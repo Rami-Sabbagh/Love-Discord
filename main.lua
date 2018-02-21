@@ -1,6 +1,6 @@
 --LÖVE Discord, A WIP Discord API Library for LÖVE framework and LuaJIT
 
-require("Websocket")
+require("Discord")
 
 function love.load()
   
