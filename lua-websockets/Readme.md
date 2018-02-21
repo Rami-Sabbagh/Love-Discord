@@ -1,4 +1,4 @@
-This is a modified version of [lua-websockets](https://github.com/lipp/lua-websockets) Originially by lipp,
+This is a modified version of [lua-websockets](https://github.com/lipp/lua-websockets) Originally written by lipp,
 
 Modifications made by RamiLego4Game:
 - Removed `copas` and `luaev` sockets.
