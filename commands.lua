@@ -71,8 +71,6 @@ function commands.urbanup(chid,data, ...)
   
   local res,code,headers,status = http.request("http://api.urbandictionary.com/v0/define?term="..discord.tools.urlEscape(term))
   
-  --print(res,code,headers,status)
-  
   if res then
     local res = discord.json:decode(res)
     if res.result_type == "no_results" then
@@ -92,18 +90,27 @@ function commands.urbanup(chid,data, ...)
     local deftext = def.definition
     if #deftext > 512 then deftext = deftext:sub(1,512).."..." end
     
-    discord.channels.createMessage(chid, "", {
+    local embed = {
       title='"'..def.word..'" #'..def.defid,
       type="rich",
       description=deftext,
       url=def.permalink,
       color = 0x23A9E0,
-      author = {name="Author: "..def.author,url="https://www.urbandictionary.com/author.php?author="..discord.tools.urlEscape(def.author)},
+      author = {name="Author: "..def.author,url="https://www.urbandictionary.com/author.php?author="..discord.tools.urlEscape(def.author)}
+    }
+    
+    if #def.example > 0 then
       fields = {{name="Example:",value=def.example or "[NONE]"},
         {name="Tags:",value=table.concat(res.tags, ", ")},
         {name="Thumbs Up 👍:",value=def.thumbs_up,inline=true},
         {name="Thumbs Down 👎:",value=def.thumbs_down,inline=true}}
-      })
+    else
+      fields = {{name="Tags:",value=table.concat(res.tags, ", ")},
+        {name="Thumbs Up 👍:",value=def.thumbs_up,inline=true},
+        {name="Thumbs Down 👎:",value=def.thumbs_down,inline=true}}
+    end
+    
+    discord.channels.createMessage(chid, "", embed)
     end
   else
     discord.channels.createMessage(chid, "Failed ! `"..tostring(code).."`")
