@@ -2,34 +2,16 @@
 
 local discord = require("Discord")
 
-local commands = {}
+local commands = love.filesystem.load("commands.lua")(discord)
 
-function commands.whatami(chid)
-  discord.channels.createMessage(chid, "I'm a Discord bot written and running in LÖVE")
-end
+local superCommands = {}
 
-function commands.say(chid, data, ...)
-  local msg = table.concat({...}," ")
-  discord.channels.createMessage(chid, data.author.username..": "..msg)
-end
-
-function commands.commands(chid)
-  local cs = {}
-  for k,v in pairs(commands) do
-    table.insert(cs,k)
-  end
-  local msg = "```\n"..table.concat(cs,", ").."\n```"
-  discord.channels.createMessage(chid, msg)
-end
-
-function commands.stop(chid, data)
+superCommands.reload = function(chid,data)
   if data.author.id == "207435670854041602" then
-    discord.channels.createMessage(chid, "Goodbye !")
-    print("Bot shutdown")
-    discord.gateway.disconnect()
-    love.event.quit()
+    commands = love.filesystem.load("commands.lua")(discord)
+    discord.channels.createMessage(chid, "Reloaded Successfully !")
   else
-    discord.channels.createMessage(chid, "Only Rami can stop the bot !")
+    discord.channels.createMessage(chid, "Only Rami can reload the bot commands !")
   end
 end
 
@@ -68,11 +50,17 @@ discord.gateway.events["MESSAGE_CREATE"] = function(data)
   
   print("Message: "..content)
   
-  if args[1] and args[1] == ">" then
-    local c = args[2]
+  if args[1] and args[1]:sub(1,1) == "." then
+    local c = args[1]:sub(2,-1)
     print("Command "..c)
     if commands[c] then
-      local ok, err = pcall(commands[c],chid, data, select(3,unpack(args)))
+      local ok, err = pcall(commands[c],chid, data, select(2,unpack(args)))
+      if not ok then
+        print("Command failed",c,err)
+        pcall(discord.channels.createMessage,Guilds["LIKO-12"]["botlog"],"Command `"..c.."` failed: ```\n"..tostring(err).."\n```")
+      end
+    elseif superCommands[c] then
+      local ok, err = pcall(superCommands[c],chid, data, select(2,unpack(args)))
       if not ok then
         print("Command failed",c,err)
         pcall(discord.channels.createMessage,Guilds["LIKO-12"]["botlog"],"Command `"..c.."` failed: ```\n"..tostring(err).."\n```")
