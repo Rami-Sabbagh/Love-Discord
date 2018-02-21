@@ -69,6 +69,8 @@ function commands.urbanup(chid,data, ...)
     return
   end
   
+  discord.channels.triggerTypingIndicator(chid)
+  
   local res,code,headers,status = http.request("http://api.urbandictionary.com/v0/define?term="..discord.tools.urlEscape(term))
   
   if res then
