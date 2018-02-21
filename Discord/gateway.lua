@@ -2,8 +2,6 @@
 
 local discord = ...
 
-local ZLIB_SUFFIX = "\x00\x00\xff\xff"
-
 local gw = {}
 
 gw.events = {} --For events handlers.
@@ -15,18 +13,16 @@ function gw.getGatewayBot()
   gw.url = data.url
   gw.shards = data.shards
   
-  cprint("Gateway: ",gw.url)
+  print("Gateway: ",gw.url)
   
 end
 
 function gw.connect()
   
-  if not WEB.hasLuaSec then return false, "LuaSec is required to connect to a gateway" end
+  print("Load websocket")
+  local Websocket = require("lua-websockets")
   
-  cprint("Load websocket")
-  local Websocket = require("Libraries.Websocket")
-  
-  cprint("Create client")
+  print("Create client")
   local client = Websocket.client.async()
   
   local params = {
@@ -36,10 +32,10 @@ function gw.connect()
     options = {"all", "no_sslv2", "no_sslv3"}
   }
   
-  cprint("Connect")
+  print("Connect")
   assert(client:connect(gw.url.."/?v=6&encoding=json",false,params))
   
-  cprint("Connected !")
+  print("Connected !")
   
   gw.client = client
   
@@ -48,7 +44,7 @@ end
 function gw.disconnect()
   gw.client:close()
   
-  cprint("Disconnected !")
+  print("Disconnected !")
 end
 
 function gw.send(op,d,t,s)
@@ -62,15 +58,11 @@ function gw.receive()
   local message,opcode,close_was_clean,close_code,close_reason = gw.client:receive()
   
   if not message and close_reason ~= "Socket Timeout" then
-    cprint("Lost connnection",close_was_clean,close_code,close_reason)
-    
-    color(8)
-    print(table.concat({"Lost connnection",close_code,close_reason}," "))
-    color(6)
+    print("Lost connnection",close_was_clean,close_code,close_reason)
     
     print("Sleeping for 2 seconds")
-    sleep(2)
-    print("Attemping to reconnect...") flip()
+    love.timer.sleep(2)
+    print("Attemping to reconnect...")
     
     local params = {
       mode = "client",
@@ -81,7 +73,6 @@ function gw.receive()
     assert(gw.client:connect(gw.url.."/?v=6&encoding=json",false,params))
     
     gw.sendReconnect()
-    --error("Connection lost")
   end
   
   if message then
@@ -103,7 +94,7 @@ function gw.update(dt)
     local s = message.s
   
     if op == 0 then --Dispatch
-      cprint("Dispatch",t,s)
+      print("Dispatch",t,s)
       gw.sequence = s or gw.sequence
       
       if t == "READY" then
@@ -115,21 +106,16 @@ function gw.update(dt)
         gw.events[t](data,t,s,discord)
       end
     elseif op == 1 then --Gateway Heartbeat
-      cprint("Gateway heartbeat")
       print("Gateway heartbeat")
     elseif op == 7 then --Reconnect
-      cprint("Should reconnect !")
       print("Should reconnect !")
     elseif op == 9 then --Invalid Session
-      cprint("Invalid Session !")
       print("Invalid Session !")
     elseif op == 10 then --Gateway Hello
       gw.hb_time = data.heartbeat_interval/1000 --Convert to seconds.
       gw.shouldIdentify = not gw.reconnected
-      cprint("Gateway Hello")
       print("Gateway Hello")
     elseif op == 11 then --Gateway Heartbeat ACK
-      cprint("Gateway heartbeat ACK")
       print("Gateway heartbeat ACK")
     end
   end
@@ -154,7 +140,6 @@ end
 function gw.sendHeartbeat()
   local message = {op = 1, d = (gw.sequence or "!NULL")}
   gw.send(1,"!NULL")
-  cprint("Client heartbeat")
   print("Client heartbeat")
 end
 
@@ -162,7 +147,7 @@ function gw.sendIdentify()
   local data = {
     token = discord.authorization,
     properties = {
-      ["$os"] = getHostOS(),
+      ["$os"] = love.system.getOS(),
       ["$browser"] = "LIKO-12",
       ["$device"] = "LIKO-12"
     },
@@ -171,7 +156,7 @@ function gw.sendIdentify()
     presence = {
       since = "!NULL",
       game = {
-        name = "LIKO-12",
+        name = "LÖVE",
         type = 0
       },
       status = "online",
@@ -179,7 +164,6 @@ function gw.sendIdentify()
     }
   }
   gw.send(2, data)
-  cprint("Client Identify")
   print("Client Identify")
 end
 
@@ -192,8 +176,7 @@ function gw.sendReconnect()
   }
   gw.send(6,data)
   gw.reconnected = true
-  cprint("Client Reconnect")
-  print("Reconnecting...")
+  print("Client Reconnect")
 end
 
 return gw

@@ -7,7 +7,7 @@ local socket = require("socket")
 local tinsert = table.insert
 local tconcat = table.concat
 
-local receive = function(self)
+local receive = function(self,notimeout)
   if self.state ~= 'OPEN' and not self.is_closing then
     return nil,nil,false,1006,'wrong state'
   end
@@ -24,14 +24,14 @@ local receive = function(self)
     return nil,nil,was_clean,code,reason or 'closed'
   end
   
-  self.sock:settimeout(0)
+  if not notimeout then self.sock:settimeout(0) end
   
   local wants = self.sock:want()
   
   if wants == "read" then
-    socket.select({self.sock},nil,0)
+    socket.select({self.sock},nil,notimeout and false or 0)
   elseif wants == "write" then
-    socket.select(nil,{self.sock},0)
+    socket.select(nil,{self.sock},notimeout and false or 0)
   end
   
   local chunk,err = self:sock_receive(bytes)
@@ -123,7 +123,7 @@ local close = function(self,code,reason)
   local reason = ''
   if n == #encoded then
     self.is_closing = true
-    local rmsg,opcode = self:receive()
+    local rmsg,opcode = self:receive(true)
     if rmsg and opcode == frame.CLOSE then
       code,reason = frame.decode_close(rmsg)
       was_clean = true

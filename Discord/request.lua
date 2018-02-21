@@ -16,7 +16,7 @@ local function urlencode(data)
   return table.concat(query,"&")
 end
 
-return function(urlstr, data, method)
+return function(urlstr, data, method, reqHeaders)
   
   --The request arguments.
   local args = {}
@@ -46,8 +46,9 @@ return function(urlstr, data, method)
       args.headers["content-type"] = "application/x-www-form-urlencoded"
     else
       --JSON Content
-      args.source = ltn12.source.string(discord.json:encode(data,nil,{ null = "!NULL" }))
-      args.headers["content-length"] = #args.source
+      local data = discord.json:encode(data,nil,{ null = "!NULL" })
+      args.source = ltn12.source.string(data)
+      args.headers["content-length"] = #data
       args.headers["content-type"] = "application/json"
     end
   end
@@ -58,6 +59,13 @@ return function(urlstr, data, method)
   --Data receiving
   local result_table = {}
   args.sink = ltn12.sink.table(result_table)
+  
+  --Merge Headers
+  if reqHeaders then
+    for k,v in pairs(reqHeaders) do
+      args.headers[k] = v
+    end
+  end
   
   --The request time
   local res, code, headers, status = https.request(args)

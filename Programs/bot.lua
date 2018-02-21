@@ -101,7 +101,7 @@ discord.gateway.events["GUILD_CREATE"] = function(data)
   if data.channels then
     for k,v in pairs(data.channels) do
       Guilds[data.name][v.name] = v.id
-      cprint("Channel",data.name,v.name,v.id)
+      print("Channel",data.name,v.name,v.id)
     end
   end
 end
@@ -121,7 +121,7 @@ discord.gateway.events["MESSAGE_CREATE"] = function(data)
     if commands[c] then
       local ok, err = pcall(commands[c],chid, data, select(3,unpack(args)))
       if not ok then
-        cprint("Command failed",c,err)
+        print("Command failed",c,err)
         pcall(discord.channels.createMessage,Guilds["LIKO-12"]["botlog"],"Command `"..c.."` failed: ```\n"..tostring(err).."\n```")
       end
     else

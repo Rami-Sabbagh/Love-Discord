@@ -26,7 +26,7 @@ function uapi.getCurrentUserGuilds(before,after,limit)
     before=before,after=after,limit=limit
   }
   
-  data = http.urlencode(data)
+  data = discord.tools.urlEncode(data)
   
   return assert(discord.request("users/@me/guilds?"..data))
 end

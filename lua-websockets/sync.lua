@@ -3,6 +3,7 @@ local frame = require(reqPrefix..".frame")
 local handshake = require(reqPrefix..".handshake")
 local tools = require(reqPrefix..".tools")
 local ssl = require("ssl")
+local socket = require("socket")
 local tinsert = table.insert
 local tconcat = table.concat
 

@@ -1,6 +1,6 @@
 local reqPrefix = (...):sub(1,-string.len(".client_async")-1)
 local socket = require("socket")
-local sync = require(reqPrefix..".async")
+local async = require(reqPrefix..".async")
 local tools = require(reqPrefix..".tools")
 
 local new = function(ws)

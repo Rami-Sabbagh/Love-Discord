@@ -23,9 +23,7 @@ function chns.getChannelMessages(id,around,before,after,limit)
     around=around, before=before, after=after, limit=limit
   }
   
-  data = http.urlencode(data)
-  
-  return assert(discord.request("channels/"..id.."/messages?"..data))
+  return assert(discord.request("channels/"..id.."/messages",data,"GET"))
 end
 
 function chns.getChannelMessage(chid,msid)
@@ -53,9 +51,7 @@ function chns.getReactions(chid,msid,emoji,before,after,limit)
     before=before, after=after, limit=limit
   }
   
-  data = http.urlencode(data)
-  
-  return assert(discord.request("channels/"..chid.."/messages/"..msid.."/reactions/"..emoji.."?"..data))
+  return assert(discord.request("channels/"..chid.."/messages/"..msid.."/reactions/"..emoji,data,"GET"))
 end
 
 function chns.deleteAllReactions(chid,msid)
