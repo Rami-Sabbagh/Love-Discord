@@ -5,7 +5,7 @@ local libpath = ...
 local discord = {}
 
 --ThirdParty-Libraries
-discord.json = require("Libraries.JSON")
+discord.json = require(libpath..".JSON")
 
 --Constants
 discord.apiEndpoint = "https://discordapp.com/api/v6/"
