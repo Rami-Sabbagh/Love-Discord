@@ -14,6 +14,6 @@ conf.oAuth_scopes = {
 --conf.bot_token = "" -- Only if you want to create a bot.
 
 --Other
-conf.agent = "DiscordBot (https://github.com/RamiLego4Game/LIKO-12, 1)"
+conf.agent = "DiscordBot (https://love2d.org, 1)"
 
 return conf
