@@ -68,6 +68,9 @@ discord.gateway.events["MESSAGE_CREATE"] = function(data)
     else
       discord.channels.createMessage(chid, "Invalid Command !!!")
     end
+  elseif string.find(content:lower(),"issue #%d+") then
+    local issueid = string.match(content:lower(),"issue #%d+"):sub(8,-1)
+    discord.channels.createMessage(chid, "https://bitbucket.org/rude/love/issues/"..issueid.."/")
   end
 end
 
