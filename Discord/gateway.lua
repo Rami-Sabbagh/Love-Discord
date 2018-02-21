@@ -20,7 +20,7 @@ end
 function gw.connect()
   
   print("Load websocket")
-  local Websocket = require("lua-websockets")
+  local Websocket = require(discord.path..".lua-websockets")
   
   print("Create client")
   local client = Websocket.client.async()
