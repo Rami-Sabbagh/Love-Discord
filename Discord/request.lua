@@ -1,14 +1,31 @@
 --JSON request
 
+local https = require("https")
+local ltn12 = require("ltn12")
+local url = require("socket.url")
+
 local discord = ...
 
-local web = WEB
+local function urlencode(data)
+  local query = {}
+  for k,v in pairs(data) do
+    if v then
+      query[#query + 1] = string.format("%s=%s",tostring(k),tostring(v))
+    end
+  end
+  return table.concat(query,"&")
+end
 
-return function(url, data, method)
-  if not web then return false, "JSON Request Requires WEB Peripheral" end
+return function(urlstr, data, method)
   
   --The request arguments.
   local args = {}
+  
+  --The request method
+  local m = data and "POST" or "GET"
+  m = method or m
+  
+  args.method = m
   
   --The request header.
   args.headers = {
@@ -16,57 +33,58 @@ return function(url, data, method)
     ["Authorization"] = discord.authorization
   }
   
-  --POST method
+  --Parse the url
+  args.url = url.parse(discord.apiEndpoint..urlstr)
+  
   if data then
-    args.method = "POST"
-    args.data = discord.json:encode(data,nil,{ null = "!NULL" })
+    if m == "GET" then
+      --Put in the query if needed
+      local query = urlencode(data)
+      if query ~= "" then
+        args.url.query = query
+      end
+      args.headers["content-type"] = "application/x-www-form-urlencoded"
+    else
+      --JSON Content
+      args.source = ltn12.source.string(discord.json:encode(data,nil,{ null = "!NULL" }))
+      args.headers["content-length"] = #args.source
+      args.headers["content-type"] = "application/json"
+    end
   end
   
-  --Set method
-  args.method = method or args.method
+  --Rebuild the url
+  args.url = url.build(args.url)
   
-  --Send the web request
-  local ticket = WEB.send(discord.apiEndpoint..url,args)
+  --Data receiving
+  local result_table = {}
+  args.sink = ltn12.sink.table(result_table)
   
-  --Wait for it to arrived
-  for event, id, url, data, errnum, errmsg, errline in pullEvent do
+  --The request time
+  local res, code, headers, status = https.request(args)
+  
+  local result = table.concat(result_table)
+  
+  if res then
+    code = tonumber(code)
     
-    --Here it is !
-    if event == "webrequest" then
-      --Yes, this is the correct package !
-      if id == ticket then
-        
-        if data then
-          data.code = tonumber(data.code)
-          
-          if data.code < 100 or data.code >= 300 then --Too bad...
-            cprint("HTTP Failed Request Body: "..tostring(data.body))
-            if discord.httpcodes[data.code] then
-              cprint("HTTP Error ("..data.code.."): "..discord.httpcodes[data.code][1].." -> "..discord.httpcodes[data.code][2])
-              return false, "HTTP Error ("..data.code.."): "..discord.httpcodes[data.code][1].." -> "..discord.httpcodes[data.code][2], data.code
-            else
-              return false, "HTTP Error: "..data.code
-            end
-          end
-          
-          local ok, decoded = pcall(discord.json.decode,discord.json,data.body) --Yay
-          
-          if ok then
-            return decoded, data
-          else
-            return data.body, data
-          end
-        else --Oh, no, it failed
-          return false, errmsg
-        end
-        
+    if code < 100 or code >= 300 then --Too bad...
+      print("HTTP Failed Request Body: "..tostring(result))
+      if discord.httpcodes[code] then
+        print("HTTP Error ("..code.."): "..discord.httpcodes[code][1].." -> "..discord.httpcodes[code][2])
+        return false, "HTTP Error ("..code.."): "..discord.httpcodes[code][1].." -> "..discord.httpcodes[code][2], code
+      else
+        return false, "HTTP Error: "..code
       end
-    elseif event == "keypressed" then
-      
-      if id == "escape" then
-        return false, "Request Canceled" --Well, the user changed his mind
-      end
-      
     end
+    
+    local ok, decoded = pcall(discord.json.decode,discord.json,result) --Yay
+    
+    if ok then
+      return decoded, {res, code, headers, status}
+    else
+      return result, {res, code, headers, status}
+    end
+  else
+    return false, "HTTPS Failed: "..tostring(code)
   end
 end
