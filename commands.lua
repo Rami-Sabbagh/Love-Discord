@@ -38,6 +38,30 @@ function commands.stop(chid, data)
   end
 end
 
+function commands.manual(chid,data, ...)
+  local section = table.concat({...}, " ")
+  if section == "" then
+    discord.channels.createMessage(chid, "Usage: `.manual <seciton name\\>`")
+    return
+  end
+  
+  local url = "http://www.lua.org/manual/5.1/manual.html#pdf-"..discord.tools.urlEscape(section)
+  
+  discord.channels.createMessage(chid, url)
+end
+
+function commands.wiki(chid,data, ...)
+  local section = table.concat({...}, " ")
+  if section == "" then
+    discord.channels.createMessage(chid, "Usage: `.wiki <seciton name\\>`")
+    return
+  end
+  
+  local url = "http://love2d.org/wiki/"..discord.tools.urlEscape(section)
+  
+  discord.channels.createMessage(chid, url)
+end
+
 function commands.urbanup(chid,data, ...)
   local term = table.concat({...}, " ")
   if term == "" then
