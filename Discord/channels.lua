@@ -30,8 +30,8 @@ function chns.getChannelMessage(chid,msid)
   return assert(discord.request("channels/"..chid.."/messages/"..msid))
 end
 
-function chns.createMessage(chid,content)
-  return assert(discord.request("channels/"..chid.."/messages",{content=content},"POST"))
+function chns.createMessage(chid,content,embed)
+  return assert(discord.request("channels/"..chid.."/messages",{content=content,embed=embed},"POST"))
 end
 
 function chns.createReaction(chid,msid,emoji)
