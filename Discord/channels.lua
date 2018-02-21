@@ -58,4 +58,10 @@ function chns.deleteAllReactions(chid,msid)
   return assert(discord.request("channels/"..chid.."/messages/"..msid.."/reactions", false, "DELETE"))
 end
 
+--Some functions
+
+function chns.triggerTypingIndicator(chid)
+  return discord.request("channels/"..chid.."/typing", "", "POST")
+end
+
 return chns
