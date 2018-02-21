@@ -5,7 +5,7 @@ local discord = require("Discord")
 local commands = {}
 
 function commands.whatami(chid)
-  discord.channels.createMessage(chid, "I'm a Discord bot written and running in LIKO-12")
+  discord.channels.createMessage(chid, "I'm a Discord bot written and running in LÖVE")
 end
 
 function commands.say(chid, data, ...)
@@ -20,13 +20,6 @@ function commands.commands(chid)
   end
   local msg = "```\n"..table.concat(cs,", ").."\n```"
   discord.channels.createMessage(chid, msg)
-end
-
-function commands.docs(chid,data,item)
-  local item = item or ""
-  local url = "https://liko-12.readthedocs.io/en/latest/"..item:gsub("%.","/").."/"
-  
-  discord.channels.createMessage(chid, url)
 end
 
 function commands.stop(chid, data)
