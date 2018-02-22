@@ -61,7 +61,7 @@ end
 --Some functions
 
 function chns.triggerTypingIndicator(chid)
-  return discord.request("channels/"..chid.."/typing", "", "POST")
+  return assert(discord.request("channels/"..chid.."/typing", false, "POST"))
 end
 
 return chns
