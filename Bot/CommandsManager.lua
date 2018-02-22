@@ -1,11 +1,12 @@
 --Love-Discord Bot Commands Manager
 
 local discord = require("Discord")
+local GuildsManager = require("Bot.GuildsManager")
 
 local cm = {}
 
 cm.commands = {} --The loaded commands chunks
-cm.prefixes = {}
+cm.prefixes = {} --prefixes[guild_id] = prefix
 
 if love.filesystem.exists("prefix.json") then
   cm.prefixes = discord.json:decode(love.filesystem.read("prefix.json"))
@@ -27,9 +28,13 @@ function cm.reload()
   end
 end
 
-function cm.setPrefix(p)
-  cm.prefix = p
-  love.filesystem.write("prefix.txt",cm.prefix)
+function cm.getPrefix(guild_id)
+  return cm.prefixes[guild_id] or "." --Defaults to '.'
+end
+
+function cm.setPrefix(guild_id,p)
+  cm.prefixes[guild_id] = p
+  love.filesystem.write("prefix.json",discord.json:encode_pretty(cm.prefixes))
 end
 
 return cm
