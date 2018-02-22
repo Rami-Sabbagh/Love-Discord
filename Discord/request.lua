@@ -36,6 +36,8 @@ return function(urlstr, data, method, reqHeaders)
   --Parse the url
   args.url = url.parse(discord.apiEndpoint..urlstr)
   
+  if not data and m ~= "GET" and m ~= "DELETE" then data = {} end
+  
   if data then
     if m == "GET" then
       --Put in the query if needed
@@ -87,7 +89,7 @@ return function(urlstr, data, method, reqHeaders)
     
     local ok, decoded = pcall(discord.json.decode,discord.json,result) --Yay
     
-    if ok then
+    if ok and decoded then
       return decoded, {res, code, headers, status}
     else
       return result, {res, code, headers, status}
