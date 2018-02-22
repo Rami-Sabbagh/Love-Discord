@@ -148,8 +148,8 @@ function gw.sendIdentify()
     token = discord.authorization,
     properties = {
       ["$os"] = love.system.getOS(),
-      ["$browser"] = "LIKO-12",
-      ["$device"] = "LIKO-12"
+      ["$browser"] = "LÖVE",
+      ["$device"] = "LÖVE"
     },
     compress = false,
     large_threshold = 50,
