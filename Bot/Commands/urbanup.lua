@@ -4,7 +4,7 @@ local http = require("socket.http")
 
 local term = table.concat({select(4,...)}, " ")
 if term == "" then
-  discord.channels.createMessage(chid, "Usage: `.urbanup <term\\>`")
+  discord.channels.createMessage(chid, "Usage: `urbanup <term>`")
   return
 end
 
