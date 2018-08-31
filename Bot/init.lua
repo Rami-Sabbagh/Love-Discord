@@ -13,11 +13,23 @@ function bot.initialize()
   print("Loading Commands...")
   CommandsManager.reload()
   
-  print("Requesting Gateway...")
-  discord.gateway.getGatewayBot()
+  while true do
+    print("Requesting Gateway...")
+    local ok = pcall(discord.gateway.getGatewayBot)
+    if ok then break end
+    
+    print("Failed, retrying in 5 seconds...")
+    love.timer.sleep(5)
+  end
 
-  print("Connecting to the Gateway...")
-  discord.gateway.connect()
+  while true do
+    print("Connecting to the Gateway...")
+    local ok = pcall(discord.gateway.connect)
+    if ok then break end
+    
+    print("Failed, retrying in 5 seconds...")
+    love.timer.sleep(5)
+  end
 end
 
 function bot.update(dt)
