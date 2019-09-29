@@ -15,19 +15,21 @@ function bot.initialize()
   
   while true do
     print("Requesting Gateway...")
-    local ok = pcall(discord.gateway.getGatewayBot)
+    local ok, err = pcall(discord.gateway.getGatewayBot)
     if ok then break end
     
-    print("Failed, retrying in 5 seconds...")
+    print("Failed, Reason:",tostring(err))
+    print("Retrying in 5 seconds...")
     love.timer.sleep(5)
   end
 
   while true do
     print("Connecting to the Gateway...")
-    local ok = pcall(discord.gateway.connect)
+    local ok, err = pcall(discord.gateway.connect)
     if ok then break end
     
-    print("Failed, retrying in 5 seconds...")
+    print("Failed, Reason:",tostring(err))
+    print("Retrying in 5 seconds...")
     love.timer.sleep(5)
   end
 end
