@@ -131,6 +131,7 @@ local connect = function(self,ws_url,ws_protocol,ssl_params)
   end
   if protocol == 'wss' then
     self.sock = ssl.wrap(self.sock, ssl_params)
+    if c.sni then c:sni(host) end --Required to lua-sec 0.8.1 to work
     self.sock:dohandshake()
   elseif protocol ~= "ws" then
     return nil, 'bad protocol'

@@ -1,5 +1,4 @@
---LIKO-12 Discord Library Config
-
+--LÖVE Discord Library Config
 local conf = {}
 
 --OAuth
