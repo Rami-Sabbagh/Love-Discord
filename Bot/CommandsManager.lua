@@ -8,7 +8,7 @@ local cm = {}
 cm.commands = {} --The loaded commands chunks
 cm.prefixes = {} --prefixes[guild_id] = prefix
 
-if love.filesystem.exists("prefix.json") then
+if love.filesystem.getInfo("prefix.json") then
   cm.prefixes = discord.json:decode(love.filesystem.read("prefix.json"))
 else
   love.filesystem.write("prefix.json",discord.json:encode_pretty(cm.prefixes))
