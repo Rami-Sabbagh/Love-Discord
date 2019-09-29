@@ -1,5 +1,8 @@
 local discord, chid, data = ...
 
+discord.channels.createMessage(chid, "This command no longer works due to the removal of urban dictionary API...")
+if true then return end
+
 local http = require("socket.http")
 
 local term = table.concat({select(4,...)}, " ")
