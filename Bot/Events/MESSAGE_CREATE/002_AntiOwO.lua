@@ -5,7 +5,12 @@ local content = data.content:lower()
 
 local owoPatterns = {
   "[ou][w]+[ou]",
-  "[ow][u]+[ow]"
+  "[ouw][w]+[ou]",
+  "[ou][w]+[ouw]",
+
+  "[ow][u]+[ow]",
+  "[ouw][u]+[ow]",
+  "[ow][u]+[ouw]"
 }
 
 for _, pattern in pairs(owoPatterns) do
