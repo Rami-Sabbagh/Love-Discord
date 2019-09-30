@@ -6,5 +6,5 @@ local cs = {}
 for k,v in pairs(CommandsManager.commands) do
   table.insert(cs,k)
 end
-local msg = "```\n"..table.concat(cs,", ").."\n```"
+local msg = "```css\n"..table.concat(cs,", ").."\n```"
 discord.channels.createMessage(chid, msg)
