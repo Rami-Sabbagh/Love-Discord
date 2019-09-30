@@ -4,13 +4,13 @@ local chid = data.channel_id
 local content = data.content:lower()
 
 local owoPatterns = {
-  "[ou][w]+[ou]",
-  "[ouw][w]+[ou]",
-  "[ou][w]+[ouw]",
+  "[ou][%A]*[w]+[%A]*[ou]",
+  "[ouw][%A]*[w]+[%A]*[ou]",
+  "[ou][%A]*[w]+[%A]*[ouw]",
 
-  "[ow][u]+[ow]",
-  "[ouw][u]+[ow]",
-  "[ow][u]+[ouw]"
+  "[ow][%A]*[u]+[%A]*[ow]",
+  "[ouw][%A]*[u]+[%A]*[ow]",
+  "[ow][%A]*[u]+[%A]*[ouw]"
 }
 
 for _, pattern in pairs(owoPatterns) do
