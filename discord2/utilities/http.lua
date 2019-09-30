@@ -6,7 +6,7 @@ local json = discord.json
 local multipart = discord.multipart
 
 local ltn12 = require("ltn12")
-local url_utils = require("luasocket.url")
+local url_utils = require("socket.url")
 
 local http_utils = {}
 
@@ -109,25 +109,22 @@ function http_utils.request(url, data, method, headers, useMultipart)
         status_code = tonumber(status_code)
 
         --Check if the response wasn't an error response...
-        if code < 100 or code >= 300 then
+        if status_code < 100 or status_code >= 300 then
             print("HTTP Failed, Response Body:", response_body)
             if http_utils.codes[status_code] then
                 print("HTTP Error ("..status_code.."):", http_utils.codes[status_code][1].." -> "..http_utils.codes[status_code][2])
-                return false, "HTTP Error ("..status_code.."):", http_utils.codes[status_code][1].." -> "..http_utils.codes[status_code][2], status_code
+                return false, "HTTP Error ("..status_code.."):", http_utils.codes[status_code][1].." -> "..http_utils.codes[status_code][2], response_body, response_headers, status_code, status_line
             else
-                return false, "HTTP Error: "..status_code
+                return false, "HTTP Error: "..status_code, response_body, response_headers, status_code, status_line
             end
         end
 
-        --Try to decode the recieved data..
-        local decode_ok, decoded = pcall(json.decode, json, response_body)
-
-        --Pass the reponse information
-        if decode_ok and decoded then
-            return decoded, response_headers, status_code, status_line
-        else
-            return response_body, response_headers, status_code, status_line
+        --Decode the response body if it's JSON data
+        if response_headers["content-type"] and response_headers["content-type"] == "application/json" then
+            response_body = json:decode(response_body)
         end
+
+        return response_body, response_headers, status_code, status_line
 
     else
         return false, "HTTP Failed: "..tostring(status_code)

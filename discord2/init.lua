@@ -1,14 +1,15 @@
 --Discörd - A Discord bot library by RamiLego4Game (Rami Sabbagh)
 
-local class = discord._require("third-party.middleclass")
+local libraryPath = ...
+local class = require(libraryPath..".third-party.middleclass")
 
 local discord = class("discord.Discord")
 
 --New instance
 function discord:initialize()
     --Internal Fields
-    self._path = ... --The require path into the Discörd library.
-    self._directory = self._directory:gsub("%.","/").."/" --The filesystem path to the Discörd library.
+    self._path = libraryPath --The require path into the Discörd library.
+    self._directory = self._path:gsub("%.","/").."/" --The filesystem path to the Discörd library.
     self._userAgent = "DiscordBot (https://github.com/RamiLego4Game/Love-Discord, 2)"
 
     --Load third-party libraries
@@ -21,9 +22,14 @@ function discord:initialize()
     self.https.USERAGENT = self._userAgent --Set the useragent
 
     --Load utilities
-    self.utilites = {}
-    self.utilites.bit = self:_dofile("utilities/bit", self)
-    self.utilites.http = self:_dofile("utilities/http", self)
+    self.utilities = {}
+    self.utilities.bit = self:_dofile("utilities/bit", self)
+    self.utilities.http = self:_dofile("utilities/http", self)
+    self.utilities.snowflake = self:_dofile("utilities/snowflake", self)
+    self.utilities.message = self:_dofile("utilities/message", self)
+
+    --Load modules
+    self.rest = self:_dofile("modules/rest", self)
 end
 
 --Requires a sub-module in the Discörd library.
