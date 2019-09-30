@@ -29,7 +29,7 @@ return function(urlstr, data, method, reqHeaders)
   
   --The request header.
   args.headers = {
-    ["User-Argent"] = discord.config.agent,
+    ["User-Agent"] = discord.config.agent,
     ["Authorization"] = discord.authorization
   }
   
