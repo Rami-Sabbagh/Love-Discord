@@ -14,8 +14,11 @@ function discord:initialize()
     --Load third-party libraries
     self.websocket = self:_require("third-party.lua-websockets")
     self.json = self:_require("third-party.JSON")
+    self.multipart = self:_require("third-party.multipart") --https://github.com/Kong/lua-multipart
     self.class = class
     self.https = self:_require("third-party.https")
+
+    self.https.USERAGENT = self._userAgent --Set the useragent
 
     --Load utilities
     self.utilites = {}
