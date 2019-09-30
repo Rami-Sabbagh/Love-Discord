@@ -1,7 +1,16 @@
 --Message utilities, for formating user tags and such
 local discord = ... --Passed as an argument
+local json = discord.json
 
 local messageUtilities = {}
+
+--TODO: Do not depend on LÖVE
+--Emojis lists
+messageUtilities.emojis = json:decode(love.filesystem.read(discord._directory.."assets/emojis_list.json"))
+messageUtilities.emojisReversed = json:decode(love.filesystem.read(discord._directory.."assets/emojis_reverse_list.json"))
+messageUtilities.emojisText = json:decode(love.filesystem.read(discord._directory.."assets/emojis_text_list.json"))
+
+--TODO: Add emojis utilities
 
 --https://discordapp.com/developers/docs/reference#message-formatting
 
