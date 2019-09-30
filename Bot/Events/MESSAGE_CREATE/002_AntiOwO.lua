@@ -13,8 +13,16 @@ local owoPatterns = {
 }
 
 for _, pattern in pairs(owoPatterns) do
-  if content:find(pattern) then
-    discord.channels.createMessage(chid, "https://cdn.discordapp.com/attachments/440553300203667479/628171994218889216/unknown.png")
+  local spos, epos = content:find(pattern)
+  if spos then
+    discord.channels.createMessage(chid, __, {
+      --title = "DON'T "..content:sub(spos, epos):upper(),
+      --description = "**$350 PENALTY**",
+      color = 0xEE0000,
+      image = {
+        url = "https://cdn.discordapp.com/attachments/440553300203667479/628171994218889216/unknown.png"
+      }
+    })
     break
   end
 end
