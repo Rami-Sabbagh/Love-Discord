@@ -7,12 +7,7 @@ if data.author.bot then return end --Ignore bot messages
 
 local owoPatterns = {
   "[ou]+[%A]*[w]+[%A]*[ou]+",
-  "[ouw]+[%A]*[w]+[%A]*[ou]+",
-  "[ou]+[%A]*[w]+[%A]*[ouw]+",
-
-  "[ow]+[%A]*[u]+[%A]*[ow]+",
-  "[ouw]+[%A]*[u]+[%A]*[ow]+",
-  "[ow]+[%A]*[u]+[%A]*[ouw]+"
+  "[ow]+[%A]*[u]+[%A]*[ow]+"
 }
 
 for _, pattern in pairs(owoPatterns) do
