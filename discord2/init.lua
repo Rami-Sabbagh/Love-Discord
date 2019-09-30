@@ -1,21 +1,37 @@
 --Discörd - A Discord bot library by RamiLego4Game (Rami Sabbagh)
 
-local discord = {}
+local class = discord._require("third-party.middleclass")
 
---Internal Fields
-discord._path = ... --The require path into the Discörd library.
-discord._directory = discord._directory:gsub("%.","/").."/" --The filesystem path to the Discörd library.
+local discord = class("discord.Discord")
+
+--New instance
+function discord:initialize()
+    --Internal Fields
+    self._path = ... --The require path into the Discörd library.
+    self._directory = self._directory:gsub("%.","/").."/" --The filesystem path to the Discörd library.
+
+    --Load third-party libraries
+    self.websocket = self:_require("third-party.lua-websockets")
+    self.json = self:_require("third-party.JSON")
+    self.class = class
+    self.https = self:_require("third-party.https")
+
+    --Load utilities
+    self.utilites = {}
+    self.utilites.bit = self:_dofile("utilities/bit", self)
+    self.utilites.http = self:_dofile("utilities/http", self)
+end
 
 --Requires a sub-module in the Discörd library.
-discord._require = function(path)
-    local ok, err = pcall(require, path and discord._path.."."..path)
+function discord:_require(path)
+    local ok, err = pcall(require, path and self._path.."."..path)
     if ok then return err end
     return error(err)
 end
 
 --Executes a file in the Discörd library.
-discord._dofile = function(path, ...)
-    local chunk, cerr = love.filesystem.load(discord._directory..path..".lua") --TODO: Don't depend on LÖVE
+function discord:_dofile(path, ...)
+    local chunk, cerr = love.filesystem.load(self._directory..path..".lua") --TODO: Don't depend on LÖVE
 
     if not chunk then return error(cerr) end
     local rets = {pcall(chunk, ...)}
@@ -23,11 +39,5 @@ discord._dofile = function(path, ...)
 
     return select(2,unpack(rets))
 end
-
---== Third-Party Libraries ==--
-
-discord.websocket = discord._require("third-party.lua-websockets")
-discord.json = discord._require("third-party.JSON")
-discord.class = discord._require("third-party.middleclass")
 
 return discord
