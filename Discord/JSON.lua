@@ -33,7 +33,7 @@ local OBJDEF = {
 -- JSON definition: http://www.json.org/
 --
 --
---   JSON = assert(loadfile "JSON.lua")() -- one-time load of the routines
+--   JSON = assert(dofile "JSON.lua")() -- one-time load of the routines
 --
 --   local lua_value = JSON:decode(raw_json_text)
 --
@@ -45,7 +45,7 @@ local OBJDEF = {
 -- DECODING (from a JSON string to a Lua table)
 --
 --
---   JSON = assert(loadfile "JSON.lua")() -- one-time load of the routines
+--   JSON = assert(dofile "JSON.lua")() -- one-time load of the routines
 --
 --   local lua_value = JSON:decode(raw_json_text)
 --
@@ -162,7 +162,7 @@ local OBJDEF = {
 --
 --   However, if you enable strictTypes, e.g.
 --
---      JSON = assert(loadfile "JSON.lua")() --load the routines
+--      JSON = assert(dofile "JSON.lua")() --load the routines
 --      JSON.strictTypes = true
 --
 --   then the Lua table resulting from the decoding of a JSON object or
@@ -175,7 +175,7 @@ local OBJDEF = {
 --
 -- ENCODING (from a lua table to a JSON string)
 --
---   JSON = assert(loadfile "JSON.lua")() -- one-time load of the routines
+--   JSON = assert(dofile "JSON.lua")() -- one-time load of the routines
 --
 --   local raw_json_text    = JSON:encode(lua_table_or_value)
 --   local pretty_json_text = JSON:encode_pretty(lua_table_or_value) -- "pretty printed" version for human readability
@@ -1577,7 +1577,7 @@ return OBJDEF:new()
 --                 Added a third 'options' argument to the encode() and encode_pretty() routines, to control
 --                 how the encoding takes place.
 --
---                 Updated docs to add assert() call to the loadfile() line, just as good practice so that
+--                 Updated docs to add assert() call to the dofile() line, just as good practice so that
 --                 if there is a problem loading JSON.lua, the appropriate error message will percolate up.
 --
 --   20140920.13   Put back (in a way that doesn't cause warnings about unused variables) the author string,
