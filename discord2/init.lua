@@ -30,6 +30,7 @@ function discord:initialize()
 
     --Load modules
     self.rest = self:_dofile("modules/rest", self)
+    self.gateway = self:_dofile("modules/gateway", self)
 end
 
 --Requires a sub-module in the Discörd library.

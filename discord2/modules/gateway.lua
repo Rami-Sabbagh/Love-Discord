@@ -75,6 +75,9 @@ function gateway:connect()
 
     --The websocket is now connected and ready for usage!
     self.websocket = client
+
+    --Success!
+    return true
 end
 
 --== Internal Methods ==--
