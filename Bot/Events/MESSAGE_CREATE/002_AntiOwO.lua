@@ -1,5 +1,7 @@
 local discord, data = ...
 
+if not data.content then return end
+
 local chid = data.channel_id
 local content = data.content:lower()
 
@@ -12,7 +14,7 @@ local owoPatterns = {
 
 for _, pattern in pairs(owoPatterns) do
   if content:find(pattern) then
-    discord.channels.createMessage(chid, "https://i.redd.it/cqpuzj8avzh11.png")
+    discord.channels.createMessage(chid, "https://cdn.discordapp.com/attachments/440553300203667479/628171994218889216/unknown.png")
     break
   end
 end
