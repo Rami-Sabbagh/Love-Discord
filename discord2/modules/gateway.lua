@@ -63,11 +63,9 @@ function gateway:connect()
     local client = websocket.client.async() --Create a new websocket client
 
     --Add in query options
-    local socketURL = url_utils.parse(self.gatewayURL)
     local socketQuery = {v=self.version, encoding=self.encoding}
     if self.compress then socketQuery.compress = self.compress end
-    socketURL.query = socketQuery
-    socketURL = url_utils.build(socketURL)
+    local socketURL = self.gatewayURL.."/?"..http_utils.encodeQuery(socketQuery)
 
     --Connect to the websocket
     local ok, err = client:connect(socketURL, false, self.websocket_params)
