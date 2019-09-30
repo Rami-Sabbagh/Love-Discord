@@ -9,6 +9,7 @@ function discord:initialize()
     --Internal Fields
     self._path = ... --The require path into the Discörd library.
     self._directory = self._directory:gsub("%.","/").."/" --The filesystem path to the Discörd library.
+    self._userAgent = "DiscordBot (https://github.com/RamiLego4Game/Love-Discord, 2)"
 
     --Load third-party libraries
     self.websocket = self:_require("third-party.lua-websockets")
