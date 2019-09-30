@@ -16,5 +16,6 @@ local owoPatterns = {
 for _, pattern in pairs(owoPatterns) do
   if content:find(pattern) then
     discord.channels.createMessage(chid, "https://i.redd.it/cqpuzj8avzh11.png")
+    break
   end
 end
