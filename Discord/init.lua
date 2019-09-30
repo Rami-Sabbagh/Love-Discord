@@ -14,7 +14,7 @@ discord.require = function(name)
 end
 
 --ThirdParty-Libraries
-discord.json = require(libpath..".JSON")
+discord.json = discord.require("Third-Party.JSON")
 
 --Constants
 discord.apiEndpoint = "https://discordapp.com/api/v6/"
