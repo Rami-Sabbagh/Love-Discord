@@ -4,6 +4,10 @@ local discord = ... --Passed as an argument.
 local class = discord.class --Middleclass.
 local http_utils = discord.utilities.http
 
+local sleep --Sleep function
+if love then sleep = love.timer.sleep --Use love.timer sleep
+else sleep = require("socket.sleep") end --Use luasocket sleep
+
 local rest = class("discord.modules.Rest")
 
 --Create a new instance
@@ -13,6 +17,7 @@ function rest:initialize()
 
     --RateLimits
     self.rateLimitBuckets = {} --The rate limit buckets
+    self.rateLimits = {} --The endpoint-to-bucket list
 end
 
 --Authorize the REST API
@@ -24,6 +29,28 @@ end
 
 --Do a HTTP request, with proper authorization header
 function rest:request(endpoint, data, method, headers, useMultipart)
+    --Hang on ratelimits
+    if self.rateLimits[endpoint] then
+        local bucket = self.rateLimitBuckets[self.rateLimits[endpoint]]
+        local timeLeft = os.time() - bucket.reset
+        if bucket.remaining == 0 and timeLeft > 0 then
+            print("RATE LIMIT REACHED !!!!!") --TODO: Proper logging
+            sleep(timeLeft)
+        elseif timeLeft <= 0 then --Invalidate the bucket
+            local bucketID = self.rateLimits[endpoint]
+            self.rateLimitBuckets[bucketID] = nil
+
+            --Invalidate all the urls using the same bucket
+            for k,v in pairs(self.rateLimits) do
+                if v and v == bucketID then
+                    self.rateLimits[k] = nil
+                end
+            end
+        else --Consume a use of this endpoint
+            bucket.remaining = bucket.remaining - 1
+        end
+    end
+
     headers = headers or {}
     headers["Authorization"] = self.authorization
     local response_body, response_headers, status_code, status_line, failure_line = http_utils.request(self.baseURL..endpoint, data, method, headers, useMultipart)
@@ -32,13 +59,25 @@ function rest:request(endpoint, data, method, headers, useMultipart)
     local headers = response_body and response_headers or status_code
     if type(headers) == "table" then
         if headers["x-ratelimit-limit"] then
-            print("RATE LIMIT HEADER") --TODO: REMOVE ERRORS
-            for k,v in pairs(headers) do print(k..":", v) end
-            error("BOOM")
+            local bucketID = headers["x-ratelimit-bucket"]
+            self.rateLimitBuckets[bucketID] = {
+                global = false,
+                limit = headers["x-ratelimit-limit"],
+                remaining = headers["x-ratelimit-remaining"],
+                reset = headers["x-ratelimit-reset"],
+                reset_after = headers["x-ratelimit-reset_after"]
+            }
+            self.rateLimits[endpoint] = bucketID
         elseif headers["x-ratelimit-global"] then
-            print("RATE LIMIT HEADER")
-            for k,v in pairs(headers) do print(k..":", v) end
-            error("BOOM")
+            local bucketID = "global"
+            self.rateLimitBuckets[bucketID] = {
+                global = true,
+                limit = 0,
+                remaining = 0,
+                reset = os.time() + math.ceil(headers["Retry-After"]/1000),
+                reset_after = math.ceil(headers["Retry-After"]/1000)
+            }
+            self.rateLimits[endpoint] = bucketID
         end
     end
 
