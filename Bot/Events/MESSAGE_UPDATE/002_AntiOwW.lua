@@ -1,0 +1,1 @@
+love.filesystem.load("Bot/Events/MESSAGE_CREATE/002_AntiOwO.lua")(...)

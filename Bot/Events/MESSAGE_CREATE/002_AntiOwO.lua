@@ -6,8 +6,8 @@ local content = data.content:lower()
 if data.author.bot then return end --Ignore bot messages
 
 local owoPatterns = {
-  "[ou]+[%A]*[w]+[%A]*[ou]+",
-  "[ow]+[%A]*[u]+[%A]*[ow]+"
+  "[ou]+[%p]*[w]+[%p]*[ou]+",
+  "[ow]+[%p]*[u]+[%p]*[ow]+"
 }
 
 for _, pattern in pairs(owoPatterns) do
