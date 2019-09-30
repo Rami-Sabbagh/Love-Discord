@@ -5,7 +5,7 @@ local json = discord.json
 local messageUtilities = {}
 
 --TODO: Do not depend on LÖVE
---Emojis lists
+--Emojis lists, generated from https://github.com/Necktrox/discord-emoji
 messageUtilities.emojis = json:decode(love.filesystem.read(discord._directory.."assets/emojis_list.json"))
 messageUtilities.emojisReversed = json:decode(love.filesystem.read(discord._directory.."assets/emojis_reverse_list.json"))
 messageUtilities.emojisText = json:decode(love.filesystem.read(discord._directory.."assets/emojis_text_list.json"))
