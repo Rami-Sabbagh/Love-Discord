@@ -3,14 +3,16 @@ local discord, data = ...
 local chid = data.channel_id
 local content = data.content:lower()
 
-local owoPatterns = {
-  "[ou][%A]*[w]+[%A]*[ou]",
-  "[ouw][%A]*[w]+[%A]*[ou]",
-  "[ou][%A]*[w]+[%A]*[ouw]",
+if data.author.bot then return end --Ignore bot messages
 
-  "[ow][%A]*[u]+[%A]*[ow]",
-  "[ouw][%A]*[u]+[%A]*[ow]",
-  "[ow][%A]*[u]+[%A]*[ouw]"
+local owoPatterns = {
+  "[ou]+[%A]*[w]+[%A]*[ou]+",
+  "[ouw]+[%A]*[w]+[%A]*[ou]+",
+  "[ou]+[%A]*[w]+[%A]*[ouw]+",
+
+  "[ow]+[%A]*[u]+[%A]*[ow]+",
+  "[ouw]+[%A]*[u]+[%A]*[ow]+",
+  "[ow]+[%A]*[u]+[%A]*[ouw]+"
 }
 
 for _, pattern in pairs(owoPatterns) do
