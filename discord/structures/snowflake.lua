@@ -3,6 +3,7 @@ local class = discord.class --Middleclass.
 
 local snowflake = class("discord.structures.Snowflake")
 
+--A function for verifying the arguments types of a method
 local function Verify(value, name, ...)
     local vt, types = type(value), {...}
     for _, t in pairs(types) do if v == t or (t=="nil" and not v) then return end end --Verified successfully
