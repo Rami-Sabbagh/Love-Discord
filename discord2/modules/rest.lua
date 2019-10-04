@@ -35,6 +35,7 @@ function rest:request(endpoint, data, method, headers, useMultipart)
         local timeLeft = os.time() - bucket.reset
         if bucket.remaining == 0 and timeLeft > 0 then
             print("RATE LIMIT REACHED !!!!!") --TODO: Proper logging
+            print("Sleeping for",timeleft,"seconds...") --DEBUG
             sleep(timeLeft)
         elseif timeLeft <= 0 then --Invalidate the bucket
             local bucketID = self.rateLimits[endpoint]
@@ -68,6 +69,10 @@ function rest:request(endpoint, data, method, headers, useMultipart)
                 reset_after = headers["x-ratelimit-reset_after"]
             }
             self.rateLimits[endpoint] = bucketID
+            if headers["Retry-After"] then
+                --Ratelimitted
+                return self:request(endpoint, data, method, headers, useMultipart) --Would sleep until the ratelimit is lifted
+            end
         elseif headers["x-ratelimit-global"] then
             local bucketID = "global"
             self.rateLimitBuckets[bucketID] = {
@@ -78,6 +83,14 @@ function rest:request(endpoint, data, method, headers, useMultipart)
                 reset_after = math.ceil(headers["Retry-After"]/1000)
             }
             self.rateLimits[endpoint] = bucketID
+            return self:request(endpoint, data, method, headers, useMultipart) --Handles the ratelimit properly
+        end
+    else --Connection failed, unconsume the API usage
+        if self.rateLimits[endpoint] then
+            local bucket = self.rateLimitBuckets[self.rateLimits[endpoint]]
+            if not bucket.global then
+                bucket.remaining = bucket.remaining + 1 --Connection failure doesn't count toward the ratelimit
+            end
         end
     end
 
