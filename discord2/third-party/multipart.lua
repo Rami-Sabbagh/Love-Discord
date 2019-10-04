@@ -290,6 +290,25 @@ function MultipartData:set_simple(name, value)
   end
 end
 
+--Added by RamiLego4Game
+function MultipartData:set_file(name, filename, value)
+  if self._data.indexes[name] then
+    self._data.data[self._data.indexes[name]] = {
+      name    = name,
+      value   = value,
+      headers = { 'Content-Disposition: form-data; name="' .. name .. '"; filename="' .. filename .. '"' }
+    }
+
+  else
+    local part_index = table_size(self._data.indexes) + 1
+    self._data.indexes[name] = part_index
+    self._data.data[part_index] = {
+      name    = name,
+      value   = value,
+      headers = { 'Content-Disposition: form-data; name="' .. name .. '"; filename="' .. filename .. '"' }
+    }
+  end
+end
 
 function MultipartData:delete(name)
   local index = self._data.indexes[name]
