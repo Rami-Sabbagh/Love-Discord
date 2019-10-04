@@ -11,6 +11,7 @@ function love.conf(t)
   t.window = nil --Disable love.window, no graphics needed for a discord bot.
 
   t.modules.audio = false             -- Disable the audio module (boolean)
+  t.modules.data = true               -- Enable the data module (boolean)
   t.modules.event = true              -- Enable the event module (boolean)
   t.modules.graphics = false          -- Disable the graphics module (boolean)
   t.modules.image = true              -- Enable the image module (boolean)
