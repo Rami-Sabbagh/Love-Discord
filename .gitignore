@@ -41,3 +41,4 @@ luac.out
 
 # DiscordAPI Config
 Discord/config.lua
+config.lua

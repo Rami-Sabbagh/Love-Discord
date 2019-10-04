@@ -14,7 +14,7 @@ else sleep = require("socket.sleep") end --Use luasocket sleep
 local gateway = class("discord.modules.Gateway")
 
 --Create a new instance
-function gateway:initialize(rest, option)
+function gateway:initialize(rest, options)
     self.rest = rest
     if not self.rest.authorization then error("The REST API has to be authorized first!") end
 
@@ -45,18 +45,37 @@ function gateway:initialize(rest, option)
     self.reconnect = false --A flag for sending resume event instead of identify when possible
 
     --TODO: State fields
-    self.connecting = false --True when identifying with the gateway, false after READY event is recieved
-    self.ready = false --True after receiving the READY event
-    self.reconnecting = false --True when trying to reconnect
-    self.resumed = false --True after receving the RESUMED event
+    --self.connecting = false --True when identifying with the gateway, false after READY event is recieved
+    --self.ready = false --True after receiving the READY event
+    --self.reconnecting = false --True when trying to reconnect
+    --self.resumed = false --True after receving the RESUMED event
 
     self.autoReconnect = true --A flag to automatically reconnect when failing
+    self.largeTreshold = 50 --Value between 50 and 250, total number of members where the gateway will stop sending offline members in the guild member list
+    --self.shard = {1,1} --TODO: Add shards support.
+    self.presence = {
+        since = 0,
+        game = {
+            name = "Discörd",
+            type = 0,
+            url = "https://ramilego4game.github.io/",
+            details = "DETAILS",
+            state = "STATE"
+        },
+        status = "online",
+        afk = true
+    }
+    self.guildSubscriptions = true --Enables dispatching of guild subscription events (presence and typing events)
 
     self.options = options or {} --Configuration options
     if self.options.encoding then self.encoding = self.options.encoding end
     if self.options.transportCompression then self.transportCompression = self.options.transportCompression end
     if self.options.payloadCompression then self.payloadCompression = true end
     if tostring(self.options.autoReconnect) == "false" then self.autoReconnect = false end
+    if self.options.largeTreshold then self.largeTreshold = self.options.largeTreshold end
+    --TODO: Add shards support
+    if self.options.presence then self.presence = self.options.presence end
+    if tostring(self.options.guildSubscriptions) == "false" then self.guildSubscriptions = false end
 
     self.events = {} --Events functions to trigger
 end
@@ -196,10 +215,7 @@ function gateway:receive()
         if self.payloadCompression then
             --Attempt decompression
             local ok, decompressed = pcall(love.data.decompress, "string", "zlib", payload)
-            if ok then
-                print("---------------ZLIB DECOMPRESSED!-----------------") --DEBUG
-                payload = decompressed
-            end
+            if ok then payload = decompressed end
         end
 
         --TODO: ETF Support
@@ -339,32 +355,33 @@ function gateway:sendIdentify()
             ["$device"] = "Discörd"
         },
         compress = self.payloadCompression or nil,
-        large_threshold = 50, --TODO: Allow configuring this
-        shard = nil, --TODO: Shards support
-        presence = {
-            --TODO: Allow configuring this
-            since = "\0",
-            game = {
-                name = "Discörd",
-                type = 0
-            },
-            status = "online",
-            afk = false
-        },
-        guild_subscriptions = false --TODO: Allow configuring this
+        large_threshold = self.largeTreshold,
+        shard = self.shard, --TODO: Shards support
+        presence = self.presence,
+        guild_subscriptions = self.guildSubscriptions
     })
 end
 
 --Sends Status Update payload
-function gateway:sendStatusUpdate()
-    --TODO
-    self:send(3)
+function gateway:sendStatusUpdate(since, game, status, afk)
+    self.presence = {
+        since = since or self.presence.since,
+        game = game or self.presence.game,
+        status = status or self.presence.status,
+        afk = afk or self.presence.afk
+    }
+
+    self:send(3, self.presence)
 end
 
 --Sends Voice State Update payload
-function gateway:sendVoiceStateUpdate()
-    --TODO
-    self:send(4)
+function gateway:sendVoiceStateUpdate(guildID, channelID, selfMute, selfDeaf)
+    self:send(4, {
+        guild_id = guildID,
+        channel_id = channelID or "\0",
+        self_mute = selfMute,
+        self_deaf = selfDeaf
+    })
 end
 
 --Sends Resume payload
@@ -377,9 +394,13 @@ function gateway:sendResume()
 end
 
 --Sends RequestGuildMembers
-function gateway:sendRequestGuildMembers()
-    --TODO
-    self:send(8)
+function gateway:sendRequestGuildMembers(guildID, query, limit, userIDs)
+    self:send(8, {
+        guild_id = guildID,
+        query = query or "",
+        limit = limit or 0,
+        userIDs = userIDs
+    })
 end
 
 --== Internal Methods ==--
