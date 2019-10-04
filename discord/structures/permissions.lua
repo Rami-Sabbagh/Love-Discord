@@ -181,6 +181,21 @@ function permissions:__tostring()
     return table.concat(self:listAll(), ", ")
 end
 
+--Tests if the two permissions are the same
+function permissions:__eq(other)
+    return self.bitfield == other.bitfield
+end
+
+--Compares two permissions to know the more permittive one
+function permissions:__lt(other)
+    return self.bitfield < other.bitfield
+end
+
+--Compares two permissions to know the more permittive one
+function permissions:__le(other)
+    return self.bitfield <= other.bitfield
+end
+
 --== Internal Methods ==--
 
 function permissions:_calculateMask()

@@ -80,4 +80,19 @@ function snowflake:__tostring()
     return self.sf
 end
 
+--Tests if the two snowflakes are the same
+function snowflake:__eq(other)
+    return self.sf == other.sf
+end
+
+--Compares two snowflakes, which one is the newer
+function snowflake:__lt(other)
+    return self.sf < other.sf
+end
+
+--Compares two snowflakes, which one is the newer
+function snowflake:__le(other)
+    return self.sf <= other.sf
+end
+
 return snowflake
