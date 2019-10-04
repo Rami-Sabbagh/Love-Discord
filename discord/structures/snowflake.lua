@@ -76,7 +76,7 @@ end
 --== Operator Overrides ==--
 
 --Returns the snowflake as a string
-function snowflake:_tostring()
+function snowflake:__tostring()
     return self.sf
 end
 
