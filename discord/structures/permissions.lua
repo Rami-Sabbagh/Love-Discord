@@ -188,12 +188,36 @@ end
 
 --Compares two permissions to know the more permittive one
 function permissions:__lt(other)
-    return self.bitfield < other.bitfield
+    return #self:listAll() < #other:listAll()
 end
 
 --Compares two permissions to know the more permittive one
 function permissions:__le(other)
-    return self.bitfield <= other.bitfield
+    return #self:listAll() < #other:listAll()
+end
+
+--Merge 2 permissions into a new one
+function permissions:__add(other)
+    local allowText = self.allowText or other.allowText
+    local allowVoice = self.allowVoice or other.allowVoice
+    local bitfield = bor(self.bitfield, other.bitfield)
+    return self.class(bitfield, allowText, allowVoice)
+end
+
+--Remove some permissions, and give a new object
+function permissions:__sub(other)
+    local allowText = self.allowText and other.allowText
+    local allowVoice = self.allowVoice and other.allowVoice
+    local new = self.class(self.bitfield, allowText, allowVoice)
+    new:set(false, unpack(other:listAll()))
+    return new
+end
+
+--Invert the current permissions, and give a new object
+function permissions:__unm()
+    local new = self.class(self.bitfield, self.allowText, self.allowVoice)
+    new:toggleAll()
+    return new
 end
 
 --== Internal Methods ==--
