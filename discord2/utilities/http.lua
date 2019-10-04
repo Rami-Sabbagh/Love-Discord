@@ -66,7 +66,6 @@ function http_utils.request(url, data, method, headers, useMultipart)
                 end
             end
             data = mp:tostring()
-            love.filesystem.write("MULTIPART.txt", data)
             headers["Content-Type"] = ContentType
         elseif not method or method ~= "GET" then
             --Convert into JSON

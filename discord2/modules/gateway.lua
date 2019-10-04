@@ -57,10 +57,7 @@ function gateway:initialize(rest, options)
         since = 0,
         game = {
             name = "Discörd",
-            type = 0,
-            url = "https://ramilego4game.github.io/",
-            details = "DETAILS",
-            state = "STATE"
+            type = 0
         },
         status = "online",
         afk = true
