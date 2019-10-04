@@ -160,7 +160,7 @@ end
 
 --Returns a list of the permissions with the given state
 --offState (any/nil): Whether to treat unset bits as set or not
-function permissons:listAll(offState)
+function permissions:listAll(offState)
     local list = {}
     
     for permName, permBit in pairs(permissionFlag) do
