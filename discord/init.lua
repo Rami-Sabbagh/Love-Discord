@@ -34,6 +34,7 @@ function discord:initialize()
 
     --Load structures
     self.snowflake = self:_dofile("structures/snowflake", self)
+    self.permissions = self:_dofile("structures/permissions", self)
 end
 
 --Requires a sub-module in the Discörd library.
