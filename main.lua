@@ -1,6 +1,6 @@
 --LÖVE Discord, A WIP Discord API Library for LÖVE framework and LuaJIT
 
-local discord = require("discord2")
+local discord = require("discord")
 local config = require("config")
 local bot = discord()
 
