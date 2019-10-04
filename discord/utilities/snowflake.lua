@@ -15,7 +15,7 @@ snowflake.increment = 0 --The increment of the snowflakes generated using this A
 function snowflake.decode(sf)
     sf = tonumber(sf)
     local time = bit.rshift(sf,22)
-    time = time + 1420070400000
+    time = time + 1420070400
 
     local workerID = bit.band(sf,0x3E0000)
     workerID = bit.rshift(workerID,17)
@@ -33,13 +33,13 @@ end
 --Converts a snowflake into a os.time() compatible value
 function snowflake.toTime(sf)
     sf = tonumber(sf)
-    return bit.rshift(sf,22) + 1420070400000
+    return bit.rshift(sf,22) + 1420070400
 end
 
 --Generates a snowflake from the given time value
-function snowflake.fromTime(time)
-    time = time - 14200700000
-    time = lshift(time, 5) + snowflake.workerID
+function snowflake.fromTime(time, worker)
+    time = time - 1420070400
+    time = lshift(time, 5) + (worker or snowflake.workerID)
     time = lshift(time, 5) + snowflake.processID
     time = lshift(time, 12) + snowflake.increment
     snowflake.increment = snowflake.increment + 1 --Increase the increment counter for this process
@@ -48,8 +48,8 @@ function snowflake.fromTime(time)
 end
 
 --Generates a new snowflake for the current moment
-function snowflake.new()
-    return snowflake.fromTime(os.time())
+function snowflake.new(worker)
+    return snowflake.fromTime(os.time(), worker)
 end
 
 return snowflake
