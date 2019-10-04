@@ -1,6 +1,6 @@
 local discord = ... --Passed as an argument.
 local class = discord.class --Middleclass.
-local bit = discord.bit --Universal bit library.
+local bit = discord.utilities.bit --Universal bit library.
 
 local band, bxor, bor = bit.band, bit.bxor, bit.bor
 
