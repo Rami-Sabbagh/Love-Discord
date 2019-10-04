@@ -52,18 +52,25 @@ function http_utils.request(url, data, method, headers, useMultipart)
             --Convert into multipart
             local ContentType = "multipart/form-data; boundary="..multipart.RANDOM_BOUNDARY
             local mp = multipart("", ContentType)
-            for k,v in pair(data) do
+            for k,v in pairs(data) do
                 --Encode the table fields into JSON, since multipart doesn't support tables...
                 if type(v) == "table" then
-                    v = JSON:encode(v,nil,{ null = "\0" })
+                    if k == "payload_json" then
+                        v = json:encode(v,nil,{ null = "\0" })
+                        mp:set_simple(k,v)
+                    elseif k == "file" then
+                        mp:set_file(k,v[1],v[2])
+                    end
+                else
+                    mp:set_simple(k,v)
                 end
-                mp:set_simple(k,v)
             end
             data = mp:tostring()
+            love.filesystem.write("MULTIPART.txt", data)
             headers["Content-Type"] = ContentType
         elseif not method or method ~= "GET" then
             --Convert into JSON
-            data = JSON:encode(data,nil,{ null = "\0" })
+            data = json:encode(data,nil,{ null = "\0" })
             headers["Content-Type"] = "application/json"
         else
             --Convert into url query, when the method is set into GET
