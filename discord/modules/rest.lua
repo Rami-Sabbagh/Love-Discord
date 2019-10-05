@@ -1,14 +1,13 @@
 --Discord REST API
 
 local discord = ... --Passed as an argument.
-local class = discord.class --Middleclass.
 local http_utils = discord.utilities.http
 
 local sleep --Sleep function
 if love then sleep = love.timer.sleep --Use love.timer sleep
 else sleep = require("socket.sleep") end --Use luasocket sleep
 
-local rest = class("discord.modules.Rest")
+local rest = {}
 
 --Create a new instance
 function rest:initialize()
@@ -96,5 +95,7 @@ function rest:request(endpoint, data, method, headers, useMultipart)
 
     return response_body, response_headers, status_code, status_line, failure_line
 end
+
+rest:initialize()
 
 return rest

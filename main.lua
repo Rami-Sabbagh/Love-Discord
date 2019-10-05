@@ -2,19 +2,16 @@
 
 local discord = require("discord")
 local config = require("config")
-local bot = discord()
+local bot = discord("Bot", config.bot_token)
 
-local REST = bot.rest()
-REST:authorize("Bot", config.bot_token)
-
-local GATEWAY = bot.gateway(REST, {
+local GATEWAY = bot.gateway{
 	payloadCompression = true, --Enable payload compression
 	transportCompression = false, --Not implemented
 	encoding = "json", --Only json is implemented for now
 	autoReconnect = true,
 	largeTreshold = 50,
 	guildSubscriptions = false --We don't want presence updates
-})
+}
 
 print("GATEWAY CONNECT")
 GATEWAY:connect()

@@ -14,8 +14,8 @@ else sleep = require("socket.sleep") end --Use luasocket sleep
 local gateway = class("discord.modules.Gateway")
 
 --Create a new instance
-function gateway:initialize(rest, options)
-    self.rest = rest
+function gateway:initialize(options)
+    self.rest = discord.rest
     if not self.rest.authorization then error("The REST API has to be authorized first!") end
 
     --The version of the gateway

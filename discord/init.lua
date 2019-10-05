@@ -5,8 +5,24 @@ local class = require(libraryPath..".third-party.middleclass")
 
 local discord = class("discord.Discord")
 
+--A function for verifying the arguments types of a method
+local function Verify(value, name, ...)
+    local vt, types = type(value), {...}
+    for _, t in pairs(types) do if v == t or (t=="nil" and not v) then return end end --Verified successfully
+    types = table.concat(types, "/")
+    local emsg = string.format("%s should be %s, provided: %s", name, types, vt)
+    error(emsg, 3)
+end
+
 --New instance
-function discord:initialize()
+function discord:initialize(tokenType, token)
+    Verify(tokenType, "tokenType", "string")
+    Verify(token, "token", "string")
+
+    if tokenType ~= "Bot" and tokenType ~= "Bearer" then
+        return error("Unknown token type: "..tokenType)
+    end
+
     --Internal Fields
     self._path = libraryPath --The require path into the Discörd library.
     self._directory = self._path:gsub("%.","/").."/" --The filesystem path to the Discörd library.
@@ -39,6 +55,9 @@ function discord:initialize()
     self.channel = self:_dofile("structures/channel", self)
     self.message = self:_dofile("structures/message", self)
     self.user = self:_dofile("structures/user", self)
+
+    --Authorize the REST API
+    self.rest:authorize(tokenType, token)
 end
 
 --Requires a sub-module in the Discörd library.
