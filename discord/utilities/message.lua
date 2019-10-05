@@ -15,27 +15,27 @@ messageUtilities.emojisText = json:decode(love.filesystem.read(discord._director
 --https://discordapp.com/developers/docs/reference#message-formatting
 
 function messageUtilities.formatUser(id)
-    return string.format("<@%d>", id)
+    return string.format("<@%s>", id)
 end
 
 function messageUtilities.formatUserNick(id)
-    return string.format("<@!%d>", id)
+    return string.format("<@!%s>", id)
 end
 
 function messageUtilities.formatChannel(id)
-    return string.format("<%#%d>", id) --TODO: Check if this works
+    return string.format("<%#%s>", id) --TODO: Check if this works
 end
 
 function messageUtilities.formatRole(id)
-    return string.format("<@&%d>", id)
+    return string.format("<@&%s>", id)
 end
 
 function messageUtilities.formatCustomEmoji(name,id)
-    return string.format("<:%s:%d>", name, id)
+    return string.format("<:%s:%s>", name, id)
 end
 
 function messageUtilities.formatCustomAnimatedEmoji(name,id)
-    return string.format("<a:%s:%d>", name, id)
+    return string.format("<a:%s:%s>", name, id)
 end
 
 return messageUtilities
