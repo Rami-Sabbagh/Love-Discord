@@ -21,7 +21,7 @@ function botAPI:initialize()
 
     print("Initializing...")
 
-    self.discord = discord("Bot", self.config.bot_token, false, {
+    self.discord = discord("Bot", self.config.bot.token, false, {
         payloadCompression = true, --Enable payload compression
         transportCompression = false, --Not implemented
         encoding = "json", --Only json is implemented for now
@@ -30,14 +30,18 @@ function botAPI:initialize()
         guildSubscriptions = false --We don't want presence updates
     })
 
+    --Hook to get the bot user object
+    self.discord:hookEvent("READY", function(data)
+        self.me = data.user
+        print("BOT ID",tostring(self.me:getID()))
+    end)
+
     pluginsManager:initialize()
     commandsManager:initialize()
 
-    print("Fetching bot user information...")
-    self.me = self.discord.user("@me")
-
     print("Connecting...")
     self.discord:connect()
+    print("Connected :)")
 end
 
 --Update the bot
