@@ -88,14 +88,14 @@ function channel:getType() return self.type end
 --Send a message into the channel
 --File is array of [filename, filedata]
 function channel:send(content, embed, tts, file)
-    if not self:isTextChannel() then return error("Can't send messages on non-text channels!") end
+    if not self:isText() then return error("Can't send messages on non-text channels!") end
     Verify(embed, "embed", "table", "nil")
     Verify(file, "file", "table", "nil")
 
     --The message request body
     local data = {
         content = type(content) ~= "nil" and tostring(content),
-        nonce = discord.utilites.snowflake.new(),
+        nonce = discord.utilities.snowflake.new(),
         tts = not not tts
     }
 
