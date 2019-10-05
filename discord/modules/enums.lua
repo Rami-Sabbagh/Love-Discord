@@ -29,7 +29,7 @@ enums.premiumTypes = enum{
     [2] = "Nitro"
 }
 
-enum.messageTypes = enum{
+enums.messageTypes = enum{
     [0] = "DEFAULT",
     [1] = "RECIPIENT_ADD",
     [2] = "RECIPIENT_REMOVE",
@@ -43,6 +43,13 @@ enum.messageTypes = enum{
     [10] = "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_2",
     [11] = "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3",
     [12] = "CHANNEL_FOLLOW_ADD"
+}
+
+enums.activityTypes = enum{
+    [0] = "Game",
+    [1] = "Steaming",
+    [2] = "Listening",
+    [3] = "Watching" --Not documented
 }
 
 return enums

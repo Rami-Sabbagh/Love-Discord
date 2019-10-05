@@ -57,7 +57,7 @@ function gateway:initialize(options)
         since = 0,
         game = {
             name = "Discörd",
-            type = 0
+            type = discord.enums.activityTypes["Watching"]
         },
         status = "online",
         afk = true
@@ -261,13 +261,6 @@ function gateway:update(dt)
                 end
             end
 
-            --Special hook triggered for any event
-            if self.events["ANY"] then
-                for k, func in pairs(self.events["ANY"]) do
-                    func(op, d, s, t)
-                end
-            end
-
             self.lastSequence = s
         elseif op == 1 then --Heartbeat, used for ping checking
             self:send(11, "\0") --Reply with heartbeat ACK
@@ -309,6 +302,13 @@ function gateway:update(dt)
 
         else --Unknown
             print("UNKOWN GATEWAY PAYLOAD!", op, d, s, t)
+        end
+    end
+
+    --Special hook triggered for any event
+    if self.events["ANY"] then
+        for k, func in pairs(self.events["ANY"]) do
+            func(op, d, s, t)
         end
     end
 
