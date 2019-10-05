@@ -11,7 +11,7 @@ local botAPI = {}
 
 --Initialize the bot and connect into Discord
 function botAPI:initialize()
-    self.bot = discord("Bot", config.bot_token, true, {
+    self.discord = discord("Bot", config.bot_token, true, {
         payloadCompression = true, --Enable payload compression
         transportCompression = false, --Not implemented
         encoding = "json", --Only json is implemented for now
@@ -25,7 +25,7 @@ end
 
 --Update the bot
 function botAPI:update(dt)
-    self.bot:update(dt)
+    self.discord:update(dt)
 end
 
 --Pass the BOT API
