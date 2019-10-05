@@ -19,7 +19,7 @@ function guild:initialize(data)
     Verify(data, "data", "table", "string")
     if type(data) == "string" then
         local gdata = discord.rest:request("/guilds/"..data)
-        if not gdata then return error("Failed to fetch gdata") end --TODO: Proper REST error handling
+        if not gdata then return error("Failed to fetch guild data") end --TODO: Proper REST error handling
         data = gdata
     end
     
