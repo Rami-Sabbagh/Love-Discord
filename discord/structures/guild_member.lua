@@ -18,7 +18,6 @@ function guildMember:initialize(data)
 
     --== Basic Fields ==--
 
-    self.user = discord.user(data.user) --The user this guild member represents (user)
     self.roles = {} --Array of roles snowflakes (array of snowflakes)
     for id, snowflake in pairs(data.roles) do
         self.roles[id] = discord.snowflake(snowflake)
@@ -29,6 +28,8 @@ function guildMember:initialize(data)
 
     --== Optional Fields ==--
 
+    --The user this guild member represents (user)
+    if data.user then self.user = discord.user(data.user) end
     self.nick = data.nick --This users guild nickname (if one is set)
     self.premiumSince = data.premium_since --When the user used their Nitro boost on the server (number)
 end

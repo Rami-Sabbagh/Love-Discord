@@ -246,7 +246,6 @@ function gateway:update(dt)
     --Got new payload
     if payload then
         local op, d, s, t = payload.op, payload.d, payload.s, payload.t
-        print("RECEIVE", op, d, s, t) --DEBUG
 
         if op == 0 then --Dispatch, dispatches an event
             print("DISPATCH", t) --DEBUG
@@ -256,7 +255,7 @@ function gateway:update(dt)
 
             --Trigger non-gateway events handlers
             if self.events[t] then
-                for k, func in pairs(self.events[t]) do
+                for k, func in ipairs(self.events[t]) do
                     func(op, d, s, t)
                 end
             end
@@ -303,12 +302,12 @@ function gateway:update(dt)
         else --Unknown
             print("UNKOWN GATEWAY PAYLOAD!", op, d, s, t)
         end
-    end
 
-    --Special hook triggered for any event
-    if self.events["ANY"] then
-        for k, func in pairs(self.events["ANY"]) do
-            func(op, d, s, t)
+        --Special hook triggered for any payload
+        if self.events["ANY"] then
+            for k, func in pairs(self.events["ANY"]) do
+                func(op, d, s, t)
+            end
         end
     end
 

@@ -30,7 +30,6 @@ function message:initialize(data)
 
     self.id = discord.snowflake(data.id) --ID of the message (snowflake)
     self.channelID = discord.snowflake(data.channel_id) --ID of the channel the message was sent in (snowflake)
-    self.author = discord.user(data.author) --The author of this message (not guaranteed to be a valid user, see below) (user)
     self.content = data.content --Contents of the message (string)
     self.timestamp = data.timestamp --When the message was sent (number)
     self.tts = data.tts --Whether this was a TTS message (boolean)
@@ -56,6 +55,8 @@ function message:initialize(data)
 
     --== Optional Fields ==--
 
+    --The author of this message (not guaranteed to be a valid user) (user)
+    if data.author then self.author = discord.user(data.author) end
     --ID of the guild the message was sent in (snowflake)
     if data.guild_id then self.guildID = discord.snowflake(data.guild_id) end
     --Member properties for this message's author (guild member)
@@ -93,10 +94,10 @@ end
 --== Methods ==--
 
 --Tells if the user id is mentioned
-function message:isUserMentioned(userID)
-    Verify(userID, "userID", "string")
+function message:isUserMentioned(user)
+    Verify(user, "user", "string")
     for k,v in pairs(self.mentions) do
-        if v == userID then return true end
+        if v == user then return true end
     end
     return false
 end
