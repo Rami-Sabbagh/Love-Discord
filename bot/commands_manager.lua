@@ -22,9 +22,8 @@ end
 --Sends a message identifying about the bot
 function commandsManager:identifyBot(channel)
     channel:send(table.concat({
-        "I'm a Discord bot written in Lua",
-        "Utilizes the Discörd library written by RamiLego4Game (Rami Sabbagh)",
-        "",
+        "I'm a Discord bot written and operating in Lua "..self.discord.utilities.message.emojis["full_moon_with_face"],
+        "Utilizes the Discörd library "..self.discord.utilities.message.emojis["books"].." written by RamiLego4Game (Rami Sabbagh) "..self.discord.utilities.message.emojis["sunglasses"],
         "Running using LÖVE "..self.discord.utilities.message.emojis["heart"]
     },"\n"))
 end
@@ -36,22 +35,16 @@ function commandsManager:_MESSAGE_CREATE(message)
     local content = message:getContent()
     local replyChannel = message:getReplyChannel()
 
-    print("MESSAGE", "|"..content.."|")
-    print("AUTHOR",tostring(authorID))
-    print("BOT TAG", self.botAPI.me:getTag(), self.botAPI.me:getNickTag())
+    print("MESSAGE", content)
 
     --Ignore the bots messages
     if author:isBot() then return end
 
     --If the message containg the bot tag only
     if content == self.botAPI.me:getTag() or content == self.botAPI.me:getNickTag() then
-        print("IDENTIFYING BOT MESSAGE")
+        print("Sending a message about the bot...")
         self:identifyBot(replyChannel)
         return
-    end
-
-    for k,v in pairs(message:getMentions()) do
-        print("MENTIONED",tostring(v))
     end
 
     local fromDeveloper = false
@@ -63,8 +56,8 @@ function commandsManager:_MESSAGE_CREATE(message)
     end
 
     --Force stop the bot (used in-case the basic commands plugin failed)
-    if fromDeveloper and content:find("FORCE STOP") and message:isUserMentioned(self.botAPI.me) then
-        replyChannel:send("DISCÖRD FORCE STOPPED!")
+    if fromDeveloper and content:lower():find("force stop") and message:isUserMentioned(self.botAPI.me) then
+        replyChannel:send("Discörd has been force stopped "..self.discord.utilities.message.emojis["no_entry"])
         love.event.quit()
     end
 end

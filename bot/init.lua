@@ -33,7 +33,6 @@ function botAPI:initialize()
     --Hook to get the bot user object
     self.discord:hookEvent("READY", function(data)
         self.me = data.user
-        print("BOT ID",tostring(self.me:getID()))
     end)
 
     pluginsManager:initialize()
