@@ -68,4 +68,11 @@ function user:initialize(data)
     self.premiumType = discord.enums.premiumTypes[data.premium_type] --The type of Nitro subscription on a user's account (string)
 end
 
+--== Operators Overrides ==--
+
+--Format the user into his/her message tag with nickname
+function user:__tostring()
+    return discord.utilities.message.formatUserNick(tostring(self.id))
+end
+
 return user

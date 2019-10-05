@@ -59,4 +59,11 @@ function channel:initialize(data)
     self.lastPinTimestamp = data.last_pin_timestamp --When the last pinned message was pinned (number)
 end
 
+--== Operators Overrides ==--
+
+--Format the channel into it's message tag
+function channel:__tostring()
+    return discord.utilities.message.formatChannel(tostring(self.id))
+end
+
 return channel
