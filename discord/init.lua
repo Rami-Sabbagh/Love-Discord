@@ -47,7 +47,7 @@ function discord:initialize(tokenType, token, connectInstantly, gatewayOptions)
     --Load modules
     self.enums = self:_dofile("modules/enums")
     self.rest = self:_dofile("modules/rest", self)
-    self.gateway = self:_dofile("modules/gateway", self)
+    self.gatewayClass = self:_dofile("modules/gateway", self)
 
     --Load structures
     self.attachment = self:_dofile("structures/attachment", self)
@@ -69,7 +69,7 @@ function discord:initialize(tokenType, token, connectInstantly, gatewayOptions)
     --Authorize the REST API
     self.rest:authorize(tokenType, token)
     --Initialize the gateway
-    self.gateway = self.gateway(gatewayOptions)
+    self.gateway = self.gatewayClass(gatewayOptions)
     --Hook into the gateway events system
     self.gateway:hookEvent("ANY", function(op, d, s, t)
         if op == 0 then
@@ -113,40 +113,58 @@ end
 
 --TODO: Add all the events
 
+function discord:_READY(op, d, s, t)
+    local privateChannels = {}
+    for k,v in pairs(d.private_channels) do
+        privateChannels[k] = self.channel(v)
+    end
+
+    local guilds = {}
+    for k,v in pairs(d.guilds) do
+        guilds[k] = self.guild(v)
+    end
+
+    self:_triggerEvent("READY", {
+        user = self.user(d.user),
+        privateChannels = privateChannels,
+        guilds = guilds
+    })
+end
+
 function discord:_CHANNEL_CREATE(op, d, s, t)
-    self:_triggerEvent("CHANNEL_CREATE", discord.channel(d))
+    self:_triggerEvent("CHANNEL_CREATE", self.channel(d))
 end
 
 function discord:_CHANNEL_UPDATE(op, d, s, t)
-    self:_triggerEvent("CHANNEL_UPDATE", discord.channel(d))
+    self:_triggerEvent("CHANNEL_UPDATE", self.channel(d))
 end
 
 function discord:_CHANNEL_DELETE(op, d, s, t)
-    self:_triggerEvent("CHANNEL_DELETE", discord.channel(d))
+    self:_triggerEvent("CHANNEL_DELETE", self.channel(d))
 end
 
 function discord:_GUILD_CREATE(op, d, s, t)
-    self:_triggerEvent("GUILD_CREATE", discord.guild(d))
+    self:_triggerEvent("GUILD_CREATE", self.guild(d))
 end
 
 function discord:_GUILD_UPDATE(op, d, s, t)
-    self:_triggerEvent("GUILD_UPDATE", discord.guild(d))
+    self:_triggerEvent("GUILD_UPDATE", self.guild(d))
 end
 
 function discord:_GUILD_DELETE(op, d, s, t)
-    self:_triggerEvent("GUILD_DELETE", discord.guild(d))
+    self:_triggerEvent("GUILD_DELETE", self.guild(d))
 end
 
 function discord:_GUILD_MEMBER_ADD(op, d, s, t)
-    self:_triggerEvent("GUILD_MEMBER_ADD", discord.guildMember(d))
+    self:_triggerEvent("GUILD_MEMBER_ADD", self.guildMember(d))
 end
 
 function discord:_MESSAGE_CREATE(op, d, s, t)
-    self:_triggerEvent("MESSAGE_CREATE", discord.message(d))
+    self:_triggerEvent("MESSAGE_CREATE", self.message(d))
 end
 
 function discord:_MESSAGE_UPDATE(op, d, s, t)
-    self:_triggerEvent("MESSAGE_UPDATE", discord.message(d))
+    self:_triggerEvent("MESSAGE_UPDATE", self.message(d))
 end
 
 function discord:_MESSAGE_REACTION_ADD(op, d, s, t)
@@ -165,7 +183,7 @@ end
 function discord:_triggerEvent(name, ...)
     if not self.events[name] then return end
     for _, func in ipairs(self.events[name]) do
-        func(name, ...)
+        func(...)
     end
 end
 
