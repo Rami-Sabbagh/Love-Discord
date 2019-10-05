@@ -90,4 +90,43 @@ function message:initialize(data)
     end
 end
 
+--== Methods ==--
+
+--Tells if the user id is mentioned
+function message:isUserMentioned(userID)
+    Verify(userID, "userID", "string")
+    for k,v in pairs(self.mentions) do
+        if v == userID then return true end
+    end
+    return false
+end
+
+--Returns the author user object
+function message:getAuthor()
+    return self.author
+end
+
+--Returns the message content
+function message:getContent()
+    return self.content
+end
+
+--Returns the list of specifically mentioned users ids
+function message:getMentions()
+    local mentions = {}
+    for k,v in pairs(self.mentions) do
+        mentions[k] = v
+    end
+    return mentions
+end
+
+--Returns a basic channel object for ONLY replying
+--Inly the id field has a proper value, and the channel type is just set into GUILD_TEXT, other fields nil
+function message:getReplyChannel()
+    return discord.channel{
+        id = tostring(self.channelID),
+        type = discord.enums.channelTypes["GUILD_TEXT"]
+    }
+end
+
 return message
