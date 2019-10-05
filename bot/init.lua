@@ -1,20 +1,27 @@
---Basic Bot System
+--Discörd Böt - A Basic Bot System
 
 --Load Discörd Library
 local discord = require("discord")
-
---Load Configuration
-local config = require("config")
+--Load JSON library from the Discörd library
+local json = require("discord.third-party.JSON")
 
 --Load bot sub-systems
 local pluginsManager = require("bot.plugins_manager")
+local commandsManager = require("bot.commands_manager")
 
 --BOT API
 local botAPI = {}
 
 --Initialize the bot and connect into Discord
 function botAPI:initialize()
-    self.discord = discord("Bot", config.bot_token, false, {
+    print("Loading configuration...")
+
+    if not love.filesystem.getInfo("/bot/config.json") then error("Please create the bot configuration file at /bot/config.json, based on the file in /bot/config_template.json") end
+    self.config = json:decode(love.filesystem.read("/bot/config.json"))
+
+    print("Initializing...")
+
+    self.discord = discord("Bot", self.config.bot_token, false, {
         payloadCompression = true, --Enable payload compression
         transportCompression = false, --Not implemented
         encoding = "json", --Only json is implemented for now
@@ -24,6 +31,10 @@ function botAPI:initialize()
     })
 
     pluginsManager:initialize()
+    commandsManager:initialize()
+
+    print("Fetching bot user information...")
+    self.me = self.discord.user("@me")
 
     print("Connecting...")
     self.discord:connect()
