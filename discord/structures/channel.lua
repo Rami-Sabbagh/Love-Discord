@@ -28,9 +28,7 @@ end
 function channel:initialize(data)
     Verify(data, "data", "table", "string")
     if type(data) == "string" then
-        local cdata = discord.rest:request("/channels/"..data)
-        if not cdata then return error("Failed to fetch channel data") end --TODO: Proper REST error handling
-        data = cdata
+        data = Request("/channels/"..data)
     end
 
     --== Basic Fields ==--
