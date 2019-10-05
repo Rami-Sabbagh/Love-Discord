@@ -15,6 +15,16 @@ local function Verify(value, name, ...)
     error(emsg, 3)
 end
 
+--REST Request with proper error handling (uses error level 3)
+local function Request(endpoint, data, method, headers, useMultipart)
+    local response_body, response_headers, status_code, status_line, failure_code, failure_line = discord.rest:request(endpoint, data, method, headers, useMultipart)
+    if not response_body then
+        error(response_headers, 3)
+    else
+        return response_body, response_headers, status_code, status_line
+    end
+end
+
 --https://discordapp.com/developers/docs/resources/user#user-object-user-flags
 local userFlags = {
     [1] = "Discord Employee",
@@ -36,9 +46,7 @@ local userFlags = {
 function user:initialize(data)
     Verify(data, "data", "table", "string")
     if type(data) == "string" then
-        local udata = discord.rest:request("/users/"..data)
-        if not udata then return error("Failed to fetch user data") end --TODO: Proper REST error handling
-        data = udata
+        data = Request("/users/"..data)
     end
 
     --== Basic Fields ==--
@@ -73,6 +81,16 @@ function user:getID()
     return self.id
 end
 
+--Returns the user tag for including in messages
+function user:getTag()
+    return discord.utilities.message.formatUser(tostring(self.id))
+end
+
+--Returns the user tag for including in messages, with the nick name used
+function user:getNickTag()
+    return discord.utilities.message.formatUserNick(tostring(self.id))
+end
+
 --Tells if the user is a bot or not
 function user:isBot()
     return self.bot
@@ -82,7 +100,7 @@ end
 
 --Format the user into his/her message tag with nickname
 function user:__tostring()
-    return discord.utilities.message.formatUserNick(tostring(self.id))
+    return self:getNickTag()
 end
 
 --Checks if the two users objects has the same id
