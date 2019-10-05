@@ -13,7 +13,7 @@ local function Verify(value, name, ...)
 end
 
 --New guild member object
-function emoji:initialize(data,emojiID)
+function emoji:initialize(data, emojiID)
     if type(data) == "string" then
         --Fetch custom emoji
         if emojiID then
