@@ -95,7 +95,7 @@ end
 
 --Tells if the user id is mentioned
 function message:isUserMentioned(user)
-    Verify(user, "user", "string")
+    Verify(user, "user", "table")
     for k,v in pairs(self.mentions) do
         if v == user then return true end
     end
