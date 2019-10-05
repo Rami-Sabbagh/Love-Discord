@@ -34,7 +34,7 @@ function channel:initialize(data)
     --== Basic Fields ==--
 
     self.id = discord.snowflake(data.id) --The id of this channel (snowflake)
-    self.type = discord.enums.channeType[data.type] --The type of this channel (string)
+    self.type = discord.enums.channelTypes[data.type] --The type of this channel (string)
 
     --== Optional Fields ==--
 
