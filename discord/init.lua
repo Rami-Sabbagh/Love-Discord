@@ -98,6 +98,17 @@ function discord:hookEvent(name, func)
     end
 end
 
+--Tells if the gateway is connected or not
+function discord:isConnected()
+    return self.gateway:isConnected()
+end
+
+--Connects the gateway if not already connected
+function discord:connect()
+    if self.gateway:isConnected() then return error("Already connected!") end
+    self.gateway:connect()
+end
+
 --== Internal Gateway Events ==--
 
 --TODO: Add all the events
