@@ -18,7 +18,7 @@ end
 function channel:initialize(data)
     Verify(data, "data", "table", "string")
     if type(data) == "string" then
-        local gdata = discord.rest:request("/guilds/"..data)
+        local gdata = discord.rest:request("/channels/"..data)
         if not gdata then return error("Failed to fetch channel data") end --TODO: Proper REST error handling
         data = gdata
     end
