@@ -4,7 +4,7 @@ local pluginsManager = {}
 --Initialize the plugin manager
 function pluginsManager:initialize()
     self.botAPI = require("bot")
-    self.discord = botAPI.discord
+    self.discord = self.botAPI.discord
 
     print(string.rep("-", 40))
     --Load and initialize the available plugins
@@ -38,7 +38,7 @@ end
 
 --Loads the chunks of the plugins
 function pluginsManager:_loadPlugins()
-    local chunk = {} --New chunks table
+    local chunks = {} --New chunks table
 
     for _, pluginName in ipairs(love.filesystem.getDirectoryItems("/bot/plugins/")) do
         local chunk, err = love.filesystem.load("/bot/plugins/"..pluginName.."/init.lua")
