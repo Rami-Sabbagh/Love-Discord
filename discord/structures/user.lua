@@ -68,11 +68,26 @@ function user:initialize(data)
     self.premiumType = discord.enums.premiumTypes[data.premium_type] --The type of Nitro subscription on a user's account (string)
 end
 
+--Returns the user id
+function user:getID()
+    return self.id
+end
+
+--Tells if the user is a bot or not
+function user:isBot()
+    return self.bot
+end
+
 --== Operators Overrides ==--
 
 --Format the user into his/her message tag with nickname
 function user:__tostring()
     return discord.utilities.message.formatUserNick(tostring(self.id))
+end
+
+--Checks if the two users objects has the same id
+function user:__eq(other)
+    return self.id == other.id
 end
 
 return user
