@@ -6,15 +6,22 @@ local guild = class("discord.structures.Guild")
 --A function for verifying the arguments types of a method
 local function Verify(value, name, ...)
     local vt, types = type(value), {...}
-    for _, t in pairs(types) do if v == t or (t=="nil" and not v) then return end end --Verified successfully
+    for _, t in pairs(types) do if vt == t or (t=="nil" and not v) then return end end --Verified successfully
     types = table.concat(types, "/")
     local emsg = string.format("%s should be %s, provided: %s", name, types, vt)
     error(emsg, 3)
 end
 
 --New guild object
---data: The data table recieved from discord.
+--data (table): The data table recieved from discord.
+--data (id): The id of the guild (the snowflake in string format), the guild data would be fetching using the REST API
 function guild:initialize(data)
+    Verify(data, "data", "table", "string")
+    if type(data) == "string" then
+        local gdata = discord.rest:request("/guilds/"..data)
+        if not gdata then return error("Failed to fetch gdata") end --TODO: Proper REST error handling
+        data = gdata
+    end
     
     --== Unavailbale Guild Fields ==--
     self.id = discord.snowflake(data.id) --The guild ID (snowflake)
@@ -42,7 +49,7 @@ function guild:initialize(data)
     end
 
     --TODO: Add the fields after the verification_level one https://discordapp.com/developers/docs/resources/guild
-    
+
 
 end
 
