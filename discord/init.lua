@@ -15,7 +15,7 @@ local function Verify(value, name, ...)
 end
 
 --New instance
-function discord:initialize(tokenType, token)
+function discord:initialize(tokenType, token, connectInstantly, gatewayOptions)
     Verify(tokenType, "tokenType", "string")
     Verify(token, "token", "string")
 
@@ -63,8 +63,99 @@ function discord:initialize(tokenType, token)
     self.reaction = self:_dofile("structures/reaction", self)
     self.user = self:_dofile("structures/user", self)
 
+    --Registered events functions
+    self.events = {}
+
     --Authorize the REST API
     self.rest:authorize(tokenType, token)
+    --Initialize the gateway
+    self.gateway = self.gateway(gatewayOptions)
+    --Hook into the gateway events system
+    self.gateway:hookEvent("ANY", function(op, d, s, t)
+        if op == 0 then
+            if self["_"..t] then self["_"..t](self, op, d, s, t) end
+        end
+    end)
+    --Connect instantly if allowed to
+    if connectInstantly then
+        self.gateway:connect()
+    end
+end
+
+--Update the gateway and process gateway events
+function discord:update(dt)
+    if self.gateway:isConnected() then
+        self.gateway:update(dt)
+    end
+end
+
+--Hook a function into an event
+function discord:hookEvent(name, func)
+    if self.events[name] then
+        self.events[name][#self.events[name] + 1] = func
+    else
+        self.events[name] = {func}
+    end
+end
+
+--== Internal Gateway Events ==--
+
+--TODO: Add all the events
+
+function discord:_CHANNEL_CREATE(op, d, s, t)
+    self:_triggerEvent("CHANNEL_CREATE", discord.channel(d))
+end
+
+function discord:_CHANNEL_UPDATE(op, d, s, t)
+    self:_triggerEvent("CHANNEL_UPDATE", discord.channel(d))
+end
+
+function discord:_CHANNEL_DELETE(op, d, s, t)
+    self:_triggerEvent("CHANNEL_DELETE", discord.channel(d))
+end
+
+function discord:_GUILD_CREATE(op, d, s, t)
+    self:_triggerEvent("GUILD_CREATE", discord.guild(d))
+end
+
+function discord:_GUILD_UPDATE(op, d, s, t)
+    self:_triggerEvent("GUILD_UPDATE", discord.guild(d))
+end
+
+function discord:_GUILD_DELETE(op, d, s, t)
+    self:_triggerEvent("GUILD_DELETE", discord.guild(d))
+end
+
+function discord:_GUILD_MEMBER_ADD(op, d, s, t)
+    self:_triggerEvent("GUILD_MEMBER_ADD", discord.guildMember(d))
+end
+
+function discord:_MESSAGE_CREATE(op, d, s, t)
+    self:_triggerEvent("MESSAGE_CREATE", discord.message(d))
+end
+
+function discord:_MESSAGE_UPDATE(op, d, s, t)
+    self:_triggerEvent("MESSAGE_UPDATE", discord.message(d))
+end
+
+function discord:_MESSAGE_REACTION_ADD(op, d, s, t)
+    self:_triggerEvent("MESSAGE_REACTION_ADD", {
+        userID = self.snowflake(d.user_id),
+        channelID = self.snowflake(d.channel_id),
+        messageID = self.snowflake(d.message_id),
+        guildID = d.guild_id and self.snowflake(d.guild_id),
+        emoji = self.emoji(d.emoji)
+    })
+end
+
+--== Internal Methods ==--
+
+--Triggers an event functions
+function discord:_triggerEvent(name, ...)
+    if not self.events[name] then return end
+    for _, func in ipairs(self.events[name]) do
+        func(name, ...)
+    end
 end
 
 --Requires a sub-module in the Discörd library.
