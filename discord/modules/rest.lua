@@ -7,6 +7,15 @@ local sleep --Sleep function
 if love then sleep = love.timer.sleep --Use love.timer sleep
 else sleep = require("socket.sleep") end --Use luasocket sleep
 
+--A function for verifying the arguments types of a method
+local function Verify(value, name, ...)
+    local vt, types = type(value), {...}
+    for _, t in pairs(types) do if vt == t or (t=="nil" and not v) then return end end --Verified successfully
+    types = table.concat(types, "/")
+    local emsg = string.format("%s should be %s, provided: %s", name, types, vt)
+    error(emsg, 3)
+end
+
 local rest = {}
 
 --Create a new instance
@@ -21,6 +30,8 @@ end
 
 --Authorize the REST API
 function rest:authorize(tokenType, token)
+    Verify(tokenType, "tokenType", "string")
+    Verify(token,"token","string")
     self.tokenType = tokenType
     self.token = token
     self.authorization = self.tokenType.." "..self.token
