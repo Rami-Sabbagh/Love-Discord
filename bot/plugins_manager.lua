@@ -1,10 +1,11 @@
---Discörd bot plugins manager
-local botAPI, discord = ...
-
+--Discörd Böt plugins manager
 local pluginsManager = {}
 
 --Initialize the plugin manager
 function pluginsManager:initialize()
+    self.botAPI = require("bot")
+    self.discord = botAPI.discord
+
     print(string.rep("-", 40))
     --Load and initialize the available plugins
     print("Loading Plugins...")
