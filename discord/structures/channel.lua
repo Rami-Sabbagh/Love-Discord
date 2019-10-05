@@ -12,6 +12,16 @@ local function Verify(value, name, ...)
     error(emsg, 3)
 end
 
+--REST Request with proper error handling (uses error level 3)
+local function Request(endpoint, data, method, headers, useMultipart)
+    local response_body, response_headers, status_code, status_line, failure_code, failure_line = discord.rest:request(endpoint, data, method, headers, useMultipart)
+    if not response_body then
+        error(response_headers, 3)
+    else
+        return response_body, response_headers, status_code, status_line
+    end
+end
+
 --== Methods ==--
 
 --New channel object
@@ -57,6 +67,59 @@ function channel:initialize(data)
     --ID of the parent category for a channel (snowflake)
     if data.parent_id then self.parentID = discord.snowflake(data.parent_id) end
     self.lastPinTimestamp = data.last_pin_timestamp --When the last pinned message was pinned (number)
+end
+
+--Tells if this is a text channel
+local textChannelTypes = {"GUILD_TEXT", "DM", "GROUP_DM"}
+function channel:isText()
+    for k, v in pairs(textChannelTypes) do
+        if self.type == v then return true end
+    end
+    return false
+end
+
+--Tells if this is a DM channel
+function channel:isDM() return self.type == "DM" end
+
+--Tells if this is a DM group channel
+function channel:isGroupDM() return self.type == "GROUP_DM" end
+
+--Tells the type of the channel
+function channel:getType() return self.type end
+
+--Send a message into the channel
+--File is array of [filename, filedata]
+function channel:send(content, tts, file)
+    if not self:isTextChannel() then return error("Can't send messages on non-text channels!") end
+    Verify(file, "table", "nil")
+
+    --The message request body
+    local data = {
+        content = type(content) ~= "nil" and tostring(content),
+        nonce = discord.utilites.snowflake.new(),
+        tts = not not tts
+    }
+
+    --TODO: Add embeds support
+
+    if not (data.content or data.embed or file) then return error("A message should have at least content or an embed or a file") end
+    if #data.content > 2000 then error("Messages content can't be longer than 2000 characters!") end
+
+    if file then
+        Verify(file[1], "file[1] (filename)", "string")
+        Verify(file[2], "file[2] (filedata)", "string")
+
+        if #file[2] > 7*1024 then return error("Can't upload files bigger than 7MB !") end
+
+        data = {
+            payload_json = data,
+            file = file
+        }
+    end
+
+    local endpoint = string.format("/channels/%s/messages", tostring(self.id))
+
+    Request(endpoint, data, "POST", {}, not not file)
 end
 
 --== Operators Overrides ==--
