@@ -87,9 +87,10 @@ function channel:getType() return self.type end
 
 --Send a message into the channel
 --File is array of [filename, filedata]
-function channel:send(content, tts, file)
+function channel:send(content, embed, tts, file)
     if not self:isTextChannel() then return error("Can't send messages on non-text channels!") end
-    Verify(file, "table", "nil")
+    Verify(embed, "embed", "table", "nil")
+    Verify(file, "file", "table", "nil")
 
     --The message request body
     local data = {
