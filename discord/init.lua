@@ -45,6 +45,7 @@ function discord:initialize(tokenType, token)
     self.utilities.message = self:_dofile("utilities/message", self)
 
     --Load modules
+    self.enums = self:_dofile("modules/enums")
     self.rest = self:_dofile("modules/rest", self)
     self.gateway = self:_dofile("modules/gateway", self)
 
