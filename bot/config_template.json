@@ -1,0 +1,11 @@
+{
+    "clientID": "the_client_id",
+    "clientSecret": "the_client_secret",
+    "botToken": "the_bot_token",
+
+    "bot": {
+        "prefix": ".",
+        "developers": ["your_account_id"],
+        "contributors": ["207435670854041602"]
+    }
+}
