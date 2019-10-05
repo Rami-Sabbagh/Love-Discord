@@ -53,7 +53,7 @@ function rest:request(endpoint, data, method, headers, useMultipart)
 
     headers = headers or {}
     headers["Authorization"] = self.authorization
-    local response_body, response_headers, status_code, status_line, failure_line = http_utils.request(self.baseURL..endpoint, data, method, headers, useMultipart)
+    local response_body, response_headers, status_code, status_line, failure_code, failure_line = http_utils.request(self.baseURL..endpoint, data, method, headers, useMultipart)
 
     --RateLimits
     local headers = response_body and response_headers or status_code
@@ -93,7 +93,17 @@ function rest:request(endpoint, data, method, headers, useMultipart)
         end
     end
 
-    return response_body, response_headers, status_code, status_line, failure_line
+    --Better error message
+    if not response_body and status_code and status_line then
+        if status_line["content-type"] and status_line["content-type"] == "application/json" then
+            local ok, ebody = pcall(discord.json.decode, discord.json, status_code)
+            if ok and (ebody.code or ebody.message) then
+                return false, "Discord Error ("..tostring(ebody.code).."): "..tostring(ebody.message), status_code, status_line, failure_code, failure_line
+            end
+        end
+    end
+
+    return response_body, response_headers, status_code, status_line, failure_code, failure_line
 end
 
 rest:initialize()
