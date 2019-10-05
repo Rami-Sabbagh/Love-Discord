@@ -50,11 +50,17 @@ function discord:initialize(tokenType, token)
     self.gateway = self:_dofile("modules/gateway", self)
 
     --Load structures
+    self.attachment = self:_dofile("structures/attachment", self)
+    self.channelMention = self:_dofile("structures/channel_mention", self)
+    self.channel = self:_dofile("structures/channel", self)
+    self.embed = self:_dofile("structures/embed", self)
+    self.emoji = self:_dofile("structures/emoji", self)
+    self.guildMember = self:_dofile("structures/guild_member", self)
+    self.guild = self:_dofile("structures/guild", self)
+    self.message = self:_dofile("structures/message", self)
     self.snowflake = self:_dofile("structures/snowflake", self)
     self.permissions = self:_dofile("structures/permissions", self)
-    self.guild = self:_dofile("structures/guild", self)
-    self.channel = self:_dofile("structures/channel", self)
-    self.message = self:_dofile("structures/message", self)
+    self.reaction = self:_dofile("structures/reaction", self)
     self.user = self:_dofile("structures/user", self)
 
     --Authorize the REST API

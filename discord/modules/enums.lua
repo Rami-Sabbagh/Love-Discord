@@ -23,4 +23,26 @@ enums.channelTypes = enum{
     [6] = "GUILD_STORE"
 }
 
+enums.premiumTypes = enum{
+    [0] = "Normal",
+    [1] = "Nitro Classic",
+    [2] = "Nitro"
+}
+
+enum.messageTypes = enum{
+    [0] = "DEFAULT",
+    [1] = "RECIPIENT_ADD",
+    [2] = "RECIPIENT_REMOVE",
+    [3] = "CALL",
+    [4] = "CHANNEL_NAME_CHANGE",
+    [5] = "CHANNEL_ICON_CHANGE",
+    [6] = "CHANNEL_PINNED_MESSAGE",
+    [7] = "GUILD_MEMBER_JOIN",
+    [8] = "USER_PREMIUM_GUILD_SUBSCRIPTION",
+    [9] = "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_1",
+    [10] = "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_2",
+    [11] = "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3",
+    [12] = "CHANNEL_FOLLOW_ADD"
+}
+
 return enums
