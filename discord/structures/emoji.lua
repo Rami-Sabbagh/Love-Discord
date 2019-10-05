@@ -13,7 +13,26 @@ local function Verify(value, name, ...)
 end
 
 --New guild member object
-function emoji:initialize(data)
+function emoji:initialize(data,emojiID)
+    if type(data) == "string" then
+        --Fetch custom emoji
+        if emojiID then
+            Verify(emojiID, "emojiID", "string")
+            local edata, reason = discord.rest:request("/guilds/"..data.."/emojis/"..emojiID)
+            if not edata then return error("Failed to fetch emoji: "..tostring(reason)) end
+            data = edata
+
+        else --Standard emoji
+            if not discord.utilities.message.emojis[data] then
+                return error("Unknown emoji: "..data)
+            end
+
+            data = {
+                name = data
+            }
+        end
+    end
+
     Verify(data, "data", "table")
 
     --== Basic Fields ==--
@@ -36,6 +55,28 @@ function emoji:initialize(data)
     self.requireColons = data.require_colons --Whether this emoji must be wrapped in colons (boolean)
     self.managed = data.managed --Whether this emoji is managed (boolean)
     self.animated = data.animated --Whether this emoji is animated (boolean)
+
+    --== Fix standard (unicode) emojis ==--
+    if not self.id then
+        if discord.utilities.message.emojisReversed[self.name] then
+            self.name = discord.utilities.message.emojisReversed[self.name]
+        end
+    end
+end
+
+--== Operators Overrides ==--
+
+--Fromat the emoji into it's message tag
+function emoji:__tostring()
+    if not self.id then
+        return discord.utilities.message.emojis[self.name]
+    end
+
+    if self.animated then
+        return discord.utilities.message.formatCustomAnimatedEmoji(self.name,self.id)
+    else
+        return discord.utilities.message.formatCustomEmoji(self.name,self.id)
+    end
 end
 
 return emoji
