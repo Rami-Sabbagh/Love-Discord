@@ -54,13 +54,11 @@ function gateway:initialize(options)
     self.largeTreshold = 50 --Value between 50 and 250, total number of members where the gateway will stop sending offline members in the guild member list
     --self.shard = {1,1} --TODO: Add shards support.
     self.presence = {
-        since = 0,
         game = {
             name = "Discörd",
             type = discord.enums.activityTypes["Watching"]
         },
-        status = "online",
-        afk = true
+        status = "online"
     }
     self.guildSubscriptions = true --Enables dispatching of guild subscription events (presence and typing events)
 
