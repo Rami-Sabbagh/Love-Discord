@@ -38,4 +38,18 @@ function messageUtilities.formatCustomAnimatedEmoji(name,id)
     return string.format("<a:%s:%s>", name, id)
 end
 
+function messageUtilities.patchEmojis(message)
+    return message:gsub("[^<]?:[^%A:]-:", function(mstr)
+        local noPreChar = mstr:sub(1,1) == ":" 
+        local emojiName = noPreChar and mstr:sub(2,-2) or mstr:sub(3,-2)
+        local unicode = messageUtilities.emojis[emojiName]
+        
+        if unicode then
+            return noPreChar and unicode or mstr:sub(1,1) .. unicode
+        else
+            return false --Unknown emoji, don't replace
+        end
+    end)
+end
+
 return messageUtilities

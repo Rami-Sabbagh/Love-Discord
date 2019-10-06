@@ -99,6 +99,9 @@ function channel:send(content, embed, tts, file)
         tts = not not tts
     }
 
+    --Convert standard emojis tags into 
+    if data.content then data.content = discord.utilities.message.patchEmojis(data.content) end
+
     --TODO: Add embeds support
 
     if not (data.content or data.embed or file) then return error("A message should have at least content or an embed or a file") end

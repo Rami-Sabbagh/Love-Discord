@@ -22,9 +22,9 @@ end
 --Sends a message identifying about the bot
 function commandsManager:identifyBot(channel)
     channel:send(table.concat({
-        "I'm a Discord bot written and operating in Lua "..self.discord.utilities.message.emojis["full_moon_with_face"],
-        "Utilizes the Discörd library "..self.discord.utilities.message.emojis["books"].." written by RamiLego4Game (Rami Sabbagh) "..self.discord.utilities.message.emojis["sunglasses"],
-        "Running using LÖVE "..self.discord.utilities.message.emojis["heart"]
+        "I'm a Discord bot written and operating in Lua :full_moon_with_face:",
+        "Utilizes the Discörd library :books: written by RamiLego4Game (Rami Sabbagh) :sunglasses:",
+        "Running using LÖVE :heart:"
     },"\n"))
 end
 
@@ -34,6 +34,8 @@ function commandsManager:_MESSAGE_CREATE(message)
     local authorID = author:getID()
     local content = message:getContent()
     local replyChannel = message:getReplyChannel()
+
+    if author == self.botAPI.me then return end --Ignore self messages
 
     print("MESSAGE", content)
 
