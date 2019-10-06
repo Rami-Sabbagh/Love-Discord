@@ -27,7 +27,16 @@ function botAPI:initialize()
         encoding = "json", --Only json is implemented for now
         autoReconnect = true,
         largeTreshold = 50,
-        guildSubscriptions = false --We don't want presence updates
+        guildSubscriptions = false, --We don't want presence updates
+
+        presence = {
+            game = {
+                name = "you 👀",
+                type = 4
+            },
+            status = "online",
+            afk = false
+        }
     })
 
     --Hook to get the bot user object
