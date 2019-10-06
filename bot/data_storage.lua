@@ -47,7 +47,7 @@ local cache = setmetatable({}, {
     end,
 
     --Important! for making sure the data is saved and unloaded aftere expiry
-    _call = function(dt)
+    __call = function(dt)
         if dt == -1 or dt == -2 then --Force write the data files
             --We write the whole weak referenced data tables
             for k,v in pairs(weakCache) do
