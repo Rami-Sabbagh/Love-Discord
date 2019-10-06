@@ -35,15 +35,14 @@ function commandsManager:_MESSAGE_CREATE(message)
     local content = message:getContent()
     local replyChannel = message:getReplyChannel()
 
-    if author == self.botAPI.me then return end --Ignore self messages
-
-    print("MESSAGE", content)
+    --Ignore self messages
+    if author == self.botAPI.me then return end
 
     --Ignore the bots messages
     if author:isBot() then return end
 
     --If the message containg the bot tag only
-    if content:match("^<@[!]?%d+>$") and message:isUserMentioned(self.botAPI.me) then
+    if content:match("^<@!?%d+>$") and message:isUserMentioned(self.botAPI.me) then
         print("Sending a message about the bot...")
         self:identifyBot(replyChannel)
         return
@@ -59,7 +58,7 @@ function commandsManager:_MESSAGE_CREATE(message)
 
     --Force stop the bot (used in-case the basic commands plugin failed)
     if fromDeveloper and content:lower():find("force stop") and message:isUserMentioned(self.botAPI.me) then
-        replyChannel:send(tostring(self.botAPI.me) .. " has been force stopped :no_entry:")
+        replyChannel:send(tostring(self.botAPI.me) .. " has been force stopped :octagonal_sign:")
         love.event.quit()
     end
 end
