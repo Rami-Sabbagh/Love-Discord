@@ -78,84 +78,55 @@ function commandsManager:_MESSAGE_CREATE(message)
 
     local prefixData = dataStorage["command_manager_prefix"]
 
-    --A list of possible prefixes
-    local prefixes = {}
-    if guildID then
-        local chankey = tostring(guildID).."_"..tostring(channelID)
-        local guildkey = tostring(guildID)
-        if prefixData[chankey] then
-            prefixes[1] = prefixData[chankey]
-        elseif prefixData[guildkey] then
-            prefixes[1] = prefixData[guildkey]
-        else
-            prefixes[1] = self.defaultPrefix
-        end
-    else
-        local chankey = "_"..tostring(channelID)
-        if prefixData[chankey] then
-            prefixes[1] = prefixData[chankey]
-        else
-            prefixes[1] = self.defaultPrefix
-        end
-    end
-    prefixes[2] = self.botAPI.me:getTag().." "
-    prefixes[3] = self.botAPI.me:getNickTag().." "
-    if not guildID then prefixes[4] = "" end --DMs don't need a prefix
+    --Parse the command prefix
 
+    --List the possible prefixes
+    local prefixes = {
+        prefixData[tostring(guildID or "").."_"..tostring(channelID)] or guildkey[tostring(guildID)] or self.defaultPrefix,
+        self.botAPI.me:getTag().." ",
+        self.botAPI.me:getNickTag().." ",
+        guildID and "" --DMs don't need a prefix
+    }
+
+    --Check if any prefix is match, and strip it if so, otherwise return
     for id, prefix in ipairs(prefixes) do
-        local prefixLength = #prefix
-        if content:sub(1,prefixLength) == prefix then
-            content = content:sub(prefixLength+1, -1) --Strip the prefix
-            break
-        end
+        if prefix and content:sub(1,#prefix) == prefix then content = content:sub(#prefix+1, -1) break end
         if id == #prefixes then return end --Didn't match any
     end
 
-    --Execute the actual command
-    print("COMMAND", content)
-
     --Parse the command syntax
-    local command = {}
-    local nextPos = 1
-    while true do
-        local spos, epos = content:find("%S+", nextPos)
-        if not spos then break end
-
+    local command, nextPos, spos, epos = {}, 1, content:find("%S+", nextPos)
+    if spos > 1 then return end --There's whitespace between the prefix and the actual command
+    while spos do
         local substr = content:sub(spos, epos)
         if not substr:find("`") then
-            command[#command + 1] = substr
-            nextPos = epos + 1
-
+            command[#command + 1], nextPos = substr, epos + 2
         else
             local blockS, blockE = content:find("```%a+%c+.-```", spos)
-            if blockS then --Multiline block
+            if blockS then --Multiline block in multiple lines
                 local prestr = content:sub(spos, blockS-1)
                 if #prestr ~= "" then command[#command + 1] = prestr end
 
                 local headerS, headerE = content:find("```%a*%c", blockS)
-                local block = content:sub(headerE+1, blockE-4)
-                command[#command + 1] = block
-                nextPos = blockE + 1
+                command[#command + 1], nextPos = content:sub(headerE+1, blockE-4), blockE + 1
+
             else
-                local blockS, blockE = content:find("```.-```", spos) --Single line multiline block
-                if blockS then
-                    command[#command + 1] = content:sub(blockS+3, blockE-3)
-                    nextPos = blockE + 1
-                else
-                    local boxS, boxE = content:find("`.-`", spos)
+                local blockS, blockE = content:find("```.-```", spos) --Multiline block in a single line
+                if blockS then command[#command + 1], nextPos = content:sub(blockS+3, blockE-3), blockE + 1
+                else local boxS, boxE = content:find("`.-`", spos)
                     if boxS then
                         local prestr = content:sub(spos, boxS-1)
                         if #prestr ~= "" then command[#command + 1] = prestr end
 
-                        command[#command + 1] = content:sub(boxS+1, boxE-1)
-                        nextPos = boxE + 1
+                        command[#command + 1], nextPos = content:sub(boxS+1, boxE-1), boxE + 1
                     else
-                        command[#command + 1] = content:sub(spos, epos)
-                        nextPos = epos + 1
+                        command[#command + 1], nextPos = substr, epos + 2
                     end
                 end
             end
         end
+
+        spos, epos = content:find("%S+", nextPos)
     end
 
     print("COMMAND PARSED",unpack(command))
