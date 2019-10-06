@@ -32,7 +32,7 @@ function botAPI:initialize()
         presence = {
             game = {
                 name = "you 👀",
-                type = 4
+                type = 3 --Watching
             },
             status = "online",
             afk = false
