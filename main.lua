@@ -11,5 +11,5 @@ function love.update(dt)
 end
 
 function love.quit()
-	botAPI:quit("event")
+	botAPI:quit()
 end

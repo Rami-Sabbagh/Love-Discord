@@ -64,7 +64,6 @@ end
 --Quit the bot properly with the data saved
 function botAPI:quit(a, ...)
     dataStorage(-2)
-    if a ~= "event" then love.event.quit(a, ...) end
 end
 
 --Pass the BOT API
