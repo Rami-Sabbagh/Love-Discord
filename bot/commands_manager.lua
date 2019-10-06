@@ -43,7 +43,7 @@ function commandsManager:_MESSAGE_CREATE(message)
     if author:isBot() then return end
 
     --If the message containg the bot tag only
-    if content == self.botAPI.me:getTag() or content == self.botAPI.me:getNickTag() then
+    if content:match("^<@[!]?%d+>$") and message:isUserMentioned(self.botAPI.me) then
         print("Sending a message about the bot...")
         self:identifyBot(replyChannel)
         return
@@ -59,7 +59,7 @@ function commandsManager:_MESSAGE_CREATE(message)
 
     --Force stop the bot (used in-case the basic commands plugin failed)
     if fromDeveloper and content:lower():find("force stop") and message:isUserMentioned(self.botAPI.me) then
-        replyChannel:send("Discörd has been force stopped "..self.discord.utilities.message.emojis["no_entry"])
+        replyChannel:send(tostring(self.botAPI.me) .. " has been force stopped :no_entry:")
         love.event.quit()
     end
 end
