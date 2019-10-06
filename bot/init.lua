@@ -45,6 +45,13 @@ function botAPI:initialize()
     --Hook to get the bot user object
     self.discord:hookEvent("READY", function(data)
         self.me = data.user
+
+        local gdata = dataStorage["bot/gateway"]
+        
+        gdata.url = self.discord.gateway.gatewayURL
+        gdata.info = self.discord.gateway.gatewayInfo
+
+        dataStorage["bot/gateway"] = gdata
     end)
 
     --Write a list of the guilds the bot is in
@@ -61,9 +68,31 @@ function botAPI:initialize()
     pluginsManager:initialize()
     commandsManager:initialize()
 
+    local gdata = dataStorage["bot/gateway"]
+
+    if gdata.url and gdata.info then
+        print("Using cached gateway url ;)")
+        self.discord.gateway.gatewayURL = gdata.url
+        self.discord.gateway.gatewayInfo = gdata.info
+    end
+
     print("Connecting...")
     self.discord:connect()
     print("Connected :)")
+end
+
+--Tells if a provided snowflake is a developer one
+function botAPI:isDeveloper(id)
+    for k, devid in pairs(self.config.bot.developers) do
+        if devid == id then return true end
+    end
+    return false
+end
+
+--Tells if a message is from a developer
+function botAPI:isFromDeveloper(message)
+    local authorID = tostring(message:getAuthor():getID())
+    return self:isDeveloper(authorID)
 end
 
 --Update the bot

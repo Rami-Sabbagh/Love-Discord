@@ -191,6 +191,12 @@ function discord:_triggerEvent(name, ...)
     for _, func in ipairs(self.events[name]) do
         func(...)
     end
+
+    if self.events["ANY"] then
+        for _, func in ipairs(self.events["ANY"]) do
+            func(name, ...)
+        end
+    end
 end
 
 --Requires a sub-module in the Discörd library.

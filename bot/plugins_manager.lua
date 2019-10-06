@@ -13,6 +13,23 @@ function pluginsManager:initialize()
     print("Initializing Plugins...")
     self.plugins = assert(self:_initializePlugins(self.chunks)) --Initialized plugins list
     print(string.rep("-", 40))
+
+    --Hook plugins events
+    self.discord:hookEvent("ANY",function(eventName, ...)
+        for pluginName, plugin in pairs(self.plugins) do
+            if plugin.events then
+                if plugin.events.ANY then
+                    local ok, err = pcall(plugin.events.ANY, eventName, ...)
+                    if not ok then print("/!\\ Plugin Event Error",pluginName,"ANY",err) end
+                end
+
+                if plugin.events[eventName] then
+                    local ok, err = pcall(plugin.events[eventName], ...)
+                    if not ok then print("/!\\ Plugin Event Error",pluginName,eventName,err) end
+                end
+            end
+        end
+    end)
 end
 
 --Reloads the plugin manager
@@ -25,6 +42,7 @@ function pluginsManager:reload()
     print("Reinitializing Plugins...")
     local plugins, err = self:_initializePlugins(chunks)
     if not plugins then return false, err end
+    self.plugins = plugins
     print(string.rep("-", 40))
     return true --Success
 end
@@ -56,11 +74,11 @@ function pluginsManager:_initializePlugins(chunks)
     local plugins = {}
 
     for pluginName, chunk in pairs(chunks) do
-        local ok, err = pcall(chunk, botAPI, discord, "bot.plugins."..pluginName, "bot/plugins/"..pluginName)
+        local ok, err = pcall(chunk, self.botAPI, self.discord, "bot.plugins."..pluginName, "bot/plugins/"..pluginName)
         if not ok then
-            return false, "Failed to enable initialize '"..pluginName.."' plugin: "..tostring(err)
+            return false, "Failed to initialize '"..pluginName.."' plugin: "..tostring(err)
         end
-        plugins[pluginName] = ok
+        plugins[pluginName] = err
     end
 
     return plugins
