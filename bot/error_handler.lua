@@ -9,8 +9,12 @@ end
  
 function love.errorhandler(msg)
 	local ok, err = pcall(dataStorage, -2) --Flush the data storage of the bot
-	print("/!\\ Failed to save bot data on crash! /!\\")
-	print("/!\\ Reason: ", err, "/!\\")
+	if ok then
+		print("Saved bot data successfully as it crashed...")
+	else
+		print("/!\\ Failed to save bot data on crash! /!\\")
+		print("/!\\ Reason: ", err, "/!\\")
+	end
 
 	msg = tostring(msg)
  
