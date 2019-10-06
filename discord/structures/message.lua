@@ -112,14 +112,16 @@ function message:isUserMentioned(user)
 end
 
 --Returns the author user object
-function message:getAuthor()
-    return self.author
-end
+function message:getAuthor() return self.author end
+
+--Returns channel ID of which the message was sent in
+function message:getChannelID() return self.channelID end
 
 --Returns the message content
-function message:getContent()
-    return self.content
-end
+function message:getContent() return self.content end
+
+--Returns the guild ID of the channel the message is sent in, would return nil for DM channels
+function message:getGuildID() return self.guildID end
 
 --Returns the list of specifically mentioned users ids
 function message:getMentions()
