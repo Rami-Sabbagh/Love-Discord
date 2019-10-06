@@ -76,13 +76,13 @@ function commandsManager:_MESSAGE_CREATE(message)
         return
     end
 
-    local prefixData = dataStorage["command_manager_prefix"]
+    local prefixData = dataStorage["commands_manager_prefix"]
 
     --Parse the command prefix
 
     --List the possible prefixes
     local prefixes = {
-        prefixData[tostring(guildID or "").."_"..tostring(channelID)] or guildkey[tostring(guildID)] or self.defaultPrefix,
+        prefixData[tostring(guildID or "").."_"..tostring(channelID)] or prefixData[tostring(guildID)] or self.defaultPrefix,
         self.botAPI.me:getTag().." ",
         self.botAPI.me:getNickTag().." ",
         guildID and "" --DMs don't need a prefix
@@ -128,6 +128,22 @@ function commandsManager:_MESSAGE_CREATE(message)
 
         spos, epos = content:find("%S+", nextPos)
     end
+
+    if #command == 0 then return end --Empty command, shouldn't happen
+
+    --Commands statistics
+    --Even invalid commands are logged, why, because it would be interesting to see what people try to do
+
+    local commandStatistics = dataStorage["commands_manager_command_statistics"]
+    local usageStatistics = dataStorage["commands_manager_usage_statistics"]
+
+    commandStatistics[command[1]] = (commandStatistics[command[1]] or 0) + 1
+    local usage = "`"..table.concat(command, "`, `").."`"
+    usageStatistics[usage] = (usageStatistics[usage] or 0) + 1
+
+    dataStorage["commands_manager_command_statistics"] = commandStatistics
+    dataStorage["commands_manager_usage_statistics"] = usageStatistics
+
 
     print("COMMAND PARSED",unpack(command))
 end
