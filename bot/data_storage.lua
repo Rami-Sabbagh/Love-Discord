@@ -41,8 +41,8 @@ local cache = setmetatable({}, {
     end,
 
     __newindex = function(t, k)
-        local v = t[k] --The value assigned
-        t[k] = nil --We want the smart cache table to stay empty
+        local v = rawget(t, k) --The value assigned
+        rawset(t, k, nil) --We want the smart cache table to stay empty
 
         cacheTimers[k] = cacheLifeTime --Revive the cached value
         weakCache[k] = v
