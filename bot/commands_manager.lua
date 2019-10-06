@@ -21,11 +21,16 @@ end
 
 --Sends a message identifying about the bot
 function commandsManager:identifyBot(channel)
-    channel:send(table.concat({
+    print("Sending a message about the bot...")
+
+    local ok, err = pcall(channel.send, channel, table.concat({
         "I'm a Discord bot written and operating in Lua :full_moon_with_face:",
         "Utilizes the Discörd library :books: written by RamiLego4Game (Rami Sabbagh) :sunglasses:",
         "Running using LÖVE :heart:"
     },"\n"))
+
+    if ok then print("Sent!") else
+        print("Failed to send:",err) end
 end
 
 --Commands handler
@@ -43,7 +48,6 @@ function commandsManager:_MESSAGE_CREATE(message)
 
     --If the message containg the bot tag only
     if content:match("^<@!?%d+>$") and message:isUserMentioned(self.botAPI.me) then
-        print("Sending a message about the bot...")
         self:identifyBot(replyChannel)
         return
     end
@@ -58,7 +62,9 @@ function commandsManager:_MESSAGE_CREATE(message)
 
     --Force stop the bot (used in-case the basic commands plugin failed)
     if fromDeveloper and content:lower():find("force stop") and message:isUserMentioned(self.botAPI.me) then
-        replyChannel:send(tostring(self.botAPI.me) .. " has been force stopped :octagonal_sign:")
+        print("Sending abort message...")
+        local ok, err = pcall(replyChannel.send, replyChannel, tostring(self.botAPI.me) .. " has been force stopped :octagonal_sign:")
+        if ok then print("Sent abort message successfully!") else print("Failed to send abort message:", err) end
         love.event.quit()
     end
 end
