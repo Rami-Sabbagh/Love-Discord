@@ -63,6 +63,9 @@ function commandsManager:identifyBot(channel)
         print("Failed to send about bot message:",err) end
 end
 
+--Returns the command list, please don't modify it
+function commandsManager:getCommands() return self.commands end
+
 --Commands handler
 function commandsManager:_MESSAGE_CREATE(message)
     local author = message:getAuthor()
@@ -175,12 +178,13 @@ function commandsManager:_MESSAGE_CREATE(message)
     local commandName = string.lower(command[1])
     
     if self.commands[commandName] then
-        local ok, err = pcall(self.commands[commandName], message, replyChannel, unpack(command))
+        local ok, traceback = xpcall(function() self.commands[commandName](message, replyChannel, unpack(command)) end, debug.traceback)
         if not ok then
             local crashReports = dataStorage["commands_manager/crash_reports"]
             local crashID = tostring(os.time())
-            local traceback = debug.traceback(err or "unknown error") or err or "unknown error"
             local report = "Command: "..message:getContent().."\n"..traceback
+            report = report:gsub("\r","")
+            report = report:gsub("..%[C%]: in function 'xpcall'.*$","")
 
             crashReports[crashID] = report
             dataStorage["commands_manager/crash_reports"] = crashReports
