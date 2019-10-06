@@ -21,7 +21,7 @@ end
 
 --Sends a message identifying about the bot
 function commandsManager:identifyBot(channel)
-    print("Sending a message about the bot...")
+    print("Sending the about bot message...")
 
     local ok, err = pcall(channel.send, channel, table.concat({
         "I'm a Discord bot written and operating in Lua :full_moon_with_face:",
@@ -29,8 +29,8 @@ function commandsManager:identifyBot(channel)
         "Running using LÖVE :heart:"
     },"\n"))
 
-    if ok then print("Sent!") else
-        print("Failed to send:",err) end
+    if ok then print("Sent then about bot message successfully!") else
+        print("Failed to send about bot message:",err) end
 end
 
 --Commands handler
