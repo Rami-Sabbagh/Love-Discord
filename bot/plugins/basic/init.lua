@@ -18,11 +18,28 @@ plugin.authorEmail = "ramilego4game@gmail.com" --The email of the auther, could 
 --== Commands ==--
 
 plugin.commands = {}
+
+plugin.commands.commands = function(message, reply, commandName, ...)
+    local commandsList = {}
+    for c in pairs(commandsManager:getCommands()) do
+        commandsList[#commandsList + 1] = c
+    end
+    commandsList = table.concat(commandsList, ", ")
+
+    reply:send(table.concat({
+        "**Available commands** :tools:",
+        "```css",
+        commandsList,
+        "```"
+    },"\n"))
+end
+
 plugin.commands.ping = function(message, reply, commandName, ...)
     local letterI = commandName:sub(2,2)
     local letterO = (letterI == "I") and "O" or "o"
     local pong = commandName:sub(1,1)..letterO..commandName:sub(3,4)
     local explosion = (pong == "PONG") and " :boom:" or ""
+    if pong == "PONG" then pong = "**PONG**" end
     reply:send(pong.." :ping_pong:"..explosion)
 end
 
@@ -46,11 +63,15 @@ end
 
 plugin.commands.restart = function(message, reply, commandName, ...)
     if not botAPI:isFromDeveloper(message) then reply:send("This command is for developers only :warning:") return end
-    reply:send("Restarting :gear:")
+    reply:send("Restarting :gear: ...")
     local pdata = dataStorage["plugins/basic/restart"]
     pdata.channelID = tostring(message:getChannelID())
     dataStorage["plugins/basic/restart"] = pdata
+
     love.event.quit("restart")
+
+    reply:triggerTypingIndicator()
+    discord.gateway.disconnect = function() end --Show the bot as online while restarting xd
 end
 
 --[[
