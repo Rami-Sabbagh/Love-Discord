@@ -57,6 +57,7 @@ end
 
 --Update the bot
 function botAPI:update(dt)
+    dataStorage(dt)
     self.discord:update(dt)
 end
 
