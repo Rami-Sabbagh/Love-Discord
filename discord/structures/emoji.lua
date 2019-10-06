@@ -64,6 +64,14 @@ function emoji:initialize(data, emojiID)
     end
 end
 
+--== Methods ==--
+
+--Returns emoji ID (snowflake/nil)
+function emoji:getID() return self.id end
+
+--Returns emoji name (string)
+function emoji:getName() return self.name end
+
 --== Operators Overrides ==--
 
 --Fromat the emoji into it's message tag
