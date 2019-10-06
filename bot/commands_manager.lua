@@ -85,7 +85,7 @@ function commandsManager:_MESSAGE_CREATE(message)
         prefixData[tostring(guildID or "").."_"..tostring(channelID)] or prefixData[tostring(guildID)] or self.defaultPrefix,
         self.botAPI.me:getTag().." ",
         self.botAPI.me:getNickTag().." ",
-        guildID and "" --DMs don't need a prefix
+        (not guildID and "") --DMs don't need a prefix
     }
 
     --Check if any prefix is match, and strip it if so, otherwise return
