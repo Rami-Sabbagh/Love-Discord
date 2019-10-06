@@ -72,11 +72,11 @@ function commandsManager:_MESSAGE_CREATE(message)
         if ok then print("Sent abort message successfully!") else print("Failed to send abort message:", err) end
 
         self.discord:disconnect()
-        self.botAPI:quit()
+        love.event.quit()
         return
     end
 
-    local prefixData = dataStorage["commands_manager_prefix"]
+    local prefixData = dataStorage["commands_manager/prefix"]
 
     --Parse the command prefix
 
@@ -134,18 +134,18 @@ function commandsManager:_MESSAGE_CREATE(message)
     --Commands statistics
     --Even invalid commands are logged, why, because it would be interesting to see what people try to do
 
-    local commandStatistics = dataStorage["commands_manager_command_statistics"]
-    local usageStatistics = dataStorage["commands_manager_usage_statistics"]
+    local commandStatistics = dataStorage["commands_manager/command_statistics"]
+    local usageStatistics = dataStorage["commands_manager/usage_statistics"]
 
     commandStatistics[command[1]] = (commandStatistics[command[1]] or 0) + 1
-    local usage = "`"..table.concat(command, "`, `").."`"
+    local usage = message:getContent() --We're going to store the whole original message content
     usageStatistics[usage] = (usageStatistics[usage] or 0) + 1
 
-    dataStorage["commands_manager_command_statistics"] = commandStatistics
-    dataStorage["commands_manager_usage_statistics"] = usageStatistics
+    dataStorage["commands_manager/command_statistics"] = commandStatistics
+    dataStorage["commands_manager/usage_statistics"] = usageStatistics
 
-
-    print("COMMAND PARSED",unpack(command))
+    --Command execution
+    
 end
 
 return commandsManager
