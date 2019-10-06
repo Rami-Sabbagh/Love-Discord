@@ -9,3 +9,7 @@ end
 function love.update(dt)
 	botAPI:update(dt)
 end
+
+function love.quit()
+	botAPI:quit("event")
+end
