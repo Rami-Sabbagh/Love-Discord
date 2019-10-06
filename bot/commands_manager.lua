@@ -81,16 +81,18 @@ function commandsManager:_MESSAGE_CREATE(message)
     local prefixes = {}
     if guildID then
         local chankey = tostring(guildID).."_"..tostring(channelID)
+        local guildkey = tostring(guildID)
         if prefixData[chankey] then
             prefixes[1] = prefixData[chankey]
-        elseif prefixData[tostring(guildID)] then
-            prefixes[1] = prefixData[tostring(guildID)]
+        elseif prefixData[guildkey] then
+            prefixes[1] = prefixData[guildkey]
         else
             prefixes[1] = self.defaultPrefix
         end
     else
-        if prefixData["_"..tostring(channelID)] then
-            prefixes[1] = prefixData["_"..tostring(channelID)]
+        local chankey = "_"..tostring(channelID)
+        if prefixData[chankey] then
+            prefixes[1] = prefixData[chankey]
         else
             prefixes[1] = self.defaultPrefix
         end
@@ -102,6 +104,7 @@ function commandsManager:_MESSAGE_CREATE(message)
         local prefixLength = #prefix
         if content:sub(1,prefixLength) == prefix then
             content = content:sub(prefixLength+1, -1) --Strip the prefix
+            break
         end
         if id == #prefixes then return end --Didn't match any
     end
