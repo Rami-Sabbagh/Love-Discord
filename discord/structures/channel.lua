@@ -124,6 +124,11 @@ function channel:send(content, embed, tts, file)
     Request(endpoint, data, "POST", {}, not not file)
 end
 
+function channel:triggerTypingIndicator()
+    local endpoint = string.format("/channels/%s/typing", tostring(self.id))
+    Request(endpoint, false, "POST")
+end
+
 --== Operators Overrides ==--
 
 --Format the channel into it's message tag
