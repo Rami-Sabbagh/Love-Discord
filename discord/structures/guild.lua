@@ -50,7 +50,19 @@ function guild:initialize(data)
 
     --TODO: Add the fields after the verification_level one https://discordapp.com/developers/docs/resources/guild
 
+end
 
+--Returns the guild ID (snowflake)
+function guild:getID() return self.id end
+
+--Returns the guild name if known (string/nil)
+function guild:getName() return self.name end
+
+--== Operator Overrides ==--
+
+--Returns the guild name, or id if the name is unknown
+function guild:__tostring()
+    return self.name or tostring(self.id)
 end
 
 return guild
