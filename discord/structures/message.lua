@@ -15,6 +15,16 @@ local function Verify(value, name, ...)
     error(emsg, 3)
 end
 
+--REST Request with proper error handling (uses error level 3)
+local function Request(endpoint, data, method, headers, useMultipart)
+    local response_body, response_headers, status_code, status_line, failure_code, failure_line = discord.rest:request(endpoint, data, method, headers, useMultipart)
+    if not response_body then
+        error(response_headers, 3)
+    else
+        return response_body, response_headers, status_code, status_line
+    end
+end
+
 --https://discordapp.com/developers/docs/resources/channel#message-object-message-flags
 local messageFlags = {
     [1] = "CROSSPOSTED",
@@ -101,6 +111,19 @@ end
 
 --== Methods ==--
 
+--Adds a reaction
+function message:addReaction(emoji)
+    Verify(emoji, "emoji", "table", "string")
+    if type(emoji) == "string" then
+        emoji = discord.utilities.message.emojis[emoji] or emoji
+    else
+        emoji = emoji:getName()..":"..emoji:getID()
+    end
+
+    local endpoint = string.format("/channels/%s/messages/%s/reactions/%s/@me", tostring(self.channelID), tostring(self.id), emoji)
+    Request(endpoint, nil, "PUT")
+end
+
 --Tells if the user id is mentioned
 function message:isUserMentioned(user)
     Verify(user, "user", "table")
@@ -122,6 +145,9 @@ function message:getContent() return self.content end
 
 --Returns the guild ID of the channel the message is sent in, would return nil for DM channels
 function message:getGuildID() return self.guildID end
+
+--Returns the ID of the message
+function message:getID() return self.id end
 
 --Returns the list of specifically mentioned users ids
 function message:getMentions()
