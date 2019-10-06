@@ -317,7 +317,10 @@ function gateway:update(dt)
             if not self.heartbeatACK then
                 print("Zombied Connection!") --DEBUG
                 self:disconnect() --The connection is zombied!
-                if self.autoConnect then
+                print("Sleeping for 5 seconds...") --SLEEP
+                sleep(5)
+                print("Reconnecting...") --DEBUG
+                if self.autoReconnect then
                     self:connect(true)
                     return true --Forgive us for the lost update
                 else
