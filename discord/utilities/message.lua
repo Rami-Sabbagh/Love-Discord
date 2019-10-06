@@ -39,16 +39,15 @@ function messageUtilities.formatCustomAnimatedEmoji(name,id)
 end
 
 function messageUtilities.patchEmojis(message)
-    return message:gsub(".?:%a-:", function(mstr)
-        local firstChar = mstr:sub(1,1)
-        if firstChar == "<" then return false end --This is a custom emoji tag, ignore it!
+    return message:gsub(".?.?:%a-:", function(mstr)
+        local prefix = mstr:match("^.-:") or ""
+        if prefix:sub(1,1) == "<" then return false end --This is a custom emoji tag, ignore it!
 
-        local noPreChar = firstChar == ":" 
-        local emojiName = noPreChar and mstr:sub(2,-2) or mstr:sub(3,-2)
+        local emojiName = mstr:match(":%a-:"):sub(2,-2)
         local unicode = messageUtilities.emojis[emojiName]
 
         if unicode then
-            return noPreChar and unicode or mstr:sub(1,1) .. unicode
+            return prefix:sub(1,-2) .. unicode
         else
             return false --Unknown emoji, don't replace
         end
