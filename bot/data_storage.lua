@@ -40,8 +40,7 @@ local cache = setmetatable({}, {
         return value
     end,
 
-    __newindex = function(t, k)
-        local v = rawget(t, k) --The value assigned
+    __newindex = function(t, k, v)
         rawset(t, k, nil) --We want the smart cache table to stay empty
 
         cacheTimers[k] = cacheLifeTime --Revive the cached value
