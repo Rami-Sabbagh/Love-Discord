@@ -43,8 +43,8 @@ function http_utils.request(url, data, method, headers, useMultipart)
     headers = headers or {}
     headers["User-Agent"] = discord._userAgent
 
-    --Use an empty table for data when the request method is neither GET nor POST
-    if method and (method ~= "GET" and method ~="POST") then data = {} end
+    --Use an empty table for data when the request method is neither GET
+    if method and method ~= "GET" then data = data or {} end
 
     --Convert the data into json or multipart
     if type(data) == "table" then
