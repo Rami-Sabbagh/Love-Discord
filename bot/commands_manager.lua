@@ -65,6 +65,9 @@ function commandsManager:_MESSAGE_CREATE(message)
         print("Sending abort message...")
         local ok, err = pcall(replyChannel.send, replyChannel, tostring(self.botAPI.me) .. " has been force stopped :octagonal_sign:")
         if ok then print("Sent abort message successfully!") else print("Failed to send abort message:", err) end
+
+        self.discord:disconnect()
+
         love.event.quit()
     end
 end

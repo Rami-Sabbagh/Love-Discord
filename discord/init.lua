@@ -109,6 +109,12 @@ function discord:connect()
     self.gateway:connect()
 end
 
+--Disconnects from the gateway if connected
+function discord:disconnect()
+    if not self.gateway:isConnected() then return error("Not connected!") end
+    self.gateway:disconnect()
+end
+
 --== Internal Gateway Events ==--
 
 --TODO: Add all the events
