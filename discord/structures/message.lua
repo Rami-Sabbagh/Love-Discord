@@ -34,22 +34,6 @@ function message:initialize(data)
     self.timestamp = data.timestamp --When the message was sent (number)
     self.tts = data.tts --Whether this was a TTS message (boolean)
     self.mentionEveryone = data.mention_everyone --Where this message mentions everyone (boolean)
-    self.mentions = {} --Users specifically mentioned in the message (array of user objects)
-    for id, udata in pairs(data.mentions) do
-        self.mentions[id] = discord.user(udata)
-    end
-    self.mentionRoles = {} --Roles specifically mentioned in this message (array of snowflake objects)
-    for id, snowflake in pairs(data.mention_roles) do
-        self.mentionRoles[id] = discord.snowflake(snowflake)
-    end
-    self.attachments = {} --Any attached files (array of attachment objects)
-    for id, adata in pairs(data.attachments) do
-        self.attachments[id] = discord.attachment(adata)
-    end
-    self.embeds = {} --Any embedded (array of embed objects)
-    for id, edata in pairs(data.embeds) do
-        self.embeds = discord.embed(edata)
-    end
     self.pinned = data.pinned --Whether this message is pinned (boolean)
     self.type = discord.enums.messageTypes[data.type] --Type of message (string)
 
@@ -62,6 +46,30 @@ function message:initialize(data)
     --Member properties for this message's author (guild member)
     if data.member then self.member = discord.guildMember(data.member) end
     self.editedTimestamp = data.edited_timestamp --When the message was edited (or null if never) (number)
+    if data.mentions then --Users specifically mentioned in the message (array of user objects)
+        self.mentions = {}
+        for id, udata in pairs(data.mentions) do
+            self.mentions[id] = discord.user(udata)
+        end
+    end
+    if data.mention_roles then --Roles specifically mentioned in this message (array of snowflake objects)
+        self.mentionRoles = {}
+        for id, snowflake in pairs(data.mention_roles) do
+            self.mentionRoles[id] = discord.snowflake(snowflake)
+        end
+    end
+    if data.attachments then --Any attached files (array of attachment objects)
+        self.attachments = {}
+        for id, adata in pairs(data.attachments) do
+            self.attachments[id] = discord.attachment(adata)
+        end
+    end
+    if data.embeds then --Any embedded (array of embed objects)
+        self.embeds = {}
+        for id, edata in pairs(data.embeds) do
+            self.embeds = discord.embed(edata)
+        end
+    end
     if data.mention_channels then --Channels specifically mentioned in this message (array of channel mention objects)
         self.mentionChannels = {}
         for id, cmdata in pairs(data.mention_channels) do
@@ -96,6 +104,7 @@ end
 --Tells if the user id is mentioned
 function message:isUserMentioned(user)
     Verify(user, "user", "table")
+    if not self.mentions then return false end --Can't know
     for k,v in pairs(self.mentions) do
         if v == user then return true end
     end
@@ -114,6 +123,7 @@ end
 
 --Returns the list of specifically mentioned users ids
 function message:getMentions()
+    if not self.mentions then return {} end --Can't know
     local mentions = {}
     for k,v in pairs(self.mentions) do
         mentions[k] = v
