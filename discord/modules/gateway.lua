@@ -58,7 +58,8 @@ function gateway:initialize(options)
             name = "Discörd",
             type = discord.enums.activityTypes["Watching"]
         },
-        status = "online"
+        status = "online",
+        afk = false
     }
     self.guildSubscriptions = true --Enables dispatching of guild subscription events (presence and typing events)
 
