@@ -47,6 +47,17 @@ function botAPI:initialize()
         self.me = data.user
     end)
 
+    --Write a list of the guilds the bot is in
+    self.discord:hookEvent("GUILD_CREATE", function(guild)
+        local GLIST = dataStorage["bot/guilds"]
+
+        local id, name = tostring(guild:getID()), tostring(guild)
+        if not GLIST[id] or GLIST[id] ~= name then
+            GLIST[id] = name
+            dataStorage["bot/guilds"] = GLIST
+        end
+    end)
+
     pluginsManager:initialize()
     commandsManager:initialize()
 
