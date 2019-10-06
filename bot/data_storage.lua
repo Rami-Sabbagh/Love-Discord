@@ -4,7 +4,7 @@
 local json = require("discord.third-party.JSON")
 
 --Make sure the data files exist
-if not love.filesystem.getInfo("/Data/") then love.filesystem.createDirectory("/Data/") end
+if not love.filesystem.getInfo("/data/") then love.filesystem.createDirectory("/data/") end
 
 --Setup the weak reference table (so we don't have to read the table back if referenced somewhere else in the bot code (which is illegal))
 local weakCache = setmetatable({}, { __mode = "kv" })
@@ -15,6 +15,16 @@ local encodePretty = true --Should the written data be pretty encoded ?
 local cacheTimers = {}
 local internalCache = {}
 local modifiedFlags = {}
+
+local function writeFile(path, data)
+    path = path .. ".json"
+    local parentDirectory = path:match(".+/")
+    if parentDirectory and not love.filesystem.getInfo("/data/"..parentDirectory) then
+        assert(love.filesystem.createDirectory("/data/"..parentDirectory))
+    end
+
+    assert(love.filesystem.write("/data/"..path, encodePretty and json:encode_pretty(data) or json:encode(data)))
+end
 
 --The smart cache table
 local cache = setmetatable({}, {
@@ -27,7 +37,7 @@ local cache = setmetatable({}, {
             return v
         end
 
-        local fileName = "/Data/"..tostring(k)..".json"
+        local fileName = "/data/"..tostring(k)..".json"
         local value = {}
         if love.filesystem.getInfo(fileName) then
             value = json:decode(love.filesystem.read(fileName))
@@ -55,8 +65,8 @@ local cache = setmetatable({}, {
             --We write the whole weak referenced data tables
             for k,v in pairs(weakCache) do
                 if modifiedFlags[k] then
-                    local data = encodePretty and json:encode_pretty(v) or json:encode(v)
-                    love.filesystem.write("/Data/"..k..".json", data)
+                    local ok, err = pcall(writeFile, k, v)
+                    if not ok then print("Failed to write data (", k, "): ", err, "/!\\") end
                 end
             end
 
@@ -70,8 +80,7 @@ local cache = setmetatable({}, {
                 cacheTimers[key] = timer - dt
                 if timer <= 0 then --Time is out! Write the data and dereference
                     if modifiedFlags[key] then
-                        local data = encodePretty and json:encode_pretty(internalCache[key]) or json:encode(internalCache[key])
-                        love.filesystem.write("/Data/"..key..".json", data)
+                        writeFile(key, internalCache[key])
                     end
 
                     cacheTimers[key] = nil
