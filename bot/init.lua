@@ -104,6 +104,7 @@ end
 --Quit the bot properly with the data saved
 function botAPI:quit(a, ...)
     dataStorage(-2)
+    self.discord:disconnect()
 end
 
 --Pass the BOT API

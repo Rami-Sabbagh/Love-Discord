@@ -65,12 +65,12 @@ plugin.commands.restart = function(message, reply, commandName, ...)
     if not botAPI:isFromDeveloper(message) then reply:send("This command is for developers only :warning:") return end
     
     love.event.quit("restart")
-    
+
     local pdata = dataStorage["plugins/basic/restart"]
     pdata.channelID = tostring(message:getChannelID())
     dataStorage["plugins/basic/restart"] = pdata
 
-    reply:send("Restarting :gear: ...")
+    reply:send("Restarting :gear: :gear: :gear:")
     reply:triggerTypingIndicator()
     discord.gateway.disconnect = function() end --Show the bot as online while restarting xd
 end
