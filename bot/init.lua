@@ -1,5 +1,7 @@
 --Discörd Böt - A Basic Bot System
 
+--Set the custom error handler
+require("bot.error_handler")
 --Load Discörd Library
 local discord = require("discord")
 --Load JSON library from the Discörd library
@@ -8,6 +10,7 @@ local json = require("discord.third-party.JSON")
 --Load bot sub-systems
 local pluginsManager = require("bot.plugins_manager")
 local commandsManager = require("bot.commands_manager")
+local dataStorage = require("bot.data_storage")
 
 --BOT API
 local botAPI = {}
@@ -55,6 +58,12 @@ end
 --Update the bot
 function botAPI:update(dt)
     self.discord:update(dt)
+end
+
+--Quit the bot properly with the data saved
+function botAPI:quit(a, ...)
+    dataStorage(-2)
+    if a ~= "event" then love.event.quit(a, ...) end
 end
 
 --Pass the BOT API

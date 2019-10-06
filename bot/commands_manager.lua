@@ -2,6 +2,7 @@
 local commandsManager = {}
 
 local pluginsManager = require("bot.plugins_manager")
+local dataStorage = require("bot.data_storage")
 
 --Initialize the commands manager
 function commandsManager:initialize()
@@ -38,7 +39,7 @@ function commandsManager:_MESSAGE_CREATE(message)
     local author = message:getAuthor()
     local authorID = author:getID()
     local content = message:getContent()
-    local replyChannel = message:getReplyChannel()
+    local replyChannel = message:getReplyChannel() --A channel object for only sending a reply message, it can't be used to tell anything about the channel (except the ID)
 
     --Ignore self messages
     if author == self.botAPI.me then return end
@@ -67,9 +68,10 @@ function commandsManager:_MESSAGE_CREATE(message)
         if ok then print("Sent abort message successfully!") else print("Failed to send abort message:", err) end
 
         self.discord:disconnect()
-
-        love.event.quit()
+        self.botAPI:quit()
     end
+
+
 end
 
 return commandsManager
