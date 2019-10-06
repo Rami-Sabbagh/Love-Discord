@@ -73,6 +73,7 @@ function commandsManager:_MESSAGE_CREATE(message)
 
         self.discord:disconnect()
         self.botAPI:quit()
+        return
     end
 
     local prefixData = dataStorage["command_manager_prefix"]
@@ -99,6 +100,7 @@ function commandsManager:_MESSAGE_CREATE(message)
     end
     prefixes[2] = self.botAPI.me:getTag().." "
     prefixes[3] = self.botAPI.me:getNickTag().." "
+    if not guildID then prefixes[4] = "" end --DMs don't need a prefix
 
     for id, prefix in ipairs(prefixes) do
         local prefixLength = #prefix
@@ -111,6 +113,52 @@ function commandsManager:_MESSAGE_CREATE(message)
 
     --Execute the actual command
     print("COMMAND", content)
+
+    --Parse the command syntax
+    local command = {}
+    local nextPos = 1
+    while true do
+        local spos, epos = content:find("%S+", nextPos)
+        if not spos then break end
+
+        local substr = content:sub(spos, epos)
+        if not substr:find("`") then
+            command[#command + 1] = substr
+            nextPos = epos + 1
+
+        else
+            local blockS, blockE = content:find("```%a+%c+.-```", spos)
+            if blockS then --Multiline block
+                local prestr = content:sub(spos, blockS-1)
+                if #prestr ~= "" then command[#command + 1] = prestr end
+
+                local headerS, headerE = content:find("```%a*%c", blockS)
+                local block = content:sub(headerE+1, blockE-4)
+                command[#command + 1] = block
+                nextPos = blockE + 1
+            else
+                local blockS, blockE = content:find("```.-```", spos) --Single line multiline block
+                if blockS then
+                    command[#command + 1] = content:sub(blockS+3, blockE-3)
+                    nextPos = blockE + 1
+                else
+                    local boxS, boxE = content:find("`.-`", spos)
+                    if boxS then
+                        local prestr = content:sub(spos, boxS-1)
+                        if #prestr ~= "" then command[#command + 1] = prestr end
+
+                        command[#command + 1] = content:sub(boxS+1, boxE-1)
+                        nextPos = boxE + 1
+                    else
+                        command[#command + 1] = content:sub(spos, epos)
+                        nextPos = epos + 1
+                    end
+                end
+            end
+        end
+    end
+
+    print("COMMAND PARSED",unpack(command))
 end
 
 return commandsManager
