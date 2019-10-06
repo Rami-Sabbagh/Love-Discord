@@ -20,6 +20,33 @@ function commandsManager:initialize()
         end
         self.discord:hookEvent(hookName, hookFunc)
     end
+
+    self.unknownEmojis = {
+        "question", "grey_question", "thinking",
+        --[["GWchadThink:366999782348292108",
+        "GWchadThinkeyes:366999794117246976",
+        "GWchadThonkery:366999788803325952",
+        "GWlulurdWaitWhat:402868030918492160",
+        "GWmythiBlobCool:388310072264228865"]]
+    }
+
+    self:reloadCommands()
+end
+
+--Reloads the commands list from plugins
+function commandsManager:reloadCommands()
+    --A merged list of commands
+    self.commands = {}
+
+    local plugins = pluginsManager:getPlugins()
+    for pluginName, plugin in pairs(plugins) do
+        if plugin.commands then
+            for commandName, commandFunc in pairs(plugin.commands) do
+                if self.commands[commandName] then print("WARNING /!\\ Conflicting command",commandName,"in",pluginName) end
+                self.commands[commandName] = commandFunc
+            end
+        end
+    end
 end
 
 --Sends a message identifying about the bot
@@ -145,7 +172,36 @@ function commandsManager:_MESSAGE_CREATE(message)
     dataStorage["commands_manager/usage_statistics"] = usageStatistics
 
     --Command execution
+    local commandName = string.lower(command[1])
     
+    if self.commands[commandName] then
+        local ok, err = pcall(self.commands[commandName], message, replyChannel, unpack(command))
+        if not ok then
+            local crashReports = dataStorage["commands_manager/crash_reports"]
+            local crashID = tostring(os.time())
+            local traceback = debug.traceback(err or "unknown error") or err or "unknown error"
+            local report = "Command: "..message:getContent().."\n"..traceback
+
+            crashReports[crashID] = report
+            dataStorage["commands_manager/crash_reports"] = crashReports
+
+            print("/!\\ Failed to execute command (", id, "):", report)
+
+            pcall(replyChannel.send, replyChannel, table.concat({
+                "**Failed to execute command** :warning:",
+                "The crash has been reported to the developers with id: `"..crashID.."`",
+                "Crash details:",
+                "||```",
+                report,
+                "```||"
+            },"\n"))
+        end
+    else
+        local r = math.random(1, #self.unknownEmojis)
+        local e = self.unknownEmojis[r]
+
+        pcall(message.addReaction, message, e)
+    end
 end
 
 return commandsManager
