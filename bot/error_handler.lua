@@ -19,10 +19,13 @@ function love.errorhandler(msg)
 	msg = tostring(msg)
  
 	error_printer(msg, 2)
+
+	local botAPI = require("bot")
 	
-	print("Restarting in 30 seconds...")
-	
-	love.timer.sleep(30)
+	if bot.args and bot.args[1] == "--git" then
+		print("Restarting in 30 seconds...")
+		love.timer.sleep(30)
+	end
  
 	if not love.window or not love.graphics or not love.event then
 		return
