@@ -119,6 +119,72 @@ function embed:getField(id)
         return field.name, field.value, field.inline
     end
 end
+function embed:getAll()
+    local e = {}
+
+    e.title = self.title
+    e.type = self.type
+    e.description = self.description
+    e.url = self.url
+    e.timestamp = self.timestamp
+    e.color = self.color
+    if self.footer then
+        e.footer = {
+            text = self.footer.text,
+            icon_url = self.footer.iconURL,
+            proxy_icon_url = self.footer.proxy_icon_url
+        }
+    end
+    if self.image then
+        e.image = {
+            url = self.image.url,
+            proxy_url = self.image.proxyURL,
+            width = self.image.width,
+            height = self.image.height
+        }
+    end
+    if self.thumbnail then
+        e.thumbnail = {
+            url = self.thumbnail.url,
+            proxy_url = self.thumbnail.proxyURL,
+            width = self.thumbnail.width,
+            height = self.thumbnail.height
+        }
+    end
+    if self.video then
+        e.video = {
+            url = self.video.url,
+            width = self.video.width,
+            height = self.video.height
+        }
+    end
+    if self.provider then
+        e.provider = {
+            name = self.provider.name,
+            url = self.provider.url
+        }
+    end
+    if self.author then
+        e.author = {
+            name = self.author.name,
+            url = self.author.url,
+            icon_url = self.author.iconURL,
+            proxy_icon_url = self.author.proxyIconURL
+        }
+    end
+    if #self.fields > 0 then
+        e.fields = {}
+        for id, field in pairs(self.fields) do
+            e.fields[id] = {
+                name = field.name,
+                value = field.value,
+                inline = field.inline
+            }
+        end
+    end
+
+    return e
+end
 
 --Setters--
 function embed:setTitle(title)
@@ -310,7 +376,8 @@ function embed:setField(id, name, value, inline)
         --Set the actual field
         self.fields[id] = {
             name = name,
-            value = value
+            value = value,
+            inline = not not inline
         }
     else --Clear field
         table.remove(self.fields, id)
