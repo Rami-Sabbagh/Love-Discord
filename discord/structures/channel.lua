@@ -87,7 +87,7 @@ function channel:getType() return self.type end
 
 --Send a message into the channel
 --File is array of [filename, filedata]
-function channel:send(content, embed, tts, file)
+function channel:send(content, embed, file, tts)
     if not self:isText() then return error("Can't send messages on non-text channels!") end
     Verify(embed, "embed", "table", "nil")
     Verify(file, "file", "table", "nil")
@@ -102,7 +102,8 @@ function channel:send(content, embed, tts, file)
     --Convert standard emojis tags into 
     if data.content then data.content = discord.utilities.message.patchEmojis(data.content) end
 
-    --TODO: Add embeds support
+    --Inject the embed data
+    if embed then data.embed = embed:getAll() end
 
     if not (data.content or data.embed or file) then return error("A message should have at least content or an embed or a file") end
     if #data.content > 2000 then error("Messages content can't be longer than 2000 characters!") end
