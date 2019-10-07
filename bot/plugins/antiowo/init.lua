@@ -44,6 +44,10 @@ plugin.events.MESSAGE_CREATE = function(message)
         local spos, epos = content:find(pattern)
         if spos then
             local owo = content:sub(spos, epos)
+            if content:sub(spos-4, epos) == "antiowo" then
+                message:addReaction("eyes")
+                return
+            end
 
             local usage = dataStorage["plugins/antiowo/usage"]
             usage[owo] = math.min((usage[owo] or 0) + 1, 446744073709551615)
