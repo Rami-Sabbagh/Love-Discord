@@ -17,9 +17,9 @@ plugin.authorEmail = "ramilego4game@gmail.com" --The email of the auther, could 
 
 --== Commands ==--
 
-plugin.commands = {}
+plugin.commands = {}; local commands = plugin.commands
 
-plugin.commands.commands = function(message, reply, commandName, ...)
+function commands.commands(message, reply, commandName, ...)
     local commandsList = {}
     for c in pairs(commandsManager:getCommands()) do
         commandsList[#commandsList + 1] = c
@@ -34,7 +34,7 @@ plugin.commands.commands = function(message, reply, commandName, ...)
     },"\n"))
 end
 
-plugin.commands.ping = function(message, reply, commandName, ...)
+function commands.ping(message, reply, commandName, ...)
     local letterI = commandName:sub(2,2)
     local letterO = (letterI == "I") and "O" or "o"
     local pong = commandName:sub(1,1)..letterO..commandName:sub(3,4)
@@ -43,7 +43,7 @@ plugin.commands.ping = function(message, reply, commandName, ...)
     reply:send(pong.." :ping_pong:"..explosion)
 end
 
-plugin.commands.reload = function(message, reply, commandName, ...)
+function commands.reload(message, reply, commandName, ...)
     if not botAPI:isFromDeveloper(message) then reply:send("This command is for developers only :warning:") return end
 
     local ok, err = pluginManager:reload()
@@ -55,13 +55,13 @@ plugin.commands.reload = function(message, reply, commandName, ...)
     end
 end
 
-plugin.commands.stop = function(message, reply, commandName, ...)
+function commands.stop(message, reply, commandName, ...)
     if not botAPI:isFromDeveloper(message) then reply:send("This command is for developers only :warning:") return end
     reply:send("Goodbye :wave:")
     love.event.quit()
 end
 
-plugin.commands.restart = function(message, reply, commandName, ...)
+function commands.restart(message, reply, commandName, ...)
     if not botAPI:isFromDeveloper(message) then reply:send("This command is for developers only :warning:") return end
     
     love.event.quit("restart")
@@ -75,7 +75,7 @@ plugin.commands.restart = function(message, reply, commandName, ...)
     discord.gateway.disconnect = function() end --Show the bot as online while restarting xd
 end
 
-plugin.commands.dumpdata = function(message, reply, commandName, dname)
+function commands.dumpdata(message, reply, commandName, dname)
     if not botAPI:isFromDeveloper(message) then reply:send("This command is for developers only :warning:") return end
     
     if not dname then
@@ -93,6 +93,31 @@ plugin.commands.dumpdata = function(message, reply, commandName, dname)
     },"\n"))
 end
 
+function commands.setprefix(message, reply, commandName, level, newPrefix)
+    if not botAPI:isFromDeveloper(message) then reply:send("This command is for developers only :warning:") return end
+
+    local guildID = message:getGuildID()
+
+    if not (level and newPrefix) or (level ~= "guild" and level ~= "channel") or (level == "guild" and not guildID) then
+        reply:send(table.concat({
+            "**Usage: :notepad_spiral: **",
+            "```css",
+            "setprefix channel <new_prefix>",
+            guildID and "setprefix guild <new_prefix>" or "",
+            "```"
+        },"\n"))
+        return
+    end
+
+    local prefixKey = (level == "guild") and tostring(guildID) or tostring(guildID or "").."_"..tostring(message:getChannelID())
+
+    local prefixData = dataStorage["commands_manager/prefix"]
+    prefixData[prefixKey] = newPrefix
+    dataStorage["commands_manager/prefix"] = prefixData
+
+    reply:send(level:sub(1,1):upper()..level:sub(2,-1).."'s commands prefix has been set to `"..newPrefix.."` successfully :white_check_mark:")
+end
+
 --[[
 plugin.commands. = function(message, reply, commandName, ...)
 
@@ -101,9 +126,9 @@ end
 
 --== Plugin Events ==--
 
-plugin.events = {}
+plugin.events = {}; local events = plugin.events
 
-plugin.events.READY = function(data)
+function events.READY(data)
     local pdata = dataStorage["plugins/basic/restart"]
     if pdata.channelID then
         local replyChannel = discord.channel{
