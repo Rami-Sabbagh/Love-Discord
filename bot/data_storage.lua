@@ -41,8 +41,6 @@ local cache = setmetatable({}, {
         local value = {}
         if love.filesystem.getInfo(fileName) then
             value = json:decode(love.filesystem.read(fileName))
-        else
-            modifiedFlags[k] = true --New table
         end
 
         internalCache[k] = value
