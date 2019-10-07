@@ -19,6 +19,10 @@ function love.errorhandler(msg)
 	msg = tostring(msg)
  
 	error_printer(msg, 2)
+	
+	print("Restarting in 30 seconds...")
+	
+	love.timer.sleep(30)
  
 	if not love.window or not love.graphics or not love.event then
 		return
