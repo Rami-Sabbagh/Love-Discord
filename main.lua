@@ -1,9 +1,9 @@
 --LÖVE Discord, A WIP Discord API Library for LÖVE framework and LuaJIT
 local botAPI = require("bot")
 
-function love.load()
+function love.load(args)
 	print("Initializing BOT")
-	botAPI:initialize()
+	botAPI:initialize(args)
 end
 
 function love.update(dt)
