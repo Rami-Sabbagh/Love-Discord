@@ -125,7 +125,7 @@ function commandsManager:_MESSAGE_CREATE(message)
     end
 
     --Parse the command syntax
-    local command, nextPos, spos, epos = {}, 1, content:find("%S+", nextPos)
+    local command, nextPos, spos, epos = {}, 1, content:find("%S+", 1)
     if spos > 1 then return end --There's whitespace between the prefix and the actual command
     while spos do
         local substr = content:sub(spos, epos)
@@ -135,7 +135,7 @@ function commandsManager:_MESSAGE_CREATE(message)
             local blockS, blockE = content:find("```%a+%c+.-```", spos)
             if blockS then --Multiline block in multiple lines
                 local prestr = content:sub(spos, blockS-1)
-                if #prestr ~= "" then command[#command + 1] = prestr end
+                if prestr ~= "" then command[#command + 1] = prestr end
 
                 local headerS, headerE = content:find("```%a*%c", blockS)
                 command[#command + 1], nextPos = content:sub(headerE+1, blockE-4), blockE + 1
@@ -146,7 +146,7 @@ function commandsManager:_MESSAGE_CREATE(message)
                 else local boxS, boxE = content:find("`.-`", spos)
                     if boxS then
                         local prestr = content:sub(spos, boxS-1)
-                        if #prestr ~= "" then command[#command + 1] = prestr end
+                        if prestr ~= "" then command[#command + 1] = prestr end
 
                         command[#command + 1], nextPos = content:sub(boxS+1, boxE-1), boxE + 1
                     else
