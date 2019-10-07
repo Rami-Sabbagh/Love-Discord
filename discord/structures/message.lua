@@ -124,6 +124,12 @@ function message:addReaction(emoji)
     Request(endpoint, nil, "PUT")
 end
 
+--Deletes the mesage
+function message:delete()
+    local endpoint = string.format("/channels/%s/messages/%s", tostring(self.channelID), tostring(self.id))
+    Request(endpoint, nil, "DELETE")
+end
+
 --Tells if the user id is mentioned
 function message:isUserMentioned(user)
     Verify(user, "user", "table")
@@ -160,11 +166,12 @@ function message:getMentions()
 end
 
 --Returns a basic channel object for ONLY replying
---Inly the id field has a proper value, and the channel type is just set into GUILD_TEXT, other fields nil
+--Only the id field has a proper value, and the channel type is just set into GUILD_TEXT for messages with guild ID, and into DM for other messages
+--Other channel fields are just nil
 function message:getReplyChannel()
     return discord.channel{
         id = tostring(self.channelID),
-        type = discord.enums.channelTypes["GUILD_TEXT"]
+        type = discord.enums.channelTypes[self.guildID and "GUILD_TEXT" or "DM"]
     }
 end
 
