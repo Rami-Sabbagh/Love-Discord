@@ -16,7 +16,9 @@ local dataStorage = require("bot.data_storage")
 local botAPI = {}
 
 --Initialize the bot and connect into Discord
-function botAPI:initialize()
+function botAPI:initialize(args)
+    self.args = args
+
     print("Loading configuration...")
 
     if not love.filesystem.getInfo("/bot/config.json") then error("Please create the bot configuration file at /bot/config.json, based on the file in /bot/config_template.json") end
