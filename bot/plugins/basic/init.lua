@@ -75,6 +75,24 @@ plugin.commands.restart = function(message, reply, commandName, ...)
     discord.gateway.disconnect = function() end --Show the bot as online while restarting xd
 end
 
+plugin.commands.dumpdata = function(message, reply, commandName, dname)
+    if not botAPI:isFromDeveloper(message) then reply:send("This command is for developers only :warning:") return end
+    
+    if not dname then
+        reply:send("Missing package name!")
+    end
+    
+    local data = dataStorage[dname]
+    
+    data = discord.json:encode_pretty(data)
+    
+    reply:send(table.concat({
+        "```json",
+        data,
+        "```"
+    },"\n"))
+end
+
 --[[
 plugin.commands. = function(message, reply, commandName, ...)
 
