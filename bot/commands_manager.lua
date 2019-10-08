@@ -112,10 +112,9 @@ function commandsManager:_MESSAGE_CREATE(message)
 
     --List the possible prefixes
     local prefixes = {
-        prefixData[tostring(guildID or "").."_"..tostring(channelID)] or prefixData[tostring(guildID)] or self.defaultPrefix,
+        prefixData[tostring(guildID or "").."_"..tostring(channelID)] or prefixData[tostring(guildID)] or (guildID and self.defaultPrefix or ""),
         self.botAPI.me:getTag().." ",
-        self.botAPI.me:getNickTag().." ",
-        (not guildID and "") --DMs don't need a prefix
+        self.botAPI.me:getNickTag().." "
     }
 
     --Check if any prefix is match, and strip it if so, otherwise return
