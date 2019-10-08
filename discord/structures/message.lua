@@ -130,6 +130,12 @@ function message:delete()
     Request(endpoint, nil, "DELETE")
 end
 
+--Tells if a message is pinned or not
+function message:isPinned() return self.pinned end
+
+--Tells if the message has the text to speech
+function message:isTTS() return self.tts end
+
 --Tells if the user id is mentioned
 function message:isUserMentioned(user)
     Verify(user, "user", "table")
@@ -155,6 +161,9 @@ function message:getGuildID() return self.guildID end
 --Returns the ID of the message
 function message:getID() return self.id end
 
+--Returns the guild member of the message
+function message:getMember() return self.member end
+
 --Returns the list of specifically mentioned users ids
 function message:getMentions()
     if not self.mentions then return {} end --Can't know
@@ -174,5 +183,11 @@ function message:getReplyChannel()
         type = discord.enums.channelTypes[self.guildID and "GUILD_TEXT" or "DM"]
     }
 end
+
+--Returns the timestamp of the message
+function message:getTimestamp() return self.timestamp end
+
+--Returns the type of the message
+function message:getType() return self.type end
 
 return message
