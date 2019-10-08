@@ -33,8 +33,15 @@ local messageFlags = {
 }
 
 --New message object
-function message:initialize(data)
-    Verify(data, "data", "table")
+function message:initialize(data, messageID)
+    Verify(data, "data", "table", "string")
+
+    if type(data) == "string" then
+        Verify(messageID, "messageID", "string")
+
+        local endpoint = string.format("/channels/%s/messages/%s", data, messageID)
+        data = Request(endpoint)
+    end
 
     --== Basic Fields ==--
 
@@ -128,6 +135,19 @@ end
 function message:delete()
     local endpoint = string.format("/channels/%s/messages/%s", tostring(self.channelID), tostring(self.id))
     Request(endpoint, nil, "DELETE")
+end
+
+--Edits the message
+function message:edit(content, embed)
+    Verify(content, "content", "string", "nil")
+    Verify(embed, "embed", "table", "nil")
+
+    if content and #content > 2000 then return error("Messages content can't be longer than 2000 characters!") end
+    if content then content = discord.utilities.message.patchEmojis(content) end
+    if embed then embed = embed:getAll() end
+
+    local endpoint = string.format("/channels/%s/messages/%s", tostring(self.channelID), tostring(self.id))
+    return discord.message(Request(endpoint, {content = content or nil, embed = embed or nil}, "PATCH"))
 end
 
 --Tells if a message is pinned or not
