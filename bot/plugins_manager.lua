@@ -59,9 +59,9 @@ function pluginsManager:_loadPlugins()
     local chunks = {} --New chunks table
 
     for _, pluginName in ipairs(love.filesystem.getDirectoryItems("/bot/plugins/")) do
-        local chunk, err = love.filesystem.load("/bot/plugins/"..pluginName.."/init.lua")
-        if not chunk then
-            return false, "Failed to load '"..pluginName.."' plugin: "..tostring(err)
+        local ok, chunk, err = pcall(love.filesystem.load, "/bot/plugins/"..pluginName.."/init.lua")
+        if not (ok and chunk) then
+            return false, "Failed to load '"..pluginName.."' plugin: "..tostring(chunk or err)
         end
         chunks[pluginName] = chunk
     end
