@@ -58,9 +58,10 @@ function discord:initialize(tokenType, token, connectInstantly, gatewayOptions)
     self.guildMember = self:_dofile("structures/guild_member", self)
     self.guild = self:_dofile("structures/guild", self)
     self.message = self:_dofile("structures/message", self)
-    self.snowflake = self:_dofile("structures/snowflake", self)
     self.permissions = self:_dofile("structures/permissions", self)
     self.reaction = self:_dofile("structures/reaction", self)
+    self.role = self:_dofile("structures/role", self)
+    self.snowflake = self:_dofile("structures/snowflake", self)
     self.user = self:_dofile("structures/user", self)
 
     --Registered events functions
