@@ -18,6 +18,7 @@ local botAPI = {}
 --Initialize the bot and connect into Discord
 function botAPI:initialize(args)
     self.args = args
+    self.adminRoles = {}
 
     print("Loading configuration...")
 
@@ -44,28 +45,12 @@ function botAPI:initialize(args)
         }
     })
 
-    --Hook to get the bot user object
-    self.discord:hookEvent("READY", function(data)
-        self.me = data.user
-
-        local gdata = dataStorage["bot/gateway"]
-        
-        gdata.url = self.discord.gateway.gatewayURL
-        gdata.info = self.discord.gateway.gatewayInfo
-
-        dataStorage["bot/gateway"] = gdata
-    end)
-
-    --Write a list of the guilds the bot is in
-    self.discord:hookEvent("GUILD_CREATE", function(guild)
-        local GLIST = dataStorage["bot/guilds"]
-
-        local id, name = tostring(guild:getID()), tostring(guild)
-        if not GLIST[id] or GLIST[id] ~= name then
-            GLIST[id] = name
-            dataStorage["bot/guilds"] = GLIST
-        end
-    end)
+    --Events
+    self.discord:hookEvent("READY", self._READY)
+    self.discord:hookEvent("GUILD_CREATE", self._GUILD_CREATE)
+    self.discord:hookEvent("GUILD_ROLE_CREATE", self._GUILD_ROLE_CREATE)
+    self.discord:hookEvent("GUILD_ROLE_UPDATE", self._GUILD_ROLE_UPDATE)
+    self.discord:hookEvent("GUILD_ROLE_DELETE", self._GUILD_ROLE_DELETE)
 
     pluginsManager:initialize()
     commandsManager:initialize()
@@ -97,6 +82,28 @@ function botAPI:isFromDeveloper(message)
     return self:isDeveloper(authorID)
 end
 
+--Tells if a provided role snowflake is an admin one
+function botAPI:isAdmin(guildID, roleID)
+    guildID, roleID = tostring(guildID), tostring(roleID)
+    if not self.adminRoles[guildID] then return false end
+    return self.adminRoles[guildID][roleID]
+end
+
+--Tells if a message is from an admin
+function botAPI:isFromAdmin(message)
+    local guildID = message:getGuildID()
+    if not guildID then return true end --DM recipient is an admin
+    guildID = tostring(guildID)
+
+    local member = message:getMember()
+    local roles = member:getRoles()
+    for _, role in pairs(roles) do
+        if self.adminRoles[guildID][tostring(role)] then return true end
+    end
+
+    return botAPI:isFromDeveloper(message) --Developers are considered admins everywhere
+end
+
 --Update the bot
 function botAPI:update(dt)
     dataStorage(dt)
@@ -107,6 +114,62 @@ end
 function botAPI:quit(a, ...)
     dataStorage(-2)
     self.discord:disconnect()
+end
+
+--== Events ==--
+
+--Hook to get the bot user object
+function botAPI._READY(data)
+    botAPI.me = data.user
+
+    local gdata = dataStorage["bot/gateway"]
+    
+    gdata.url = botAPI.discord.gateway.gatewayURL
+    gdata.info = botAPI.discord.gateway.gatewayInfo
+
+    dataStorage["bot/gateway"] = gdata
+end
+
+--Write a list of the guilds the bot is in
+function botAPI._GUILD_CREATE(guild)
+    local GLIST = dataStorage["bot/guilds"]
+
+    local id, name = tostring(guild:getID()), tostring(guild)
+    if not GLIST[id] or GLIST[id] ~= name then
+        GLIST[id] = name
+        dataStorage["bot/guilds"] = GLIST
+    end
+
+    --Admin detection
+    local guildID = tostring(guild:getID())
+    botAPI.adminRoles[guildID] = {}
+    for _, role in pairs(guild:getRoles()) do
+        local permissions = role:getPermissions()
+        if permissions:get(true, "ADMINISTRATOR") then
+            botAPI.adminRoles[guildID][tostring(role:getID())] = true
+        end
+    end
+end
+
+--Admin detection
+function botAPI._GUILD_ROLE_CREATE(guildID, role)
+    guildID = tostring(guildID)
+    if not botAPI.adminRoles[guildID] then botAPI.adminRoles[guildID] = {} end
+    local isAdmin = role:getPermissions():get(true, "ADMINISTRATOR")
+    botAPI.adminRoles[guildID][tostring(role:getID())] = isAdmin and true or nil
+end
+
+function botAPI._GUILD_ROLE_UPDATE(guildID, role)
+    guildID = tostring(guildID)
+    if not botAPI.adminRoles[guildID] then botAPI.adminRoles[guildID] = {} end
+    local isAdmin = role:getPermissions():get(true, "ADMINISTRATOR")
+    botAPI.adminRoles[guildID][tostring(role:getID())] = isAdmin and true or nil
+end
+
+function botAPI._GUILD_ROLE_DELETE(guildID, roleID)
+    guildID = tostring(guildID)
+    if not botAPI.adminRoles[guildID] then botAPI.adminRoles[guildID] = {} end
+    botAPI.adminRoles[guildID][tostring(roleID)] = nil
 end
 
 --Pass the BOT API
