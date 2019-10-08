@@ -166,6 +166,18 @@ function discord:_GUILD_MEMBER_ADD(op, d, s, t)
     self:_triggerEvent("GUILD_MEMBER_ADD", self.guildMember(d))
 end
 
+function discord:_GUILD_ROLE_CREATE(op, d, s, t)
+    self:_triggerEvent("GUILD_ROLE_CREATE", self.snowflake(d.guild_id), self.role(d.role))
+end
+
+function discord:_GUILD_ROLE_UPDATE(op, d, s, t)
+    self:_triggerEvent("GUILD_ROLE_UPDATE", self.snowflake(d.guild_id), self.role(d.role))
+end
+
+function discord:_GUILD_ROLE_DELETE(op, d, s, t)
+    self:_triggerEvent("GUILD_ROLE_DELETE", self.snowflake(d.guild_id), self.snowflake(d.role_id))
+end
+
 function discord:_MESSAGE_CREATE(op, d, s, t)
     self:_triggerEvent("MESSAGE_CREATE", self.message(d))
 end
