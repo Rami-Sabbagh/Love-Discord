@@ -79,11 +79,22 @@ function guild:initialize(data)
 
 end
 
+--== Methods ==--
+
 --Returns the guild ID (snowflake)
 function guild:getID() return self.id end
 
 --Returns the guild name if known (string/nil)
 function guild:getName() return self.name end
+
+--Returns the guild roles (array of roles, or nil)
+function guild:getRoles()
+    if self.roles then
+        local roles = {}
+        for k,v in pairs(self.roles) do roles[k] = v end
+        return roles
+    end
+end
 
 --== Operator Overrides ==--
 
