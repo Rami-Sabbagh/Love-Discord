@@ -34,4 +34,31 @@ function guildMember:initialize(data)
     self.premiumSince = data.premium_since --When the user used their Nitro boost on the server (number)
 end
 
+--== Methods ==--
+
+--Returns the user's nickname if set on this guild
+function guildMember:getNick() return self.nick end
+
+--Returns the timestamp which the user has been booting the server since (if he's boosting)
+function guildMember:getPremiumSince() return self.premiumSince end
+
+--Returns a list of roles snowflakes the member has
+function guildMember:getRoles()
+    local roles = {}
+    for k,v in pairs(self.roles) do roles[k] = v end
+    return roles
+end
+
+--Returns the user object if received
+function guildMember:getUser() return self.user end
+
+--Returns a timestamp of when the user joined the guild
+function guildMember:getJoinedAt() return self.joinedAt end
+
+--Tells if the user is deafened in voice channels
+function guildMember:isDeafened() return self.deaf end
+
+--Tells if the user is muted in voice channels
+function guildMember:isMuted() return self.mute end
+
 return guildMember
