@@ -13,6 +13,13 @@ local function enum(e)
     return e
 end
 
+enums.activityTypes = enum{
+    [0] = "Game",
+    [1] = "Steaming",
+    [2] = "Listening",
+    [3] = "Watching" --Not documented
+}
+
 enums.channelTypes = enum{
     [0] = "GUILD_TEXT",
     [1] = "DM",
@@ -21,12 +28,6 @@ enums.channelTypes = enum{
     [4] = "GUILD_CATEGORY",
     [5] = "GUILD_NEWS",
     [6] = "GUILD_STORE"
-}
-
-enums.premiumTypes = enum{
-    [0] = "Normal",
-    [1] = "Nitro Classic",
-    [2] = "Nitro"
 }
 
 enums.messageTypes = enum{
@@ -45,11 +46,10 @@ enums.messageTypes = enum{
     [12] = "CHANNEL_FOLLOW_ADD"
 }
 
-enums.activityTypes = enum{
-    [0] = "Game",
-    [1] = "Steaming",
-    [2] = "Listening",
-    [3] = "Watching" --Not documented
+enums.premiumTypes = enum{
+    [0] = "Normal",
+    [1] = "Nitro Classic",
+    [2] = "Nitro"
 }
 
 return enums
