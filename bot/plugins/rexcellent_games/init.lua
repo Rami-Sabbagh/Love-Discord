@@ -29,6 +29,10 @@ function commands.this(message, reply, commandName, ...)
     pcall(message.delete, message)
 end
 
+function commands.antisnipe(message, reply, commandName, ...)
+    pcall(message.delete, message)
+end
+
 --== Events ==--
 
 plugin.events = {}; local events = plugin.events

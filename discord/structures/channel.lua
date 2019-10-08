@@ -85,6 +85,16 @@ function channel:isGroupDM() return self.type == "GROUP_DM" end
 --Tells the type of the channel
 function channel:getType() return self.type end
 
+local function patchEmbed(t)
+    for k,v in pairs(t) do
+        if type(v) == "table" then
+            patchEmbed(v)
+        elseif type(v) == "string" and (k == "name" or k == "value" or k == "text" or k == "title" or k == "description") then
+            t[k] = discord.utilities.message.patchEmojis(v)
+        end
+    end
+end
+
 --Send a message into the channel
 --File is array of [filename, filedata]
 function channel:send(content, embed, file, tts)
@@ -94,7 +104,7 @@ function channel:send(content, embed, file, tts)
 
     --The message request body
     local data = {
-        content = type(content) ~= "nil" and tostring(content),
+        content = content and tostring(content) or nil,
         nonce = discord.utilities.snowflake.new(),
         tts = not not tts
     }
@@ -103,10 +113,10 @@ function channel:send(content, embed, file, tts)
     if data.content then data.content = discord.utilities.message.patchEmojis(data.content) end
 
     --Inject the embed data
-    if embed then data.embed = embed:getAll() end
+    if embed then data.embed = embed:getAll(); patchEmbed(data.embed) end
 
     if not (data.content or data.embed or file) then return error("A message should have at least content or an embed or a file") end
-    if #data.content > 2000 then error("Messages content can't be longer than 2000 characters!") end
+    if data.content and #data.content > 2000 then error("Messages content can't be longer than 2000 characters!") end
 
     if file then
         Verify(file[1], "file[1] (filename)", "string")

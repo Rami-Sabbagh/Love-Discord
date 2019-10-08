@@ -77,20 +77,24 @@ end
 
 function commands.dumpdata(message, reply, commandName, dname)
     if not botAPI:isFromDeveloper(message) then reply:send("This command is for developers only :warning:") return end
-    
-    if not dname then
-        reply:send("Missing package name!")
-    end
-    
-    local data = dataStorage[dname]
-    
-    data = discord.json:encode_pretty(data)
-    
-    reply:send(table.concat({
+    if not dname then reply:send("Missing package name!") end
+
+    local data = discord.json:encode_pretty(dataStorage[dname])
+    local message = table.concat({
         "```json",
         data,
         "```"
-    },"\n"))
+    },"\n")
+    
+    if #message > 2000 then
+        reply:send("Data too large, uploaded in a file :wink:", false, {dname:gsub("/","_")..".json",data})
+    else
+        reply:send(message)
+    end
+end
+
+function commands.data(message, reply, commandName, action, dname)
+    if not botAPI:isFromDeveloper(message) then reply:send("This command is for developers only :warning:") return end
 end
 
 function commands.setprefix(message, reply, commandName, level, newPrefix)
