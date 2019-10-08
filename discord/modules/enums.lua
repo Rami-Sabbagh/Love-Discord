@@ -30,6 +30,17 @@ enums.channelTypes = enum{
     [6] = "GUILD_STORE"
 }
 
+enums.explicitContentFilterLevels = enum{
+    [0] = "DISABLED",
+    [1] = "MEMBERS_WITHOUT_ROLES",
+    [2] = "ALL_MEMBERS"
+}
+
+enums.messageNotificationsLevels = enum{
+    [0] = "ALL_MESSAGES",
+    [1] = "ONLY_MENTIONS"
+}
+
 enums.messageTypes = enum{
     [0] = "DEFAULT",
     [1] = "RECIPIENT_ADD",
@@ -46,10 +57,23 @@ enums.messageTypes = enum{
     [12] = "CHANNEL_FOLLOW_ADD"
 }
 
+enums.mfaLevels = enum{
+    [0] = "NONE",
+    [1] = "ELEVATED"
+}
+
 enums.premiumTypes = enum{
     [0] = "Normal",
     [1] = "Nitro Classic",
     [2] = "Nitro"
+}
+
+enums.verificationLevels = enum{
+    [0] = "NONE",
+    [1] = "LOW",
+    [2] = "MEDIUM",
+    [3] = "HIGH",
+    [4] = "VERY_HIGH"
 }
 
 return enums
