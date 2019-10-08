@@ -116,7 +116,7 @@ function events.MESSAGE_CREATE(message)
         while spos do
             local owo = content:sub(spos, epos)
             if content:sub(spos-4, epos) == "antiowo" then
-                message:addReaction("eyes")
+                --message:addReaction("eyes")
                 return
             end
 
