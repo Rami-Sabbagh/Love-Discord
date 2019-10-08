@@ -14,7 +14,9 @@ end
 
 --New guild member object
 function embed:initialize(data)
-    Verify(data, "data", "table")
+    Verify(data, "data", "table", "nil")
+
+    data = data or {}
     
     --== Optional Fields ==--
 
