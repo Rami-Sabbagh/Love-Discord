@@ -132,7 +132,8 @@ function channel:send(content, embed, file, tts)
 
     local endpoint = string.format("/channels/%s/messages", tostring(self.id))
 
-    Request(endpoint, data, "POST", {}, not not file)
+    local mdata = Request(endpoint, data, "POST", {}, not not file)
+    return discord.message(mdata)
 end
 
 function channel:triggerTypingIndicator()
