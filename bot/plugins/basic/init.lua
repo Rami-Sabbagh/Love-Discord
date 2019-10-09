@@ -1,6 +1,7 @@
 --Basic operations plugin
 local botAPI, discord, pluginPath, pluginDir = ...
 
+local ffi = require("ffi")
 local dataStorage = require("bot.data_storage")
 local pluginManager = require("bot.plugins_manager")
 local commandsManager = require("bot.commands_manager")
@@ -46,6 +47,8 @@ do
 
         reply:send(false, commandsEmbed)
     end
+
+    commands.help = commands.commands --Temporary
 end
 
 function commands.ping(message, reply, commandName, ...)
@@ -127,6 +130,77 @@ function commands.data(message, reply, commandName, action, dname)
     if not botAPI:isFromDeveloper(message) then reply:send(false, developerEmbed) return end
 end
 
+--Execute command
+do
+    local executeUsage = discord.embed()
+    executeUsage:setTitle("Usage: :notepad_spiral:")
+    executeUsage:setDescription(table.concat({
+        "```css",
+        "execute <lua_code_block> [no_log]",
+        "```"
+    },"\n"))
+
+    local errorEmbed = discord.embed()
+    errorEmbed:setTitle("Failed to execute lua code :warning:")
+
+    local outputEmbed = discord.embed()
+    outputEmbed:setTitle("Executed successfully :white_check_mark:")
+
+    function commands.execute(message, reply, commandName, luaCode, nolog, ...)
+        if not botAPI:isFromDeveloper(message) then reply:send(false, developerEmbed) return end
+        if not luaCode then reply:send(false, executeUsage) return end
+
+        local chunk, err = loadstring(luaCode, "codeblock")
+        if not chunk then
+            errorEmbed:setField(1, "Compile Error:", "```\n"..err:gsub('%[string "codeblock"%]', "").."\n```")
+            reply:send(false, errorEmbed)
+            return
+        end
+
+        local showOutput = false
+        local output = {"```"}
+
+        local env = {}
+        local superEnv = _G
+        setmetatable(env, { __index = function(t,k) return superEnv[k] end })
+
+        env.botAPI, env.discord = botAPI, discord
+        env.pluginsManager, env.commandsManager, env.dataStorage = pluginManager, commandsManager, dataStorage
+        env.message, env.reply = message, reply
+        env.bit, env.http, env.rest = discord.utilities.bit, discord.utilities.http, discord.rest
+        env.band, env.bor, env.lshift, env.rshift, env.bxor = env.bit.band, env.bit.bor, env.bit.lshift, env.bit.rshift, env.bit.bxor
+        env.ffi = ffi
+        env.print = function(...)
+            local args = {...}; for k,v in pairs(args) do args[k] = tostring(v) end
+            local msg = table.concat(args, " ")
+            output[#output + 1] = msg
+            showOutput = true
+        end
+
+        setfenv(chunk, env)
+
+        local ok, rerr = pcall(chunk, ...)
+        if not ok then
+            errorEmbed:setField(1, "Runtime Error:", "```\n"..rerr:gsub('%[string "codeblock"%]', "").."\n```")
+            reply:send(false, errorEmbed)
+            return
+        end
+
+        if showOutput then
+            env.print("```")
+            outputEmbed:setField(1, "Output:", table.concat(output, "\n"))
+        else
+            outputEmbed:setField(1)
+        end
+
+        if tostring(nolog) == "true" then
+            if message:getGuildID() then pcall(message.delete, message) end
+        else
+            reply:send(false, outputEmbed)
+        end
+    end
+end
+
 --Setprefix command
 do
     local setprefixHelpDM = discord.embed()
@@ -148,14 +222,25 @@ do
         "```"
     },"\n"))
 
+    local showPrefix = discord.embed()
+    showPrefix:setTitle("You need to have administrator permissions to set the prefix :warning:")
+    showPrefix:setDescription("But you can use this command to check the prefix set :wink:")
+
     local replyEmbed = discord.embed()
 
     function commands.setprefix(message, reply, commandName, level, newPrefix)
-        if not botAPI:isFromAdmin(message) then reply:send(false, adminEmbed) return end
+        local prefixData = dataStorage["commands_manager/prefix"]
+        
+        if not botAPI:isFromAdmin(message) then
+            local guildPrefix = prefixData[tostring(guildID)]
+            local channelPrefix = prefixData[tostring(guildID or "").."_"..tostring(message:getChannelID())]
+            showPrefix:setField(1, "Guild's Prefix:", guildPrefix and "`"..guildPrefix.."`" or "default (`"..commandsManager.defaultPrefix.."`)", true)
+            showPrefix:setField(2, "Channel's Prefix:", channelPrefix and "`"..channelPrefix.."`" or "not set", true)
+            reply:send(false, showPrefix)
+            return
+        end
 
         local guildID = message:getGuildID()
-
-        local prefixData = dataStorage["commands_manager/prefix"]
 
         if guildID then
             local guildPrefix = prefixData[tostring(guildID)]
@@ -194,6 +279,82 @@ do
         end
 
         dataStorage["commands_manager/prefix"] = prefixData
+    end
+end
+
+--Say command
+do
+    local sayUsage = discord.embed()
+    sayUsage:setTitle("Usage: :notepad_spiral:")
+    sayUsage:setDescription("```css\nsay <content> [...]\n```")
+
+    local everyoneEmbed = discord.embed()
+    everyoneEmbed:setTitle("You need to have administrator permissions to mention everyone :warning:")
+
+    function commands.say(message, reply, commandName, ...)
+        local content = table.concat({...}, " ")
+        if content == "" then reply:send(false, sayUsage) return end
+        if content:find("@everyone") and not botAPI:isFromAdmin(message) then reply:send(false, everyoneEmbed) return end
+        reply:send(content)
+
+        if message:getGuildID() then pcall(message.delete, message) end
+    end
+end
+
+--Embed command
+do
+    local replyEmbed = discord.embed()
+    local embedUsage = discord.embed()
+    embedUsage:setTitle("Usage: :notepad_spiral:")
+    embedUsage:setDescription("```css\nembed [title] [description]\n```")
+
+    local everyoneEmbed = discord.embed()
+    everyoneEmbed:setTitle("You need to have administrator permissions to mention everyone :warning:")
+
+    function commands.embed(message, reply, commandName, title, description)
+        if not (title or description) then reply:send(false, embedUsage) return end
+
+        if title and title:find("@everyone") and not botAPI:isFromAdmin(message) then reply:send(false, everyoneEmbed) return end
+        if description and description:find("@everyone") and not botAPI:isFromAdmin(message) then reply:send(false, everyoneEmbed) return end
+
+        replyEmbed:setTitle(title)
+        replyEmbed:setDescription(description)
+
+        reply:send(false, replyEmbed)
+
+        if message:getGuildID() then pcall(message.delete, message) end
+    end
+end
+
+--Snowflake command
+do
+    local usageEmbed = discord.embed()
+    usageEmbed:setTitle("Usage: :notepad_spiral:")
+    usageEmbed:setDescription(table.concat({
+        "```css",
+        "snowflake <snowflake> /* Prints snowflake information */",
+        "snowflake /* Prints information of self generated snowflake */",
+        "```"
+    }, "\n"))
+
+    local infoEmbed = discord.embed()
+    infoEmbed:setTitle("Snowflake information: :clipboard:")
+
+    function commands.snowflake(message, reply, commandName, sf)
+        if sf == "help" then reply:send(false, usageEmbed) return end
+        sf = discord.snowflake(sf)
+
+        infoEmbed:setDescription(tostring(sf))
+
+        infoEmbed:setField(1, "Timestamp", sf:getTime(), true)
+        infoEmbed:setField(2, "Date/Time", os.date("%c", sf:getTime()), true)
+        infoEmbed:setField(3, "Discord Timestamp", sf:getTimeSinceDiscordEpoch(), true)
+
+        infoEmbed:setField(4, "Worker ID:", sf:getWorkerID(), true)
+        infoEmbed:setField(5, "Process ID:", sf:getProcessID(), true)
+        infoEmbed:setField(6, "Increment:", sf:getIncrement(), true)
+
+        reply:send(false, infoEmbed)
     end
 end
 
