@@ -362,6 +362,7 @@ function embed:setField(id, name, value, inline)
     if id < 1 or id > 25 then return error("Field id must be a number between 1 and 25") end
     if not (name and value) and (name or value) then return error("Both name and value are required!") end
     if name then --Set field
+        name, value = tostring(name), tostring(value)
         if #name > 1024 then return error("Field name can't be more than 1024 characters!") end
         if #value > 2048 then return error("Field value can't be more than 2048 characters!") end
 
