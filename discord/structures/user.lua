@@ -86,6 +86,9 @@ function user:getTag()
     return discord.utilities.message.formatUser(tostring(self.id))
 end
 
+--Returns the user's name
+function user:getUsername() return self.username end
+
 --Returns the user tag for including in messages, with the nick name used
 function user:getNickTag()
     return discord.utilities.message.formatUserNick(tostring(self.id))
