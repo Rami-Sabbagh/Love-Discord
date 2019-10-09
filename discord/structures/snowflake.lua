@@ -29,7 +29,7 @@ function snowflake:initialize(sf)
 
     if not tonumber(sf) then return error("Invalid Snowflake!") end
     local data = discord.utilities.snowflake.decode(sf)
-    self.time, self.processID, self.workerID, self.increment = data.time, data.processID, data.workerID, self.increment
+    self.time, self.processID, self.workerID, self.increment = data.time, data.processID, data.workerID, data.increment
     self.sf = sf
 end
 
