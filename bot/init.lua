@@ -19,6 +19,7 @@ local botAPI = {}
 function botAPI:initialize(args)
     self.args = args
     self.adminRoles = {}
+    self.guildOwners = {}
 
     print("Loading configuration...")
 
@@ -95,6 +96,10 @@ function botAPI:isFromAdmin(message)
     if not guildID then return true end --DM recipient is an admin
     guildID = tostring(guildID)
 
+    --Guild owners are admins
+    if self.guildOwners[guildID] == tostring(message:getAuthor():getID()) then return true end
+
+    --Check if any role has admin power
     local member = message:getMember()
     local roles = member:getRoles()
     for _, role in pairs(roles) do
@@ -143,6 +148,7 @@ function botAPI._GUILD_CREATE(guild)
     --Admin detection
     local guildID = tostring(guild:getID())
     botAPI.adminRoles[guildID] = {}
+    botAPI.guildOwners[guildID] = tostring(guild:getOwnerID())
     for _, role in pairs(guild:getRoles()) do
         local permissions = role:getPermissions()
         if permissions:get(true, "ADMINISTRATOR") then
