@@ -81,6 +81,9 @@ end
 
 --== Methods ==--
 
+--Returns the guild's owner ID (snowflake)
+function guild:getOwnerID() return self.ownerID end
+
 --Returns the guild ID (snowflake)
 function guild:getID() return self.id end
 
