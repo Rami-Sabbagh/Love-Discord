@@ -26,11 +26,11 @@ function commands.this(message, reply, commandName, ...)
         lastMessages[channelID] = nil --We don't want to react again
     end
 
-    pcall(message.delete, message)
+    if message:getGuildID() then pcall(message.delete, message) end
 end
 
 function commands.antisnipe(message, reply, commandName, ...)
-    pcall(message.delete, message)
+    if message:getGuildID() then pcall(message.delete, message) end
 end
 
 --== Events ==--
