@@ -17,7 +17,6 @@ plugin.author = "Rami#8688" --Usually the discord tag of the author, but could b
 plugin.authorEmail = "ramilego4game@gmail.com" --The email of the auther, could be left empty
 
 --== Commands ==--
-developerEmbed:setTitle("This command could be only used by the bot's developers :warning:")
 
 --Shared embed, could be used by any command
 local ownerEmbed = discord.embed()
