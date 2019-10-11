@@ -72,7 +72,6 @@ function commands.antiowo(message, reply, commandName, verb, arg1, arg2)
         message:delete()
     elseif verb == "tell" then
         if not arg1 then sendAntiOwOUsage(reply) return end
-        --if arg1:sub(1,1) ~= "<" or arg1:sub(-1,-1) ~= ">" then sendAntiOwOUsage(reply) return end
         local authorID = arg1:gsub("[<!@>]","")
 
         local penalties = dataStorage["plugins/antiowo/penalties"]
@@ -81,7 +80,7 @@ function commands.antiowo(message, reply, commandName, verb, arg1, arg2)
         if count <= 0 then
             message:getReplyChannel():send(arg1.." is not a weeb!")
         else
-            message:getReplyChannel():send(arg1.." has $"..(penalties[authorID] or "0").." to pay!")
+            message:getReplyChannel():send(arg1.." has $"..count.." to pay!\nWhich is `"..(count/36).."$` mike's dollars.")
         end
     elseif verb == "clear" then
         if not arg1 then sendAntiOwOUsage(reply) return end
