@@ -4,6 +4,12 @@ local commandsManager = {}
 local pluginsManager = require("bot.plugins_manager")
 local dataStorage = require("bot.data_storage")
 
+--[[Used data storages:
+commands_manager/prefix
+commands_manager/command_statistics
+commands_manager/usage_statistics
+]]
+
 --Initialize the commands manager
 function commandsManager:initialize()
     self.botAPI = require("bot")
@@ -21,14 +27,7 @@ function commandsManager:initialize()
         self.discord:hookEvent(hookName, hookFunc)
     end
 
-    self.unknownEmojis = {
-        "question", "grey_question", "thinking",
-        --[["GWchadThink:366999782348292108",
-        "GWchadThinkeyes:366999794117246976",
-        "GWchadThonkery:366999788803325952",
-        "GWlulurdWaitWhat:402868030918492160",
-        "GWmythiBlobCool:388310072264228865"]]
-    }
+    self.unknownEmojis = { "question", "grey_question", "thinking", "rolling_eyes", "confused" }
 
     self:reloadCommands()
 end
@@ -37,6 +36,7 @@ end
 function commandsManager:reloadCommands()
     --A merged list of commands
     self.commands = {}
+    self.commandPluginName = {} --A reverse table for looking up the plugin's internal name for a specific command (both strings)
 
     local plugins = pluginsManager:getPlugins()
     for pluginName, plugin in pairs(plugins) do
@@ -44,6 +44,7 @@ function commandsManager:reloadCommands()
             for commandName, commandFunc in pairs(plugin.commands) do
                 if self.commands[commandName] then print("WARNING /!\\ Conflicting command",commandName,"in",pluginName) end
                 self.commands[commandName] = commandFunc
+                self.commandPluginName[commandName] = pluginName
             end
         end
     end
