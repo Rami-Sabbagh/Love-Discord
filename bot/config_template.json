@@ -5,7 +5,8 @@
     "bot": {
         "token": "the_bot_token",
         "prefix": ".",
-        "developers": ["your_account_id"],
-        "contributors": ["207435670854041602"]
+        "owners": ["your_account_id"],
+        "developers": ["207435670854041602"],
+        "contributors": []
     }
 }

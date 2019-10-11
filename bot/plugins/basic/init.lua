@@ -26,6 +26,10 @@ adminEmbed:setTitle("You need to have administrator permissions to use this comm
 local developerEmbed = discord.embed()
 developerEmbed:setTitle("This command could be only used by the bot's developers :warning:")
 
+--Shared embed, could be used by any command
+local ownerEmbed = discord.embed()
+ownerEmbed:setTitle("This command could be only used by the bot's owners :warning:")
+
 plugin.commands = {}; local commands = plugin.commands
 
 --Commands command, lists available commands
@@ -68,7 +72,7 @@ do
     reloadEmbedFailure:setTitle("Failed to reload :warning:")
 
     function commands.reload(message, reply, commandName, ...)
-        if not botAPI:isFromDeveloper(message) then reply:send(false, developerEmbed) return end
+        if not botAPI:isFromOwner(message) then reply:send(false, ownerEmbed) return end
 
         local ok, err = pluginManager:reload()
         if ok then
@@ -82,7 +86,7 @@ do
 end
 
 function commands.stop(message, reply, commandName, ...)
-    if not botAPI:isFromDeveloper(message) then reply:send(false, developerEmbed) return end
+    if not botAPI:isFromOwner(message) then reply:send(false, ownerEmbed) return end
     reply:send("Goodbye :wave:")
     love.event.quit()
 end
@@ -93,7 +97,7 @@ do
     restartEmbed:setTitle(":gear: Restarting :gear:")
     restartEmbed:setDescription("This might take a while...")
     function commands.restart(message, reply, commandName, ...)
-        if not botAPI:isFromDeveloper(message) then reply:send(false, developerEmbed) return end
+        if not botAPI:isFromOwner(message) then reply:send(false, ownerEmbed) return end
         
         love.event.quit("restart")
 
@@ -109,7 +113,7 @@ do
 end
 
 function commands.dumpdata(message, reply, commandName, dname)
-    if not botAPI:isFromDeveloper(message) then reply:send(false, developerEmbed) return end
+    if not botAPI:isFromOwner(message) then reply:send(false, ownerEmbed) return end
     if not dname then reply:send("Missing package name!") end
 
     local data = discord.json:encode_pretty(dataStorage[dname])
@@ -127,7 +131,7 @@ function commands.dumpdata(message, reply, commandName, dname)
 end
 
 function commands.data(message, reply, commandName, action, dname)
-    if not botAPI:isFromDeveloper(message) then reply:send(false, developerEmbed) return end
+    if not botAPI:isFromOwner(message) then reply:send(false, ownerEmbed) return end
 end
 
 --Execute command
@@ -147,7 +151,7 @@ do
     outputEmbed:setTitle("Executed successfully :white_check_mark:")
 
     function commands.execute(message, reply, commandName, luaCode, nolog, ...)
-        if not botAPI:isFromDeveloper(message) then reply:send(false, developerEmbed) return end
+        if not botAPI:isFromOwner(message) then reply:send(false, ownerEmbed) return end
         if not luaCode then reply:send(false, executeUsage) return end
 
         local chunk, err = loadstring(luaCode, "codeblock")

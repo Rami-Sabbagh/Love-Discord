@@ -69,6 +69,20 @@ function botAPI:initialize(args)
     print("Connected :)")
 end
 
+--Tells if a provided snowflake is an owner one
+function botAPI:isOwner(id)
+    for k, devid in pairs(self.config.bot.owners) do
+        if devid == id then return true end
+    end
+    return false
+end
+
+--Tells if a message is from an owner
+function botAPI:isFromOwner(message)
+    local authorID = tostring(message:getAuthor():getID())
+    return self:isOwner(authorID)
+end
+
 --Tells if a provided snowflake is a developer one
 function botAPI:isDeveloper(id)
     for k, devid in pairs(self.config.bot.developers) do
@@ -78,7 +92,7 @@ function botAPI:isDeveloper(id)
 end
 
 --Tells if a message is from a developer
-function botAPI:isFromDeveloper(message)
+function botAPI:isFromOwner(message)
     local authorID = tostring(message:getAuthor():getID())
     return self:isDeveloper(authorID)
 end
@@ -106,7 +120,7 @@ function botAPI:isFromAdmin(message)
         if self.adminRoles[guildID][tostring(role)] then return true end
     end
 
-    return botAPI:isFromDeveloper(message) --Developers are considered admins everywhere
+    return botAPI:isFromOwner(message) --Developers are considered admins everywhere
 end
 
 --Update the bot

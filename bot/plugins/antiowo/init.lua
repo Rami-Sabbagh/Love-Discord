@@ -16,6 +16,10 @@ local penaltyEmbed = discord.embed()
 penaltyEmbed:setColor(0xEE0000)
 penaltyEmbed:setImage("https://cdn.discordapp.com/attachments/440553300203667479/628171994218889216/unknown.png", false, 102, 142)
 
+--Shared embed, could be used by any command
+local ownerEmbed = discord.embed()
+ownerEmbed:setTitle("This command could be only used by the bot's owners :warning:")
+
 local plugin = {}
 
 --== Plugin Meta ==--
@@ -45,7 +49,7 @@ local function sendAntiOwOUsage(reply)
 end
 
 function commands.antiowo(message, reply, commandName, verb, arg1, arg2)
-    if not botAPI:isFromDeveloper(message) and (not verb or verb ~= "tell") then reply:send("This command is for developers only :warning:") return end
+    if not botAPI:isFromOwner(message) and (not verb or verb ~= "tell") then reply:send(false, ownerEmbed) return end
 
     if not verb then sendAntiOwOUsage(reply) return end
 
@@ -103,7 +107,7 @@ function events.MESSAGE_CREATE(message)
     
     if author:isBot() then return end
     if author == botAPI.me then return end
-    --if botAPI:isFromDeveloper(message) then return end
+    --if botAPI:isFromOwner(message) then return end
 
     local authorID = tostring(author:getID())
 
