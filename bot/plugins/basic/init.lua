@@ -107,8 +107,6 @@ do
         dataStorage["plugins/basic/restart"] = pdata
 
         reply:send(false, restartEmbed)
-        reply:triggerTypingIndicator()
-        discord.gateway.disconnect = function() end --Show the bot as online while restarting xd
     end
 end
 
