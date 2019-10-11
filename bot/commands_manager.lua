@@ -6,6 +6,7 @@ local dataStorage = require("bot.data_storage")
 
 --[[Used data storages:
 commands_manager/prefix
+coomands_manager/disabled_plugins
 commands_manager/command_statistics
 commands_manager/usage_statistics
 ]]
@@ -176,8 +177,21 @@ function commandsManager:_MESSAGE_CREATE(message)
 
     --Command execution
     local commandName = string.lower(command[1])
+    local commandFound = self.commands[commandName]
     
-    if self.commands[commandName] then
+    if commandFound then
+        local pluginName = self.commandPluginName[commandName]
+        local disabledPlugins = dataStorage["commands_manager/disabled_plugins"]
+        local guildKey = guildID and tostring(guildID) or nil
+        local channelKey = (guildKey or "").."_"..tostring(channelID)
+        
+        local guildValue = disabledPlugins[guildKey] and disabledPlugins[guildKey][pluginName] or nil
+        local channelValue = disabledPlugins[channelValue] and disabledPlugins[channelValue][pluginName] or nil
+
+        if type(channelValue) ~= "nil" then commandFound = not channelValue else commandFound = not guildValue end
+    end
+    
+    if commandFound then
         local ok, traceback = xpcall(function() self.commands[commandName](message, replyChannel, unpack(command)) end, debug.traceback)
         if not ok then
             local crashReports = dataStorage["commands_manager/crash_reports"]
@@ -191,14 +205,12 @@ function commandsManager:_MESSAGE_CREATE(message)
 
             print("/!\\ Failed to execute command (", id, "):", report)
 
-            pcall(replyChannel.send, replyChannel, table.concat({
-                "**Failed to execute command** :warning:",
-                "The crash has been reported to the developers with id: `"..crashID.."`",
-                "Crash details:",
-                "||```",
-                report,
-                "```||"
-            },"\n"))
+            local crashEmbed = self.discord.embed()
+            crashEmbed:setTitle("**Failed to execute command** :warning:")
+            crashEmbed:setDescription("The crash has been reported to the developers with id: `"..crashID.."`")
+            crashEmbed:setField(1, "Crash details:", "||```\n"..report.."\n```||")
+
+            pcall(replyChannel.send, replyChannel, false, crashEmbed)
         end
     else
         local r = math.random(1, #self.unknownEmojis)
