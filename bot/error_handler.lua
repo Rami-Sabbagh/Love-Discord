@@ -22,7 +22,7 @@ function love.errorhandler(msg)
 
 	local botAPI = require("bot")
 	
-	if bot.args and bot.args[1] == "--git" then
+	if botAPI.args and botAPI.args[1] == "--git" then
 		print("Restarting in 30 seconds...")
 		love.timer.sleep(30)
 	end
