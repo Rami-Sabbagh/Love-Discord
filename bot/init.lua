@@ -71,8 +71,8 @@ end
 
 --Tells if a provided snowflake is an owner one
 function botAPI:isOwner(id)
-    for k, devid in pairs(self.config.bot.owners) do
-        if devid == id then return true end
+    for k, ownerid in pairs(self.config.bot.owners) do
+        if ownerid == id then return true end
     end
     return false
 end
@@ -92,7 +92,7 @@ function botAPI:isDeveloper(id)
 end
 
 --Tells if a message is from a developer
-function botAPI:isFromOwner(message)
+function botAPI:isFromDeveloper(message)
     local authorID = tostring(message:getAuthor():getID())
     return self:isDeveloper(authorID)
 end
