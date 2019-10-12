@@ -4,9 +4,9 @@ local botAPI, discord, pluginPath, pluginDir = ...
 local dataStorage = require("bot.data_storage")
 
 local owoPatterns = {
-    "[ouv°◔ʘ]+[%p]*[w]+[%p]*[ouv°◔ʘ]+",
-    "[owv°◔ʘ]+[%p]*[u]+[%p]*[owv°◔ʘ]+",
-    "[ouw°◔ʘ]+[%p]*[v]+[%p]*[ouw°◔ʘ]+"
+    "[ouv°0◔ʘ]+[%p]*[w]+[%p]*[ouv°0◔ʘ]+",
+    "[owv°0◔ʘ]+[%p]*[u]+[%p]*[owv°0◔ʘ]+",
+    "[ouw°0◔ʘ]+[%p]*[v]+[%p]*[ouw°0◔ʘ]+"
 }
 
 local penalty = 350
