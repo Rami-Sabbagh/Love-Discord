@@ -3,7 +3,7 @@ local botAPI, discord, pluginPath, pluginDir = ...
 
 local ffi = require("ffi")
 local dataStorage = require("bot.data_storage")
-local pluginManager = require("bot.plugins_manager")
+local pluginsManager = require("bot.plugins_manager")
 local commandsManager = require("bot.commands_manager")
 
 local plugin = {}
@@ -34,7 +34,7 @@ do
     function commands.reload(message, reply, commandName, ...)
         if not botAPI:isFromOwner(message) then reply:send(false, ownerEmbed) return end
 
-        local ok, err = pluginManager:reload()
+        local ok, err = pluginsManager:reload()
         if ok then
             commandsManager:reloadCommands()
             reply:send(false, reloadEmbedSuccess)
@@ -127,7 +127,7 @@ do
         setmetatable(env, { __index = function(t,k) return superEnv[k] end })
 
         env.botAPI, env.discord = botAPI, discord
-        env.pluginsManager, env.commandsManager, env.dataStorage = pluginManager, commandsManager, dataStorage
+        env.pluginsManager, env.commandsManager, env.dataStorage = pluginsManager, commandsManager, dataStorage
         env.message, env.reply = message, reply
         env.bit, env.http, env.rest = discord.utilities.bit, discord.utilities.http, discord.rest
         env.band, env.bor, env.lshift, env.rshift, env.bxor = env.bit.band, env.bit.bor, env.bit.lshift, env.bit.rshift, env.bit.bxor
