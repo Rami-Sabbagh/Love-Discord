@@ -1,7 +1,7 @@
 --Discörd Böt plugins manager
 local pluginsManager = {}
 
-local dataStorage = require("bot/data_storage")
+local dataStorage = require("bot.data_storage")
 
 --[[Used data storage:
 commands_manager/disabled_plugins
