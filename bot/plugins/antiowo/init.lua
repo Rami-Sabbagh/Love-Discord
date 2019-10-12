@@ -135,7 +135,7 @@ function events.MESSAGE_CREATE(message)
 
     if owoCount > 0 then
         local penalties = dataStorage["plugins/antiowo/penalties"]
-        penalties[authorID] = (penalties[authorID] or 0) + penalty*owoCount
+        penalties[authorID] = (penalties[authorID] or 0) + penalty--*owoCount
         dataStorage["plugins/antiowo/penalties"] = penalties
 
         penaltyEmbed:setTitle("**$"..penalties[authorID].." PENALTY**")
