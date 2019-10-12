@@ -180,7 +180,7 @@ do
     local resultEmbed = discord.embed()
     resultEmbed:setTitle("Execution output: :scroll:")
 
-    function commands.gitpull(messsage, reply, commandName, ...)
+    function commands.gitpull(message, reply, commandName, ...)
         if not botAPI:isFromOwner(message) then reply:send(false, ownerEmbed) return end
         local output = capture("git -C "..love.filesystem.getSource().." pull")
         resultEmbed:setDescription("```\n"..output.."\n```")
