@@ -1,5 +1,5 @@
 --Basic operations plugin
-local botAPI, discord, pluginPath, pluginDir = ...
+local botAPI, discord, pluginName, pluginPath, pluginDir = ...
 
 local rolesManager = require("bot.roles_manager")
 

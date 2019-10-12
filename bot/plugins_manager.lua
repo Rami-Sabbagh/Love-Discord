@@ -95,7 +95,7 @@ function pluginsManager:_initializePlugins(chunks)
     local plugins = {}
 
     for pluginName, chunk in pairs(chunks) do
-        local ok, err = pcall(chunk, self.botAPI, self.discord, "bot.plugins."..pluginName, "bot/plugins/"..pluginName)
+        local ok, err = pcall(chunk, self.botAPI, self.discord, pluginName, "bot.plugins."..pluginName, "bot/plugins/"..pluginName)
         if not ok then
             return false, "Failed to initialize '"..pluginName.."' plugin: "..tostring(err)
         end

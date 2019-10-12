@@ -1,5 +1,5 @@
 --Basic operations plugin
-local botAPI, discord, pluginPath, pluginDir = ...
+local botAPI, discord, pluginName, pluginPath, pluginDir = ...
 
 local ffi = require("ffi")
 local dataStorage = require("bot.data_storage")
