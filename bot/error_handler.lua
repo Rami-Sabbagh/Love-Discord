@@ -9,7 +9,7 @@ end
 
 local function triggerHook(msg, botAPI)
 	local discord = botAPI.discord
-	local webhook = botAPI.config.errorhandler_webhook
+	local webhook = botAPI.config.bot.errorhandler_webhook
 
 	assert(discord.utilities.http.request(webhook,{
 		embeds = {{
