@@ -2,7 +2,7 @@
 local botAPI, discord, pluginName, pluginPath, pluginDir = ...
 
 local dataStorage = require("bot.data_storage")
-local pluginsManager = requie("bot.plugins_manager")
+local pluginsManager = require("bot.plugins_manager")
 
 local owoPatterns = {
     "[ouv°0◔ʘ]+[%p]*[w]+[%p]*[ouv°0◔ʘ]+",
