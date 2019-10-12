@@ -39,7 +39,12 @@ function love.errorhandler(msg)
 		love.timer.sleep(30)
 	end
 
-	pcall(triggerHook, msg, botAPI)
+	local ok, err = pcall(triggerHook, msg, botAPI)
+	if ok then
+		print("Triggered errorHandler webhook successfully!")
+	else
+		print("Failed to trigger errorHandler webhook", err)
+	end
 
 	os.exit(1) --Exit with error code 1
  
