@@ -11,12 +11,12 @@ local function triggerHook(msg, botAPI)
 	local discord = botAPI.discord
 	local webhook = botAPI.config.errorhandler_webhook
 
-	discord.utilities.http.request(webhook,{
+	assert(discord.utilities.http.request(webhook,{
 		embeds = {{
 			title = "**The bot has crashed** ⚠",
 			description = "Crash details: ```\n"..msg.."\n```"
 		}}
-	})
+	}))
 end
  
 function love.errorhandler(msg)
