@@ -163,6 +163,57 @@ do
     end
 end
 
+--Pulls the bot's git repository
+do
+    --Executes a command, and returns it's output
+    local function capture(cmd, raw)
+        local f = assert(io.popen(cmd, 'r'))
+        local s = assert(f:read('*a'))
+        f:close()
+        if raw then return s end
+        s = string.gsub(s, '^%s+', '')
+        s = string.gsub(s, '%s+$', '')
+        s = string.gsub(s, '[\n\r]+', ' ')
+        return s
+    end
+
+    local resultEmbed = discord.embed()
+    resultEmbed:setTitle("Execution output: :scroll:")
+
+    function commands.gitpull(messsage, reply, commandName, ...)
+        if not botAPI:isFromOwner(message) then reply:send(false, ownerEmbed) return end
+        local output = capture("git -C "..love.filesystem.getSource().." pull")
+        resultEmbed:setDescription("```\n"..output.."\n```")
+        reply:send(false, resultEmbed)
+    end
+end
+
+--CMD command
+do
+    --Executes a command, and returns it's output
+    local function capture(cmd, raw)
+        local f = assert(io.popen(cmd, 'r'))
+        local s = assert(f:read('*a'))
+        f:close()
+        if raw then return s end
+        s = string.gsub(s, '^%s+', '')
+        s = string.gsub(s, '%s+$', '')
+        s = string.gsub(s, '[\n\r]+', ' ')
+        return s
+    end
+
+    local resultEmbed = discord.embed()
+    resultEmbed:setTitle("Execution output: :scroll:")
+
+    function commands.cmd(message, reply, commandName, ...)
+        if not botAPI:isFromOwner(message) then reply:send(false, ownerEmbed) return end
+        local cmd = table.concat({...}, " ")
+        local output = capture(cmd)
+        resultEmbed:setDescription("```\n"..output.."\n```")
+        reply:send(false, resultEmbed)
+    end
+end
+
 --== Plugin Events ==--
 
 plugin.events = {}; local events = plugin.events
