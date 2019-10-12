@@ -1,6 +1,12 @@
 --Discörd Böt plugins manager
 local pluginsManager = {}
 
+local dataStorage = require("bot/data_storage")
+
+--[[Used data storage:
+commands_manager/disabled_plugins
+]]
+
 --Initialize the plugin manager
 function pluginsManager:initialize()
     self.botAPI = require("bot")
@@ -50,6 +56,21 @@ end
 --Returns the list of initialized plugins
 function pluginsManager:getPlugins()
     return self.plugins
+end
+
+--Returns a table of disabled plugins
+function pluginsManager:getDisabledPlugins(guildID, channelID)
+    local disabledPlugins = dataStorage["bot/disabled_plugins"]
+    local guildKey, channelKey = tostring(guildID or ""), tostring(guildID or "").."_"..tostring(channelID or "")
+    return disabledPlugins[guildKey] or {}, disabledPlugins[channelKey] or {}
+end
+
+--Tells if a plugin is disabled or not
+function pluginsManager:isPluginDisabled(guildID, channelID, pluginName)
+    local guildPlugins, channelPlugins = pluginsManager:getDisabledPlugins(guildID, channelID)
+
+    if type(channelPlugins[pluginName]) ~= "nil" then return channelPlugins[pluginName]
+    else return guildPlugins[pluginName] end
 end
 
 --== Internal Methods ==--

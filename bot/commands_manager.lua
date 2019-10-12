@@ -181,14 +181,7 @@ function commandsManager:_MESSAGE_CREATE(message)
     
     if commandFound then
         local pluginName = self.commandPluginName[commandName]
-        local disabledPlugins = dataStorage["commands_manager/disabled_plugins"]
-        local guildKey = guildID and tostring(guildID) or nil
-        local channelKey = (guildKey or "").."_"..tostring(channelID)
-        
-        local guildValue = disabledPlugins[guildKey] and disabledPlugins[guildKey][pluginName] or nil
-        local channelValue = disabledPlugins[channelValue] and disabledPlugins[channelValue][pluginName] or nil
-
-        if type(channelValue) ~= "nil" then commandFound = not channelValue else commandFound = not guildValue end
+        if pluginsManager:isPluginDisabled(guildID, channelID, pluginName) then commandFound = false end
     end
     
     if commandFound then
