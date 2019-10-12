@@ -1,10 +1,7 @@
 --Basic operations plugin
 local botAPI, discord, pluginPath, pluginDir = ...
 
-local ffi = require("ffi")
-local dataStorage = require("bot.data_storage")
-local pluginManager = require("bot.plugins_manager")
-local commandsManager = require("bot.commands_manager")
+local rolesManager = require("bot.roles_manager")
 
 local plugin = {}
 
@@ -68,7 +65,7 @@ do
     function commands.say(message, reply, commandName, ...)
         local content = table.concat({...}, " ")
         if content == "" then reply:send(false, sayUsage) return end
-        if content:find("@everyone") and not botAPI:isFromAdmin(message) then reply:send(false, everyoneEmbed) return end
+        if content:find("@everyone") and not rolesManager:isFromAdmin(message) then reply:send(false, everyoneEmbed) return end
         reply:send(content)
 
         if message:getGuildID() then pcall(message.delete, message) end
@@ -88,8 +85,8 @@ do
     function commands.embed(message, reply, commandName, title, description)
         if not (title or description) then reply:send(false, embedUsage) return end
 
-        if title and title:find("@everyone") and not botAPI:isFromAdmin(message) then reply:send(false, everyoneEmbed) return end
-        if description and description:find("@everyone") and not botAPI:isFromAdmin(message) then reply:send(false, everyoneEmbed) return end
+        if title and title:find("@everyone") and not rolesManager:isFromAdmin(message) then reply:send(false, everyoneEmbed) return end
+        if description and description:find("@everyone") and not rolesManager:isFromAdmin(message) then reply:send(false, everyoneEmbed) return end
 
         replyEmbed:setTitle(title)
         replyEmbed:setDescription(description)
