@@ -6,6 +6,18 @@ local utf8 = require("utf8")
 local function error_printer(msg, layer)
 	print((debug.traceback("Error: " .. tostring(msg), 1+(layer or 1)):gsub("\n[^\n]+$", "")))
 end
+
+local function triggerHook(msg, botAPI)
+	local discord = botAPI.discord
+	local webhook = botAPI.config.errorhandler_webhook
+
+	discord.utilities.http.request(webhook,{
+		embeds = {{
+			title = "**The bot has crashed** ⚠",
+			description = "Crash details: ```\n"..msg.."\n```"
+		}}
+	})
+end
  
 function love.errorhandler(msg)
 	local ok, err = pcall(dataStorage, -2) --Flush the data storage of the bot
@@ -26,6 +38,10 @@ function love.errorhandler(msg)
 		print("Restarting in 30 seconds...")
 		love.timer.sleep(30)
 	end
+
+	pcall(triggerHook, msg, botAPI)
+
+	os.exit(1) --Exit with error code 1
  
 	if not love.window or not love.graphics or not love.event then
 		return
