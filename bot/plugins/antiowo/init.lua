@@ -1,7 +1,8 @@
 --Basic operations plugin
-local botAPI, discord, pluginPath, pluginDir = ...
+local botAPI, discord, pluginName, pluginPath, pluginDir = ...
 
 local dataStorage = require("bot.data_storage")
+local pluginsManager = requie("bot.plugins_manager")
 
 local owoPatterns = {
     "[ouv°0◔ʘ]+[%p]*[w]+[%p]*[ouv°0◔ʘ]+",
@@ -106,7 +107,7 @@ function events.MESSAGE_CREATE(message)
     
     if author:isBot() then return end
     if author == botAPI.me then return end
-    --if botAPI:isFromOwner(message) then return end
+    if pluginsManager:isPluginDisabled(message:getGuildID(), message:getChannelID(), pluginName) then return end
 
     local authorID = tostring(author:getID())
 
