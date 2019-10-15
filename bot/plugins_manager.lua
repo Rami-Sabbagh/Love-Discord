@@ -7,6 +7,22 @@ local dataStorage = require("bot.data_storage")
 commands_manager/disabled_plugins
 ]]
 
+local function triggerPluginsEvent(eventName, ...)
+    for pluginName, plugin in pairs(self.plugins) do
+        if plugin.events then
+            if plugin.events.ANY then
+                local ok, err = pcall(plugin.events.ANY, eventName, ...)
+                if not ok then print("/!\\ Plugin Event Error",pluginName,"ANY",err) end
+            end
+
+            if plugin.events[eventName] then
+                local ok, err = pcall(plugin.events[eventName], ...)
+                if not ok then print("/!\\ Plugin Event Error",pluginName,eventName,err) end
+            end
+        end
+    end
+end
+
 --Initialize the plugin manager
 function pluginsManager:initialize()
     self.botAPI = require("bot")
@@ -21,21 +37,7 @@ function pluginsManager:initialize()
     print(string.rep("-", 40))
 
     --Hook plugins events
-    self.discord:hookEvent("ANY",function(eventName, ...)
-        for pluginName, plugin in pairs(self.plugins) do
-            if plugin.events then
-                if plugin.events.ANY then
-                    local ok, err = pcall(plugin.events.ANY, eventName, ...)
-                    if not ok then print("/!\\ Plugin Event Error",pluginName,"ANY",err) end
-                end
-
-                if plugin.events[eventName] then
-                    local ok, err = pcall(plugin.events[eventName], ...)
-                    if not ok then print("/!\\ Plugin Event Error",pluginName,eventName,err) end
-                end
-            end
-        end
-    end)
+    self.discord:hookEvent("ANY", triggerPluginsEvent)
 end
 
 --Reloads the plugin manager
@@ -49,6 +51,8 @@ function pluginsManager:reload()
     local plugins, err = self:_initializePlugins(chunks)
     if not plugins then return false, err end
     self.plugins = plugins
+    print("Triggering Plugins Reload Event...")
+    triggerPluginsEvent("RELOAD")
     print(string.rep("-", 40))
     return true --Success
 end
