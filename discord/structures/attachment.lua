@@ -30,4 +30,16 @@ function attachment:initialize(data)
     self.width = data.width --Width of file (if image) (number)
 end
 
+--== Methods ==--
+
+function attachment:getID() return self.id end
+function attachment:getFilename() return self.filename end
+function attachment:getSize() return self.size end
+function attachment:getURL() return self.url end
+function attachment:getProxyURL() return self.proxyURL end
+function attachment:getHeight() return self.height end
+function attachment:getWidth() return self.width end
+
+function attachment:isImage() return not not (self.width and self.height) end
+
 return attachment
