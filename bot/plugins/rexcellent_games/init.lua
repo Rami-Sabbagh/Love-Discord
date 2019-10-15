@@ -204,7 +204,6 @@ local reactionActions = {
 
 --Suggestion Accepted/Denied/Done
 function events.MESSAGE_REACTION_ADD(info)
-    print("MESSAGE REACTION ADD", info)
     local userID, guildID, channelID, messageID = info.userID, info.guildID, info.channelID, info.messageID
     local emoji = info.emoji
 

@@ -8,7 +8,6 @@ commands_manager/disabled_plugins
 ]]
 
 local function triggerPluginsEvent(eventName, ...)
-    print("Plugin trigger", eventName, ...)
     for pluginName, plugin in pairs(pluginsManager.plugins) do
         if plugin.events then
             if plugin.events.ANY then
@@ -17,7 +16,6 @@ local function triggerPluginsEvent(eventName, ...)
             end
 
             if plugin.events[eventName] then
-                print("TRIGGERING", pluginName, eventName)
                 local ok, err = pcall(plugin.events[eventName], ...)
                 if not ok then print("/!\\ Plugin Event Error",pluginName,eventName,err) end
             end
