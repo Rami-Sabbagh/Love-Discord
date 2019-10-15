@@ -187,7 +187,6 @@ function discord:_MESSAGE_UPDATE(op, d, s, t)
 end
 
 function discord:_MESSAGE_REACTION_ADD(op, d, s, t)
-    print("HELLO, REACTION ADD", d.emoji)
     self:_triggerEvent("MESSAGE_REACTION_ADD", {
         userID = self.snowflake(d.user_id),
         channelID = self.snowflake(d.channel_id),
