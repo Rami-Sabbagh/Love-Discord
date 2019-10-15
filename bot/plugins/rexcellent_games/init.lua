@@ -204,6 +204,7 @@ local reactionActions = {
 
 --Suggestion Accepted/Denied/Done
 function events.MESSAGE_REACTION_ADD(info)
+    print("CP 1")
     local userID, guildID, channelID, messageID = info.userID, info.guildID, info.channelID, info.messageID
     local emoji = info.emoji
 
@@ -211,23 +212,32 @@ function events.MESSAGE_REACTION_ADD(info)
     local reactionMember = discord.guildMember(tostring(guildID), tostring(userID))
     if not rolesManager:doesMemberHaveAdminRole(guildID, reactionMember) then return end --Not an admin
 
+    print("CP 2")
+
     local message = discord.message(tostring(channelID), tostring(messageID))
     local author = message:getAuthor()
 
     --Check if the suggestion embed is from bot itself
     if author ~= botAPI.me then return end --Ignore the message
     if #message:getContent() > 0 then return end --Ignore the messages with text content
-    
+
+    print("CP 3")
+
     for k, embed in pairs(message:getEmbeds()) do
+        print("CP 4")
         if embed:getType() == "rich" then
+            print("CP 5")
             local title, description = embed:getTitle(), embed:getDescription()
             if title and description then
+                print("CP 6")
                 --Suggestions embeds only
                 if title == "Suggestion" or title == "Suggestion Accepted" or title == "Suggestion Rejected" or title == "Suggestion Done" then
+                    print("CP 7")
                     local patchedEmbed = discord.embed(embed:getAll())
                     local emojiName = emoji:getName()
                     local action = reactionActions[emojiName]
                     if action then
+                        print("CP 8")
                         patchedEmbed:setTitle("Suggestion "..action.verb)
                         patchedEmbed:setColor(action.color)
                         local user = member:getUser()
