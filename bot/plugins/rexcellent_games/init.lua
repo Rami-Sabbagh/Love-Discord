@@ -20,7 +20,7 @@ plugin.authorEmail = "ramilego4game@gmail.com" --The email of the auther, could 
 --== Shared Embeds ==--
 
 local noDMEmbed = discord.embed()
-noDMEmbed:setTitle("This command could be used only in guilds (servers) :warning:")
+noDMEmbed:setTitle("This command could be used only in servers :warning:")
 
 local adminEmbed = discord.embed()
 adminEmbed:setTitle("You need to have administrator permissions to use this command :warning:")
@@ -184,6 +184,7 @@ end
 
 --Fetch each guild's suggestion channel after reload
 function events.RELOAD()
+    print("Fetching suggestions channels...")
     local suggestionSnowflakes = dataStorage["plugins/rexcellent_games/suggestions_snowflakes"]
     for guildID, channelID in pairs(suggestionSnowflakes) do
         local ok, channel = pcall(discord.channel, channelID)
