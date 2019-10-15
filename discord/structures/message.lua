@@ -169,6 +169,15 @@ end
 --Returns the author user object
 function message:getAuthor() return self.author end
 
+--Returns the list of attachments if there are any
+function message:getAttachments()
+    if self.attachments then
+        local attachments = {}
+        for k,v in pairs(self.attachments) do attachments[k] = v end
+        return attachments
+    end
+end
+
 --Returns channel ID of which the message was sent in
 function message:getChannelID() return self.channelID end
 
