@@ -81,7 +81,10 @@ function user:getID()
     return self.id
 end
 
---Returns the user tag for including in messages
+--Returns the user's discriminator
+function user:getDiscriminator() return self.discriminator end
+
+--Returns the user's tag for including in messages
 function user:getTag()
     return discord.utilities.message.formatUser(tostring(self.id))
 end
