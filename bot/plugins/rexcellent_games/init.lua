@@ -64,6 +64,7 @@ do
 
     local successEmbed = discord.embed()
     successEmbed:setTitle("The suggestions has been sent successfully :white_check_mark:")
+    successEmbed:setColor(0xDBBF59)
 
     function commands.suggestion(message, reply, commandName, suggestion, ...)
         if not message:getGuildID() then reply:send(false, noDMEmbed) return end
