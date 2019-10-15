@@ -5,9 +5,9 @@ local dataStorage = require("bot.data_storage")
 local pluginsManager = require("bot.plugins_manager")
 
 local owoPatterns = {
-    "[ouv°0◔ʘüÜÖö]+[%p]*[w]+[%p]*[ouv°0◔ʘüÜÖö]+",
-    "[owv°0◔ʘüÜÖö]+[%p]*[u]+[%p]*[owv°0◔ʘüÜÖö]+",
-    "[ouw°0◔ʘüÜÖö]+[%p]*[v]+[%p]*[ouw°0◔ʘüÜÖö]+"
+    "[ouv°0◔ʘüÜÖö@]+[%p]*[w]+[%p]*[ouv°0◔ʘüÜÖö@]+",
+    "[owv°0◔ʘüÜÖö@]+[%p]*[u]+[%p]*[owv°0◔ʘüÜÖö@]+",
+    "[ouw°0◔ʘüÜÖö@]+[%p]*[v]+[%p]*[ouw°0◔ʘüÜÖö@]+"
 }
 
 local penalty = 350
