@@ -184,6 +184,15 @@ function message:getChannelID() return self.channelID end
 --Returns the message content
 function message:getContent() return self.content end
 
+--Returns the message embeds
+function message:getEmbeds()
+    if self.embeds do
+        local embeds = {}
+        for k,v in pairs(self.embeds) do embeds[k] = v end
+        return embeds
+    end
+end
+
 --Returns the guild ID of the channel the message is sent in, would return nil for DM channels
 function message:getGuildID() return self.guildID end
 
