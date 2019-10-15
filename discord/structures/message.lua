@@ -186,7 +186,7 @@ function message:getContent() return self.content end
 
 --Returns the message embeds
 function message:getEmbeds()
-    if self.embeds do
+    if self.embeds then
         local embeds = {}
         for k,v in pairs(self.embeds) do embeds[k] = v end
         return embeds
