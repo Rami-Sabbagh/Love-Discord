@@ -84,7 +84,7 @@ function message:initialize(data, messageID)
     if data.embeds then --Any embedded (array of embed objects)
         self.embeds = {}
         for id, edata in pairs(data.embeds) do
-            self.embeds = discord.embed(edata)
+            self.embeds[id] = discord.embed(edata)
         end
     end
     if data.mention_channels then --Channels specifically mentioned in this message (array of channel mention objects)
