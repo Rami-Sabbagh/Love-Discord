@@ -15,6 +15,12 @@ function rolesManager:initialize()
     self.discord:hookEvent("GUILD_ROLE_DELETE", self._GUILD_ROLE_DELETE)
 end
 
+--Tells if the provided user snowflake is the server (guild) owner's id
+function rolesManager:isGuildOwner(guildID, userID)
+    guildID, userID = tostring(guildID), tostring(userID)
+    return (self.guildOwners[guildID] == userID)
+end
+
 --Tells if a provided role snowflake is an admin one
 function rolesManager:isAdmin(guildID, roleID)
     guildID, roleID = tostring(guildID), tostring(roleID)
