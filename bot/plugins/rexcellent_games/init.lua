@@ -2,6 +2,7 @@
 local botAPI, discord, pluginName, pluginPath, pluginDir = ...
 
 local dataStorage = require("bot.data_storage")
+local roleManager = require("bot.roles_manager")
 
 local plugin = {}
 
@@ -116,7 +117,7 @@ do
 
     local failureEmbed = discord.embed()
 
-    function commands.set_suggest_channel(message, reply, commandName, channelTag)
+    function commands.setsuggestionschannel(message, reply, commandName, channelTag)
         if not message:getGuildID() then reply:send(false, noDMEmbed) return end
         if not rolesManager:isFromAdmin(message) then reply:send(false, adminEmbed) return end
         if not channelTag then reply:send(false, usageEmbed) return end
