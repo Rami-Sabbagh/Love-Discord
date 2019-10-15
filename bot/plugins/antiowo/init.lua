@@ -145,6 +145,4 @@ function events.MESSAGE_CREATE(message)
     end
 end
 
-plugin.events.MESSAGE_UPDATE = plugin.events.MESSAGE_CREATE
-
 return plugin
