@@ -203,6 +203,7 @@ local reactionActions = {
 
 --Suggestion Accepted/Denied/Done
 function events.MESSAGE_REACTION_ADD(info)
+    print("MESSAGE REACTION ADD", info)
     local userID, guildID, channelID, messageID = info.userID, info.guildID, info.channelID, info.messageID
     local emoji = info.emoji
 
@@ -215,7 +216,7 @@ function events.MESSAGE_REACTION_ADD(info)
 
     --Check if the suggestion embed is from bot itself
     if author ~= botAPI.me then return end --Ignore the message
-    if #message:getContent() then return end --Ignore the messages with text content
+    if #message:getContent() > 0 then return end --Ignore the messages with text content
     
     for k, embed in pairs(message:getEmbeds()) do
         if embed:getType() == "rich" then
