@@ -81,6 +81,15 @@ end
 
 --== Methods ==--
 
+--Returns the guild's channels (array of channel objects)
+function guild:getChannels()
+    if self.channels then
+        local channels = {}
+        for k,v in pairs(self.channels) do channels[k] = v end
+        return channels
+    end
+end
+
 --Returns the guild's owner ID (snowflake)
 function guild:getOwnerID() return self.ownerID end
 
