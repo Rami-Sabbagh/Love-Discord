@@ -195,4 +195,51 @@ end
 
 --TODO: HOOK INTO CHANNEL DELETE
 
+local reactionActions = {
+    ["white_check_mark"] = { verb = "Accepted", color = 0x5FF44B },
+    ["negative_squared_cross_mark"] = { verb = "Denied", color = 0xEF5047 },
+    ["ballot_box_with_check"] = { verb = "Done", color = 0x42B0F4 }
+}
+
+--Suggestion Accepted/Denied/Done
+function events.MESSAGE_REACTION_ADD(info)
+    local userID, guildID, channelID, messageID = info.userID, info.guildID, info.channelID, info.messageID
+    local emoji = info.emoji
+
+    --Figure out if he's an admin doing this
+    local reactionMember = discord.guildMember(tostring(guildID), tostring(userID))
+    if not rolesManager:doesMemberHaveAdminRole(guildID, reactionMember) then return end --Not an admin
+
+    local message = discord.message(tostring(channelID), tostring(messageID))
+    local author = message:getAuthor()
+
+    --Check if the suggestion embed is from bot itself
+    if author != botAPI.me then return end --Ignore the message
+    if #message:getContent() then return end --Ignore the messages with text content
+    
+    for k, embed in pairs(message:getEmbeds()) do
+        if embed:getType() == "rich" then
+            local title, description = embed:getTitle(), embed:getDescription()
+            if title and description then
+                --Suggestions embeds only
+                if title == "Suggestion" or title == "Suggestion Accepted" or title == "Suggestion Rejected" or title == "Suggestion Done" then
+                    local patchedEmbed = discord.embed(embed:getAll())
+                    local emojiName = emoji:getName()
+                    local action = reactionActions[emojiName]
+                    if action then
+                        patchedEmbed:setTitle("Suggestion "..action.verb)
+                        patchedEmbed:setColor(action.color)
+                        local user = member:getUser()
+                        patchedEmbed:setFooter(action.verb.." by "..user:getUsername().."#"..user:getDiscriminator()..", "..patchedEmbed:getFooter())
+
+                        message:getReplyChannel():send(false, patchedEmbed)
+                    end
+
+                    break
+                end
+            end
+        end
+    end
+end
+
 return plugin
