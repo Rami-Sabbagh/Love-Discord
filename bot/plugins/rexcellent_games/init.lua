@@ -93,8 +93,8 @@ do
 
         local sentMessage = suggestionChannel:send(false, suggestionEmbed)
         if sentMessage then
-            sentMessage:addReaction(":thumbsup:")
-            sentMessage:addReaction(":thumbsdown:")
+            sentMessage:addReaction("thumbsup")
+            sentMessage:addReaction("thumbsdown")
         end
 
         reply:send(false, successEmbed)
@@ -131,9 +131,9 @@ do
             return
         end
         
-        local channel, err = pcall(discord.channel, channelTag) --Fetch the channel object
-        if not channel then
-            print("Failed to set suggestion channel", err, channelTag)
+        local ok, channel = pcall(discord.channel, channelTag) --Fetch the channel object
+        if not ok then
+            print("Failed to set suggestion channel", channel, channelTag)
             failureEmbed:setTitle("Failed to set suggestion channel :warning:")
             reply:send(false, failureEmbed)
             return
@@ -185,8 +185,8 @@ end
 function events.RELOAD()
     local suggestionSnowflakes = dataStorage["plugins/rexcellent_games/suggestions_snowflakes"]
     for guildID, channelID in pairs(suggestionSnowflakes) do
-        local channel, err = pcall(discord.channel, channelID)
-        if not channel then print("Failed to fetch suggestion channel on reload:", err) else
+        local ok, channel = pcall(discord.channel, channelID)
+        if not ok then print("Failed to fetch suggestion channel on reload:", channel, channelID) else
             suggestionChannels[guildID] = channel
         end
     end
