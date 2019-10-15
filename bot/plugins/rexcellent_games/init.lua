@@ -107,8 +107,8 @@ do
     usageEmbed:setTitle("Usage: :notepad_spiral:")
     usageEmbed:setDescription(table.concat({
         "```css",
-        "set_suggest_channel <new channel tag> /* Sets the channel for sending in suggestions */",
-        "set_suggset_channel clear /* Clears the set channel for sending in suggestions and disables the suggestions system */",
+        "setSuggestionsChannel <new channel tag> /* Sets the channel for sending in suggestions */",
+        "setSuggestionsChannel clear /* Clears the set channel for sending in suggestions and disables the suggestions system */",
         "```"
     }, "\n"))
 
