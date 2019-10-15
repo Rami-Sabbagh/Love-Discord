@@ -22,6 +22,17 @@ function rolesManager:isAdmin(guildID, roleID)
     return self.adminRoles[guildID][roleID]
 end
 
+--Tells if a provided guild member is an admin
+function rolesManager:doesMemberHaveAdminRole(guildID, member)
+    guildID = tostring(guildID)
+
+    --Check if any role has admin power
+    local roles = member:getRoles()
+    for _, role in pairs(roles) do
+        if self.adminRoles[guildID][tostring(role)] then return true end
+    end
+end
+
 --Tells if a message is from an admin
 function rolesManager:isFromAdmin(message)
     local guildID = message:getGuildID()
@@ -33,10 +44,7 @@ function rolesManager:isFromAdmin(message)
 
     --Check if any role has admin power
     local member = message:getMember()
-    local roles = member:getRoles()
-    for _, role in pairs(roles) do
-        if self.adminRoles[guildID][tostring(role)] then return true end
-    end
+    if self:doesMemberHaveAdminRole(guildID, member) then return end
 
     return self.botAPI:isFromOwner(message) --Bot owners are considered admins everywhere
 end
