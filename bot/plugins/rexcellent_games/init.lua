@@ -133,7 +133,7 @@ do
         
         local channel, err = pcall(discord.channel, channelTag) --Fetch the channel object
         if not channel then
-            print("Failed to set suggestion channel", err)
+            print("Failed to set suggestion channel", err, channelTag)
             failureEmbed:setTitle("Failed to set suggestion channel :warning:")
             reply:send(false, failureEmbed)
             return
