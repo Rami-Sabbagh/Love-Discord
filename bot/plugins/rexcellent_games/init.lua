@@ -214,7 +214,7 @@ function events.MESSAGE_REACTION_ADD(info)
     local author = message:getAuthor()
 
     --Check if the suggestion embed is from bot itself
-    if author != botAPI.me then return end --Ignore the message
+    if author ~= botAPI.me then return end --Ignore the message
     if #message:getContent() then return end --Ignore the messages with text content
     
     for k, embed in pairs(message:getEmbeds()) do
