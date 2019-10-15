@@ -144,7 +144,7 @@ do
         suggestionSnowflakes[tostring(guildID)] = channelTag
         dataStorage["plugins/rexcellent_games/suggestions_snowflakes"] = suggestionSnowflakes
 
-        reply:send(false, failureEmbed)
+        reply:send(false, successEmbed)
     end
 end
 
