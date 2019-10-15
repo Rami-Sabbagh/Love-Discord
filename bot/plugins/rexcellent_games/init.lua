@@ -69,7 +69,7 @@ do
 
         local guildID = tostring(message:getGuildID())
         local suggestionChannel = suggestionChannels[guildID]
-        if not suggestionChannel then reply:send(False, noSetupEmbed) return end
+        if not suggestionChannel then reply:send(false, notSetupEmbed) return end
 
         if not suggestion then reply:send(false, usageEmbed) return end
         suggestion = table.concat({suggestion, ...}, " ")
