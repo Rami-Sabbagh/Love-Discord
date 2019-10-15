@@ -1,6 +1,8 @@
 --Basic operations plugin
 local botAPI, discord, pluginName, pluginPath, pluginDir = ...
 
+local dataStorage = require("bot.data_storage")
+
 local plugin = {}
 
 local lastMessages = {}
