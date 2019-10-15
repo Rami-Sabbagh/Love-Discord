@@ -12,9 +12,26 @@ local function Verify(value, name, ...)
     error(emsg, 3)
 end
 
+--REST Request with proper error handling (uses error level 3)
+local function Request(endpoint, data, method, headers, useMultipart)
+    local response_body, response_headers, status_code, status_line, failure_code, failure_line = discord.rest:request(endpoint, data, method, headers, useMultipart)
+    if not response_body then
+        error(response_headers, 3)
+    else
+        return response_body, response_headers, status_code, status_line
+    end
+end
+
 --New guild member object
-function guildMember:initialize(data)
-    Verify(data, "data", "table")
+function guildMember:initialize(data, userID)
+    Verify(data, "data", "table", "string")
+
+    if type(data) == "string" then
+        Verify(userID, "userID", "string")
+
+        local endpoint = string.format("/guilds/%s/members/%s", data, userID)
+        data = Request(endpoint)
+    end
 
     --== Basic Fields ==--
 
