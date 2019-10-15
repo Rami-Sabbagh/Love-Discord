@@ -41,3 +41,6 @@ luac.out
 
 # Bot Configuration
 bot/config.json
+
+# VSCode SFTP Configuration
+.vscode/sftp.json
