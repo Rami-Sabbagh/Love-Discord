@@ -56,7 +56,7 @@ do
 
     local notSetupEmbed = discord.embed()
     notSetupEmbed:setTitle("Failed to send then suggestion :warning:")
-    notSetupEmbed:setDescription("The suggestion system is not configured on this guild (server) !")
+    notSetupEmbed:setDescription("The suggestion system is not configured on this server !")
 
     local suggestionEmbed = discord.embed()
     suggestionEmbed:setTitle("Suggestion")
