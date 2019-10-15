@@ -78,7 +78,7 @@ do
         suggestionEmbed:setDescription(suggestion)
 
         local author = message:getAuthor()
-        suggestionEmbed:setFooter(string.format("Suggested by %s#%s", author:getUsername(), author:getDisciminator()))
+        suggestionEmbed:setFooter(string.format("Suggested by %s#%s", author:getUsername(), author:getDiscriminator()))
 
         suggestionEmbed:setImage()
         local attachments = message:getAttachments()
