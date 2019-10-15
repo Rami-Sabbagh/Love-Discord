@@ -2,7 +2,7 @@
 local botAPI, discord, pluginName, pluginPath, pluginDir = ...
 
 local dataStorage = require("bot.data_storage")
-local roleManager = require("bot.roles_manager")
+local rolesManager = require("bot.roles_manager")
 
 local plugin = {}
 
