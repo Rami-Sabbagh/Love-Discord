@@ -8,7 +8,7 @@ commands_manager/disabled_plugins
 ]]
 
 local function triggerPluginsEvent(eventName, ...)
-    for pluginName, plugin in pairs(self.plugins) do
+    for pluginName, plugin in pairs(pluginsManager.plugins) do
         if plugin.events then
             if plugin.events.ANY then
                 local ok, err = pcall(plugin.events.ANY, eventName, ...)
