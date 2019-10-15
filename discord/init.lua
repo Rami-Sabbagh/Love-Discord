@@ -200,9 +200,10 @@ end
 
 --Triggers an event functions
 function discord:_triggerEvent(name, ...)
-    if not self.events[name] then return end
-    for _, func in ipairs(self.events[name]) do
-        func(...)
+    if self.events[name] then
+        for _, func in ipairs(self.events[name]) do
+            func(...)
+        end
     end
 
     if self.events["ANY"] then
