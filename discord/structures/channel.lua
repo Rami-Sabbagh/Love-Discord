@@ -67,6 +67,11 @@ function channel:initialize(data)
     self.lastPinTimestamp = data.last_pin_timestamp --When the last pinned message was pinned (number)
 end
 
+--== Methods ==--
+
+--Returns the ID of the channel
+function channel:getID() return self.id end
+
 --Tells if this is a text channel
 local textChannelTypes = {"GUILD_TEXT", "DM", "GROUP_DM"}
 function channel:isText()
