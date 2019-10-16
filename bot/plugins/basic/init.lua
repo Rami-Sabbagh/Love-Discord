@@ -138,27 +138,38 @@ do
     end
 end
 
-function commands.ping(message, reply, commandName, ...)
-    local letterI = commandName:sub(2,2)
-    local letterO = (letterI == "I") and "O" or "o"
-    local pong = commandName:sub(1,1)..letterO..commandName:sub(3,4)
-    local explosion = (pong == "PONG") and " :boom:" or ""
-    if pong == "PONG" then pong = "**PONG**" end
-    reply:send(pong.." :ping_pong:"..explosion)
+--Ping command
+do
+    local usageEmbed = discord.embed()
+    usageEmbed:setDescription(":ping_pong:")
+    
+    function commands.ping(message, reply, commandName, ...)
+        if commandName == "?" then reply:send(false, usageEmbed) return end --Triggered using the help command
+
+        local letterI = commandName:sub(2,2)
+        local letterO = (letterI == "I") and "O" or "o"
+        local pong = commandName:sub(1,1)..letterO..commandName:sub(3,4)
+        local explosion = (pong == "PONG") and " :boom:" or ""
+        if pong == "PONG" then pong = "**PONG**" end
+        reply:send(pong.." :ping_pong:"..explosion)
+    end
 end
 
 --Say command
 do
-    local sayUsage = discord.embed()
-    sayUsage:setTitle("Usage: :notepad_spiral:")
-    sayUsage:setDescription("```css\nsay <content> [...]\n```")
+    local usageEmbed = discord.embed()
+    usageEmbed:setTitle("say")
+    usageEmbed:setDescription("Makes the bot send a message, and delete the original command message if allowed.")
+    usageEmbed:setField(1, "Usage: :notepad_spiral:", "```css\nsay <content> [...]\n```")
 
     local everyoneEmbed = discord.embed()
     everyoneEmbed:setTitle("You need to have administrator permissions to mention everyone :warning:")
 
     function commands.say(message, reply, commandName, ...)
+        if commandName == "?" then reply:send(false, usageEmbed) return end --Triggered using the help command
+
         local content = table.concat({...}, " ")
-        if content == "" then reply:send(false, sayUsage) return end
+        if content == "" then reply:send(false, usageEmbed) return end
         if content:find("@everyone") and not rolesManager:isFromAdmin(message) then reply:send(false, everyoneEmbed) return end
         reply:send(content)
 
@@ -170,13 +181,15 @@ end
 do
     local replyEmbed = discord.embed()
     local embedUsage = discord.embed()
-    embedUsage:setTitle("Usage: :notepad_spiral:")
-    embedUsage:setDescription("```css\nembed [title] [description]\n```")
+    embedUsage:setTitle("embed")
+    embedUsage:setDescription("Makes the bot send a message in an embed format, and delete the original command message if allowed.")
+    embedUsage:setField(1, "Usage: :notepad_spiral:", "```css\nembed [title] [description]\n```")
 
     local everyoneEmbed = discord.embed()
     everyoneEmbed:setTitle("You need to have administrator permissions to mention everyone :warning:")
 
     function commands.embed(message, reply, commandName, title, description)
+        if commandName == "?" then reply:send(false, embedUsage) return end --Triggered using the help command
         if not (title or description) then reply:send(false, embedUsage) return end
 
         if title and title:find("@everyone") and not rolesManager:isFromAdmin(message) then reply:send(false, everyoneEmbed) return end
@@ -194,8 +207,9 @@ end
 --Snowflake command
 do
     local usageEmbed = discord.embed()
-    usageEmbed:setTitle("Usage: :notepad_spiral:")
-    usageEmbed:setDescription(table.concat({
+    usageEmbed:setTitle("snowflake")
+    usageEmbed:setDescription("Decodes the provided snowflake and sends it's information")
+    usageEmbed:setField(1, "Usage: :notepad_spiral:", table.concat({
         "```css",
         "snowflake <snowflake> /* Prints snowflake information */",
         "snowflake /* Prints information of self generated snowflake */",
@@ -206,7 +220,8 @@ do
     infoEmbed:setTitle("Snowflake information: :clipboard:")
 
     function commands.snowflake(message, reply, commandName, sf)
-        if sf == "help" then reply:send(false, usageEmbed) return end
+        if commandName == "?" then reply:send(false, usageEmbed) return end --Triggered using the help command
+        if not sf then reply:send(false, usageEmbed) return end
         sf = discord.snowflake(sf)
 
         infoEmbed:setDescription(tostring(sf))
