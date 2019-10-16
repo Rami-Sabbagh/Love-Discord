@@ -32,8 +32,9 @@ plugin.commands = {}; local commands = plugin.commands
 --Suggest Command
 do
     local usageEmbed = discord.embed()
-    usageEmbed:setTitle("Usage: :notepad_spiral:")
-    usageEmbed:setDescription(table.concat({
+    usageEmbed:setTitle("suggest")
+    usageEmbed:setDescription("Submit a suggestion for the server admins to inspect.")
+    usageEmbed:setField(1, "Usage: :notepad_spiral:", table.concat({
         "```css",
         "suggestion <suggestion> /* Submit a suggestion */",
         "```"
@@ -51,6 +52,7 @@ do
     successEmbed:setTitle("The suggestions has been sent successfully :white_check_mark:")
 
     function commands.suggestion(message, reply, commandName, suggestion, ...)
+        if commandName == "?" then reply:send(false, usageEmbed) return end --Triggered using the help command
         if not message:getGuildID() then reply:send(false, noDMEmbed) return end
 
         local guildID = tostring(message:getGuildID())
@@ -91,8 +93,9 @@ end
 --SetSuggestChannel Command
 do
     local usageEmbed = discord.embed()
-    usageEmbed:setTitle("Usage: :notepad_spiral:")
-    usageEmbed:setDescription(table.concat({
+    usageEmbed:setTitle("setSuggestionChannel")
+    usageEmbed:setDescription("Sets the channel for sending suggestion embeds into.")
+    usageEmbed:setField(1, "Usage: :notepad_spiral:", table.concat({
         "```css",
         "setSuggestionsChannel <new channel tag> /* Sets the channel for sending in suggestions */",
         "setSuggestionsChannel clear /* Clears the set channel for sending in suggestions and disables the suggestions system */",
@@ -105,6 +108,7 @@ do
     local failureEmbed = discord.embed()
 
     function commands.setsuggestionschannel(message, reply, commandName, channelTag)
+        if commandName == "?" then reply:send(false, usageEmbed) return end --Triggered using the help command
         if not message:getGuildID() then reply:send(false, noDMEmbed) return end
         if not rolesManager:isFromAdmin(message) then reply:send(false, adminEmbed) return end
         if not channelTag then reply:send(false, usageEmbed) return end
