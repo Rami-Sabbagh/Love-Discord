@@ -47,17 +47,12 @@ do
 
         --Provide help about a plugin or a command
         if arg1 then
-            --Command help
             local commands = commandsManager:getCommands()
-            if commands[arg1:lower()] then
-                commands[arg1:lower()](message, reply, "?")
-                return
-            end
 
             --Plugin help
             local plugins = pluginsManager:getPlugins()
             for internalName, p in pairs(plugins) do
-                if internalName == arg1 or p.name == arg1 then
+                if (internalName == arg1 and not commands[arg1:lower()]) or p.name == arg1 then
                     local pluginEmbed = discord.embed()
                     pluginEmbed:setTitle(p.name.." "..p.icon)
                     pluginEmbed:setDescription(p.description)
@@ -82,6 +77,12 @@ do
                     reply:send(false, pluginEmbed)
                     return
                 end
+            end
+
+            --Command help
+            if commands[arg1:lower()] then
+                commands[arg1:lower()](message, reply, "?")
+                return
             end
 
             --Not found
