@@ -41,6 +41,7 @@ do
     notFoundEmbed:setTitle("Command/Plugin doesn't exist :warning:")
 
     local mainEmbed = discord.embed()
+    mainEmbed:setFooter("Use |help help| for more information on how to use this command.")
 
     function commands.help(message, reply, commandName, arg1)
         if commandName == "?" then reply:send(false, usageEmbed) return end --Triggered using the help command
