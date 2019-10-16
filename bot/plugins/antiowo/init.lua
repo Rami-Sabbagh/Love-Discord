@@ -37,8 +37,9 @@ plugin.authorEmail = "ramilego4game@gmail.com" --The email of the auther, could 
 plugin.commands = {}; local commands = plugin.commands
 
 local usageEmbed = discord.embed()
-usageEmbed:setTitle("Usage :notepad_spiral:")
-usageEmbed:setDescription(table.concat({
+usageEmbed:setTitle("antiowo")
+usageEmbed:setDescription("Control the antiowo forces :spy:")
+usageEmbed:setField(1, "Usage :notepad_spiral:", table.concat({
     "```css",
     "antiowo report <mention_user> <owo_count>",
     "antiowo tell <mention_user>",
@@ -51,6 +52,7 @@ local function sendAntiOwOUsage(reply)
 end
 
 function commands.antiowo(message, reply, commandName, verb, arg1, arg2)
+    if commandName == "?" then sendAntiOwOUsage(reply) return end --Triggered using the help command
     if not botAPI:isFromOwner(message) and (not verb or verb ~= "tell") then reply:send(false, ownerEmbed) return end
 
     if not verb then sendAntiOwOUsage(reply) return end
