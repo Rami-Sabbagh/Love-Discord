@@ -180,10 +180,12 @@ do
     local resultEmbed = discord.embed()
     resultEmbed:setTitle("Execution output: :scroll:")
 
-    function commands.gitpull(message, reply, commandName, ...)
+    function commands.gitupdate(message, reply, commandName, ...)
         if not botAPI:isFromOwner(message) then reply:send(false, ownerEmbed) return end
-        local output = capture("git -C "..love.filesystem.getSource().." pull")
-        resultEmbed:setDescription("```\n"..output.."\n```")
+        local output1 = capture("git -C "..love.filesystem.getSource().." -- .")
+        local output2 = capture("git -C "..love.filesystem.getSource().." pull")
+        resultEmbed:setField(1, "Git Checkout:", "```\n"..output1.."\n```")
+        resultEmbed:setField(2, "Git Pull:", "```\n"..output2.."\n```")
         reply:send(false, resultEmbed)
     end
 end
