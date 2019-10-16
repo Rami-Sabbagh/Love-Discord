@@ -41,15 +41,15 @@ do
     }, "\n"))
 
     local notSetupEmbed = discord.embed()
-    notSetupEmbed:setTitle("Failed to send then suggestion :warning:")
-    notSetupEmbed:setDescription("The suggestion system is not configured on this server !")
+    notSetupEmbed:setTitle("Failed to send the suggestion :warning:")
+    notSetupEmbed:setDescription("The suggestions system is not configured on this server !")
 
     local suggestionEmbed = discord.embed()
     suggestionEmbed:setTitle("Suggestion")
     suggestionEmbed:setColor(0xDBBF59)
 
     local successEmbed = discord.embed()
-    successEmbed:setTitle("The suggestions has been sent successfully :white_check_mark:")
+    successEmbed:setTitle("The suggestion has been sent successfully :white_check_mark:")
 
     function commands.suggestion(message, reply, commandName, suggestion, ...)
         if commandName == "?" then reply:send(false, usageEmbed) return end --Triggered using the help command
