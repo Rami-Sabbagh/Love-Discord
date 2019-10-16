@@ -177,17 +177,18 @@ do
         return s
     end
 
-    local resultEmbed = discord.embed()
-    resultEmbed:setTitle("Execution output: :scroll:")
-
     function commands.gitupdate(message, reply, commandName, ...)
         if not botAPI:isFromOwner(message) then reply:send(false, ownerEmbed) return end
         local output1 = capture("git -C "..love.filesystem.getSource().." add *")
         local output2 = capture("git -C "..love.filesystem.getSource().." checkout -- "..love.filesystem.getSource())
         local output3 = capture("git -C "..love.filesystem.getSource().." pull")
-        resultEmbed:setField(1, "Git Add:", "` "..output1:gsub("\n", " `\n` ").." `")
-        resultEmbed:setField(2, "Git Checkout:", "` "..output2:gsub("\n", " `\n` ").." `")
-        resultEmbed:setField(3, "Git Pull:", "` "..output3:gsub("\n", " `\n` ").." `")
+        local fieldsCount = 1
+        
+        local resultEmbed = discord.embed()
+        resultEmbed:setTitle("Execution output: :scroll:")
+        if output1 ~= "" then resultEmbed:setField(fieldsCount, "Git Add:", "` "..output1:gsub("\n", " `\n` ").." `"); fieldsCount = fieldsCount + 1 end
+        if output2 ~= "" then resultEmbed:setField(fieldsCount, "Git Checkout:", "` "..output2:gsub("\n", " `\n` ").." `"); fieldsCount = fieldsCount + 1 end
+        if output3 ~= "" then resultEmbed:setField(fieldsCount, "Git Pull:", "` "..output3:gsub("\n", " `\n` ").." `"); fieldsCount = fieldsCount + 1 end
         reply:send(false, resultEmbed)
     end
 end
