@@ -3,14 +3,16 @@ local botAPI, discord, pluginName, pluginPath, pluginDir = ...
 
 local rolesManager = require("bot.roles_manager")
 local commandsManager = require("bot.commands_manager")
+local pluginsManager = require("bot.plugins_manager")
 
 local plugin = {}
 
 --== Plugin Meta ==--
 
 plugin.name = "Basic" --The visible name of the plugin
+plugin.icon = ":books:" --The plugin icon to be shown in the help command
 plugin.version = "V2.0.0" --The visible version string of the plugin
-plugin.description = "Handles basic operations" --The description of the plugin
+plugin.description = "Handles basic operations." --The description of the plugin
 plugin.author = "Rami#8688" --Usually the discord tag of the author, but could be anything else
 plugin.authorEmail = "ramilego4game@gmail.com" --The email of the auther, could be left empty
 
@@ -22,12 +24,105 @@ adminEmbed:setTitle("You need to have administrator permissions to use this comm
 
 plugin.commands = {}; local commands = plugin.commands
 
+--Help command, lists available commands and could request help for each command or plugin
+do
+    local usageEmbed = discord.embed()
+    usageEmbed:setTitle("help")
+    usageEmbed:setDescription("Provides information about the available plugins and their commands usage.")
+    usageEmbed:setField(1, "Usage: :notepad_spiral:", table.concat({
+        "```css",
+        "help /* Provides a list of available plugins and some information about the bot */",
+        "help <pluginName> /* Provides more information about the requested plugin and it's command list */",
+        "help <commandName> /* Provides the usage information of the requested command */",
+        "```"
+    }, "\n"))
+
+    local notFoundEmbed = discord.embed()
+    notFoundEmbed:setTitle("Command/Plugin doesn't exist :warning:")
+
+    local mainEmbed = discord.embed()
+
+    function commands.help(message, reply, commandName, arg1)
+        if commandName == "?" then reply:send(false, usageEmbed) return end --Triggered using the help command
+
+        --Provide help about a plugin or a command
+        if arg1 then
+            --Command help
+            local commands = commandsManager:getCommands()
+            if commands[arg1:lower()] then
+                commands[arg1:lower()](message, reply, "?")
+                return
+            end
+
+            --Plugin help
+            local plugins = pluginsManager:getPlugins()
+            for internalName, p in pairs(plugins) do
+                if internalName == arg1 or p.name == arg1 then
+                    local pluginEmbed = discord.embed()
+                    pluginEmbed:setTitle(p.name.." "..p.icon)
+                    pluginEmbed:setDescription(p.description)
+                    pluginEmbed:setField(1, "Version:", p.version)
+                    
+                    local pCommands = p.commands
+                    if pCommands then
+                        local clist = {}
+                        for k,v in pairs(pCommands) do clist[#clist+1] = k end
+                        if #clist > 0 then
+                            table.sort(clist)
+                            clist = table.concat(clist, ", ")
+                            pluginEmbed:setField(2, "Commands:", "```css\n"..clist.."\n```")
+                        end
+                    end
+
+                    if not pluginEmbed:getField(2) then
+                        pluginEmbed:setField(2, "Commands:", "The plugin has no commands :thinking:")
+                    end
+
+                    pluginEmbed:setFooter("Plugin by "..p.author:gsub("_", "\\_").." ("..p.authorEmail:gsub("_", "\\_")..")")
+                    reply:send(false, pluginEmbed)
+                    return
+                end
+            end
+
+            --Not found
+            reply:send(false, notFoundEmbed)
+        --Provide the main help embed
+        else
+            if not mainEmbed:getField(1) then
+                local plugins = pluginsManager:getPlugins()
+                local plist = {}
+                for id, p in pairs(plugins) do
+                    plist[#plist + 1] = p.icon.." **"..p.name.."** (ID: _"..id:gsub("_", "\\_").."_)"
+                end
+                table.sort(plist, function(v1, v2)
+                    v1, v2 = v1:gsub("^:.-: ", ""), v2:gsub("^:.-: ", "")
+                    return v1 < v2
+                end)
+                plist = table.concat(plist, "\n")
+                mainEmbed:setField(1, "Available Plugins: :tools:", plist)
+            end
+
+            reply:send(false, mainEmbed)
+        end
+    end
+end
+
 --Commands command, lists available commands
 do
     local commandsEmbed = discord.embed()
     commandsEmbed:setTitle("Available commands: :tools:")
 
+    local usageEmbed = discord.embed()
+    usageEmbed:setTitle("commands")
+    usageEmbed:setDescription("Provides the list of available commands.")
+    usageEmbed:setField(1, "Usage: :notepad_spiral:", "```css\ncommands\n```")
+
+    local mainEmbed = discord.embed()
+
+
     function commands.commands(message, reply, commandName, ...)
+        if commandName == "?" then reply:send(false, usageEmbed) return end --Triggered using the help command
+
         if not commandsEmbed:getDescription() then
             local commandsList = {}
             for c in pairs(commandsManager:getCommands()) do commandsList[#commandsList + 1] = c end
@@ -41,8 +136,6 @@ do
 
         reply:send(false, commandsEmbed)
     end
-
-    commands.help = commands.commands --Temporary
 end
 
 function commands.ping(message, reply, commandName, ...)
