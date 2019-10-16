@@ -26,7 +26,7 @@ local plugin = {}
 --== Plugin Meta ==--
 
 plugin.name = "AntiOwO" --The visible name of the plugin
-plugin.icon = ":question:" --The plugin icon to be shown in the help command
+plugin.icon = ":spy:" --The plugin icon to be shown in the help command
 plugin.version = "V2.0.3" --The visible version string of the plugin
 plugin.description = "Complains about everyone saying owo or it's varients." --The description of the plugin
 plugin.author = "Rami#8688" --Usually the discord tag of the author, but could be anything else
