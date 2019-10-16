@@ -21,20 +21,36 @@ plugin.authorEmail = "ramilego4game@gmail.com" --The email of the auther, could 
 
 plugin.commands = {}; local commands = plugin.commands
 
-function commands.this(message, reply, commandName, ...)
-    local channelID = tostring(message:getChannelID())
-    
-    local lastMessage = lastMessages[channelID]
-    if lastMessage then
-        pcall(lastMessage.addReaction, lastMessage, "this:580812863111954442")
-        lastMessages[channelID] = nil --We don't want to react again
-    end
+do
+    local usageEmbed = discord.embed()
+    usageEmbed:setTitle("this")
+    usageEmbed:setDescription("Reacts with the <:this:580812863111954442> emoji on the last message, and deletes the original command message if possible.")
+    usageEmbed:setField(1, "Usage: :notepad_spiral:", "```css\nthis\n```")
 
-    if message:getGuildID() then pcall(message.delete, message) end
+    function commands.this(message, reply, commandName, ...)
+        if commandName == "?" then reply:send(false, usageEmbed) return end --Triggered using the help command
+        local channelID = tostring(message:getChannelID())
+        
+        local lastMessage = lastMessages[channelID]
+        if lastMessage then
+            pcall(lastMessage.addReaction, lastMessage, "this:580812863111954442")
+            lastMessages[channelID] = nil --We don't want to react again
+        end
+
+        if message:getGuildID() then pcall(message.delete, message) end
+    end
 end
 
-function commands.antisnipe(message, reply, commandName, ...)
-    if message:getGuildID() then pcall(message.delete, message) end
+do
+    local usageEmbed = discord.embed()
+    usageEmbed:setTitle("antisnipe")
+    usageEmbed:setDescription("Deletes the original command message if possible so that snipe utilities (which display the latest deleted message) would not show the actual delete message.")
+    usageEmbed:setField(1, "Usage: :notepad_spiral:", "```css\nantisnipe\n```")
+
+    function commands.antisnipe(message, reply, commandName, ...)
+        if commandName == "?" then reply:send(false, usageEmbed) return end --Triggered using the help command
+        if message:getGuildID() then pcall(message.delete, message) end
+    end
 end
 
 --== Events ==--
