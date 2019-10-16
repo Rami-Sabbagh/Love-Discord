@@ -102,7 +102,7 @@ do
     function commands.dumpdata(message, reply, commandName, dname)
         if commandName == "?" then reply:send(false, usageEmbed) return end --Triggered using the help command
         if not botAPI:isFromOwner(message) then reply:send(false, ownerEmbed) return end
-        if not dname then reply:send(false, usageEmbed) return end end
+        if not dname then reply:send(false, usageEmbed) return end
 
         local data = discord.json:encode_pretty(dataStorage[dname])
         local message = table.concat({
