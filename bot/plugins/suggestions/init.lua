@@ -11,7 +11,7 @@ local suggestionChannels = {}
 --== Plugin Meta ==--
 
 plugin.name = "Suggestions" --The visible name of the plugin
-plugin.icon = ":question:" --The plugin icon to be shown in the help command
+plugin.icon = ":envelope:" --The plugin icon to be shown in the help command
 plugin.version = "V1.0.0" --The visible version string of the plugin
 plugin.description = "A basic suggestions system." --The description of the plugin
 plugin.author = "Rami#8688" --Usually the discord tag of the author, but could be anything else
