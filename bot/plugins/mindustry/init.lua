@@ -2,8 +2,6 @@
 local botAPI, discord, pluginName, pluginPath, pluginDir = ...
 
 local socket = require("socket")
-local dataStorage = require("bot.data_storage")
-local rolesManager = require("bot.roles_manager")
 
 local plugin = {}
 
@@ -14,7 +12,7 @@ local serverFile --Created later using io.popen
 
 plugin.name = "MinDustry" --The visible name of the plugin
 plugin.icon = ":joystick:" --The plugin icon to be shown in the help command
-plugin.version = "V0.0.0" --The visible version string of the plugin
+plugin.version = "V1.0.0" --The visible version string of the plugin
 plugin.description = "Allows the control of a mindustry server running at the same system of the bot's one." --The description of the plugin
 plugin.author = "Rami#8688" --Usually the discord tag of the author, but could be anything else
 plugin.authorEmail = "ramilego4game@gmail.com" --The email of the auther, could be left empty
