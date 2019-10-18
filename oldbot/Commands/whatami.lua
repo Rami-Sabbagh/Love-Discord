@@ -1,3 +1,0 @@
-local discord, chid, data = ...
-
-discord.channels.createMessage(chid, "I'm a Discord bot written and running in LÖVE\n\n**Soucecode:** https://github.com/RamiLego4Game/Love-Discord")
