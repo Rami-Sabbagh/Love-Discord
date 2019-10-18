@@ -99,7 +99,9 @@ end
 --Update the bot
 function botAPI:update(dt)
     dataStorage(dt)
-    self.discord:update(dt)
+    if self.discord:update(dt) then
+        pluginsManager:update(dt)
+    end
 end
 
 --Quit the bot properly with the data saved

@@ -86,7 +86,7 @@ end
 --Update the gateway and process gateway events
 function discord:update(dt)
     if self.gateway:isConnected() then
-        self.gateway:update(dt)
+        return self.gateway:update(dt)
     end
 end
 

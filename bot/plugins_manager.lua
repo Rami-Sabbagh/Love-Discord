@@ -57,6 +57,11 @@ function pluginsManager:reload()
     return true --Success
 end
 
+--Update the plugins
+function pluginsManager:update(dt)
+    triggerPluginsEvent("UPDATE", dt)
+end
+
 --Returns the list of initialized plugins
 function pluginsManager:getPlugins()
     return self.plugins
