@@ -221,7 +221,7 @@ function events.MESSAGE_REACTION_ADD(info)
                     local user = reactionMember:getUser()
                     patchedEmbed:setFooter(action.verb.." by "..user:getUsername().."#"..user:getDiscriminator()..", "..patchedEmbed:getFooter())
 
-                    message:getReplyChannel():send(false, patchedEmbed)
+                    message:edit(false, patchedEmbed)
 
                     break
                 end
