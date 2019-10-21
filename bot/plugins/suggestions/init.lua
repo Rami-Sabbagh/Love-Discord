@@ -81,6 +81,7 @@ do
         local sentMessage = suggestionChannel:send(false, suggestionEmbed)
         if sentMessage then
             sentMessage:addReaction("thumbsup")
+            love.timer.sleep(1) --Sleep 1 second between the reactions so the ratelimit is not faced instantly
             sentMessage:addReaction("thumbsdown")
         end
 
