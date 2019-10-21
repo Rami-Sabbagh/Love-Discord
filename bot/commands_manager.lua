@@ -209,7 +209,7 @@ function commandsManager:_MESSAGE_CREATE(message)
         local r = math.random(1, #self.unknownEmojis)
         local e = self.unknownEmojis[r]
 
-        local embed = discord.embed()
+        local embed = self.discord.embed()
         embed:setTitle("Unknown command `"..commandName.."` :"..e..":")
 
         pcall(replyChannel.send, replyChannel, false, embed)
