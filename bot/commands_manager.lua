@@ -127,7 +127,7 @@ function commandsManager:_MESSAGE_CREATE(message)
 
     --Parse the command syntax
     local command, nextPos, spos, epos = {}, 1, content:find("%S+", 1)
-    if spos > 1 then return end --There's whitespace between the prefix and the actual command
+    if not spos or spos > 1 then return end --There's whitespace between the prefix and the actual command, or just the command is not known
     while spos do
         local substr = content:sub(spos, epos)
         if not substr:find("`") then
