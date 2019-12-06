@@ -127,6 +127,8 @@ do
     executeUsage:setField(1, "Usage: :notepad_spiral:", table.concat({
         "```css",
         "execute <lua_code_block> [no_log]",
+        "execute `[ATTACHMENT]` [no_log]",
+        "  /* Execute code from the first attached file */",
         "```"
     },"\n"))
 
@@ -140,6 +142,20 @@ do
         if commandName == "?" then reply:send(false, executeUsage) return end --Triggered using the help command
         if not botAPI:isFromOwner(message) then reply:send(false, ownerEmbed) return end
         if not luaCode then reply:send(false, executeUsage) return end
+
+        if luaCode == "[ATTACHMENT]" then
+            local attachment = message:getAttachments()[1]
+            local fileURL = attachment:getURL()
+
+            local respondBody, httpErr = discord.utilities.http.request(fileURL)
+            if not respondBody then
+                errorEmbed:setField(1, "Download Error:", "```\n"..httpErr.."\n```")
+                reply:send(false, errorEmbed)
+                return
+            end
+
+            luaCode = respondBody
+        end
 
         local chunk, err = loadstring(luaCode, "codeblock")
         if not chunk then
