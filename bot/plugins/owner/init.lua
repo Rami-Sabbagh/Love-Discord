@@ -12,7 +12,7 @@ local plugin = {}
 
 plugin.name = "Owner" --The visible name of the plugin
 plugin.icon = ":radio_button:" --The plugin icon to be shown in the help command
-plugin.version = "V2.0.0" --The visible version string of the plugin
+plugin.version = "V2.1.0" --The visible version string of the plugin
 plugin.description = "Contains commands available only to the owners of the bot." --The description of the plugin
 plugin.author = "Rami#8688" --Usually the discord tag of the author, but could be anything else
 plugin.authorEmail = "ramilego4game@gmail.com" --The email of the auther, could be left empty
