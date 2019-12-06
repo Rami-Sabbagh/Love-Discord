@@ -178,13 +178,14 @@ function commandsManager:_MESSAGE_CREATE(message)
     --Command execution
     local commandName = string.lower(command[1])
     local commandFound = self.commands[commandName]
+	local commandAvailable = commandFound
     
     if commandFound then
         local pluginName = self.commandPluginName[commandName]
-        if pluginsManager:isPluginDisabled(guildID, channelID, pluginName) then commandFound = false end
+        if pluginsManager:isPluginDisabled(guildID, channelID, pluginName) then commandAvailable = false end
     end
     
-    if commandFound then
+    if commandAvailable then
         local ok, traceback = xpcall(function() self.commands[commandName](message, replyChannel, unpack(command)) end, debug.traceback)
         if not ok then
             local crashReports = dataStorage["commands_manager/crash_reports"]
@@ -210,7 +211,11 @@ function commandsManager:_MESSAGE_CREATE(message)
         local e = self.unknownEmojis[r]
 
         local embed = self.discord.embed()
-        embed:setTitle("Unknown command `"..commandName.."` :"..e..":")
+		if commandFound then 
+			embed:setTitle("The `"..commandName.."` command is not available in this channel/server :warning:")
+		else
+			embed:setTitle("Unknown command `"..commandName.."` :"..e..":")
+		end
 
         pcall(replyChannel.send, replyChannel, false, embed)
         --pcall(message.addReaction, message, e)
