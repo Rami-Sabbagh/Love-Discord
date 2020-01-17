@@ -41,7 +41,7 @@ local function getReactionEmoji(guildID, id, fetch)
     local emojiID = guildEmojies[id] or defaultReactions[id]
     
     if fetch and tonumber(emojiID) then
-        local emoji = discord.emoji(false, emojiID)
+        local emoji = discord.emoji(tostring(guildID), emojiID)
         return emoji:getName()..":"..tostring(emoji:getID())
     else
         return emojiID
