@@ -12,7 +12,7 @@ local suggestionChannels = {}
 
 plugin.name = "Suggestions" --The visible name of the plugin
 plugin.icon = ":envelope:" --The plugin icon to be shown in the help command
-plugin.version = "V1.0.0" --The visible version string of the plugin
+plugin.version = "V1.1.0" --The visible version string of the plugin
 plugin.description = "A basic suggestions system." --The description of the plugin
 plugin.author = "Rami#8688" --Usually the discord tag of the author, but could be anything else
 plugin.authorEmail = "ramilego4game@gmail.com" --The email of the auther, could be left empty
@@ -24,6 +24,22 @@ noDMEmbed:setTitle("This command could be used only in servers :warning:")
 
 local adminEmbed = discord.embed()
 adminEmbed:setTitle("You need to have administrator permissions to use this command :warning:")
+
+--== Shared Methods ==--
+local defaultReactions = {
+    upvote = "thumbsup",
+    downvote = "thumbsdown",
+    accepted = "white_check_mark",
+    rejected = "negative_squared_cross_mark",
+    done = "ballot_box_with_check"
+}
+
+local function getReactionEmoji(guildID, id)
+    local suggestionEmojies = dataStorage["plugins/rexcellent_games/suggestions_emojies"]
+    local guildEmojies = suggestionEmojies[tostring(guildID)]
+    
+    return guildEmojies[id] or defaultReactions[id]
+end
 
 --== Commands ==--
 
@@ -80,9 +96,9 @@ do
 
         local sentMessage = suggestionChannel:send(false, suggestionEmbed)
         if sentMessage then
-            sentMessage:addReaction("thumbsup")
+            sentMessage:addReaction(getReactionEmoji(guildID, "upvote"))
             love.timer.sleep(1) --Sleep 1 second between the reactions so the ratelimit is not faced instantly
-            sentMessage:addReaction("thumbsdown")
+            sentMessage:addReaction(getReactionEmoji(guildID, "downvote"))
         end
 
         reply:send(false, successEmbed)
@@ -94,7 +110,7 @@ end
 --SetSuggestChannel Command
 do
     local usageEmbed = discord.embed()
-    usageEmbed:setTitle("setSuggestionChannel")
+    usageEmbed:setTitle("setSuggestionsChannel")
     usageEmbed:setDescription("Sets the channel for sending suggestion embeds into.")
     usageEmbed:setField(1, "Usage: :notepad_spiral:", table.concat({
         "```css",
@@ -137,6 +153,65 @@ do
         dataStorage["plugins/rexcellent_games/suggestions_snowflakes"] = suggestionSnowflakes
 
         reply:send(false, successEmbed)
+    end
+end
+
+local waitingReaction = {}
+
+--SetSuggestionsReaction
+do
+    local usageEmbed = discord.embed()
+    usageEmbed:setTitle("setSuggestionsReaction")
+    usageEmbed:setDescription("Customize the suggestions reactions emojis for your guild.")
+    usageEmbed:setField(1, "Usage: :notepad_spiral:", table.concat({
+        "```css",
+        "setSuggestionsReaction upvote /* Set the emoji for the upvote reaction */",
+        "setSuggestionsReaction downvote /* Set the emoji for the downvote reaction */",
+        "setSuggestionsReaction accepted /* Set the emoji for the accepted reaction */",
+        "setSuggestionsReaction rejected /* Set the emoji for the rejected reaction */",
+        "setSuggestionsReaction done /* Set the emoji for the done reaction */",
+        "",
+        "setSuggestionsChannel reset /* Restore the original reactions emojis */",
+        "```"
+    }, "\n"))
+
+    local resetEmbed = discord.embed()
+    resetEmbed:setTitle("The suggestions reaction has been reset successfully :white_check_mark:")
+
+    local waitingEmbed = discord.embed()
+
+    local actionsNames = {"upvote", "downvote", "accepted", "rejected", "done", "reset"}
+    for k,v in ipairs(actionsNames) do actionsNames[v] = k end
+
+    function commands.setsuggestionsreaction(message, reply, commandName, action)
+        if commandName == "?" then reply:send(false, usageEmbed) return end --Triggered using the help command
+        if not message:getGuildID() then reply:send(false, noDMEmbed) return end
+        if not rolesManager:isFromAdmin(message) then reply:send(false, adminEmbed) return end
+        if not action then reply:send(false, usageEmbed) return end
+        if not actionsNames[action] then reply:send(false, usageEmbed) return end
+
+        local guildID = tostring(message:getGuildID())
+
+        --Delete the previous request
+        if waitingReaction.message then
+            waitingReaction.message:delete()
+            waitingReaction = {}
+        end
+
+        if action == "reset" then
+            local suggestionEmojies = dataStorage["plugins/rexcellent_games/suggestions_emojies"]
+            suggestionsEmojies[guildID] = {}
+            dataStorage["plugins/rexcellent_games/suggestions_emojies"] = suggestionEmojies
+            reply:send(false, resetEmbed)
+            return
+        end
+
+        waitingEmbed:setTitle("Please react with the new emoji for `"..action.."`")
+        local waitingMessage = reply:send(false, waitingEmbed)
+
+        waitingReaction.message = waitingMessage
+        waitingReaction.requestMessage = message
+        waitingReaction.action = action
     end
 end
 
@@ -195,20 +270,29 @@ function events.CHANNEL_DELETE(channel)
 end
 
 local reactionActions = {
-    ["white_check_mark"] = { verb = "Accepted", color = 0x5FF44B },
-    ["negative_squared_cross_mark"] = { verb = "Denied", color = 0xEF5047 },
-    ["ballot_box_with_check"] = { verb = "Done", color = 0x42B0F4 }
+    ["accepted"] = { verb = "Accepted", color = 0x5FF44B },
+    ["rejected"] = { verb = "Denied", color = 0xEF5047 },
+    ["done"] = { verb = "Done", color = 0x42B0F4 }
 }
 
 --Suggestion Accepted/Denied/Done
-function events.MESSAGE_REACTION_ADD(info)
+local function suggestionReaction(info)
     local userID, guildID, channelID, messageID = info.userID, info.guildID, info.channelID, info.messageID
     local emoji = info.emoji
 
     if not guildID then return end --DM reaction
+    if not suggestionChannels[tostring(guildID)] then return end --This guild doesn't have a suggestions channel
+    if suggestionChannels[tostring(guildID)]:getID() ~= channelID then return end --It's not the suggestions channel
 
-    local emojiName = emoji:getName()
-    local action = reactionActions[emojiName]
+    local emojiName = tostring(emoji:getID() or emoji:getName())
+
+    local action
+    for k,v in pairs(reactionActions) do
+        if emojiName == getReactionEmoji(guildID, k) then
+            action = v
+            break
+        end
+    end
     if not action then return end --Useless reaction
 
     --Figure out if he's an admin doing this
@@ -242,6 +326,37 @@ function events.MESSAGE_REACTION_ADD(info)
             end
         end
     end
+end
+
+--Suggestion reactions customization
+--TODO: Reject the reaction if other action has the same emoji!
+local function customizationReaction(info)
+    if not waitingReaction.message then return end
+
+    local userID, guildID, channelID, messageID = info.userID, info.guildID, info.channelID, info.messageID
+    local emoji = info.emoji
+
+    if messageID ~= waitingReaction.message:getID() then return end
+    if userID ~= waitingReaction.requestMessage:getAuthor():getID() then return end
+    
+    local suggestionEmojies = dataStorage["plugins/rexcellent_games/suggestions_emojies"]
+    local guildEmojis = suggestionEmojies[tostring(guildID)] or {}
+
+    guildEmojis[waitingReaction.action] = tostring(emoji:getID() or emoji:getName())
+
+    suggestionEmojies[tostring(guildID)] = guildEmojis
+    dataStorage["plugins/rexcellent_games/suggestions_emojies"] = suggestionEmojies
+
+    local reactionSetEmbed = discord.embed()
+    reactionSetEmbed:setTitle("The suggestions `"..waitingReaction.action.."` reaction has been set successfully for this guild :white_check_mark:")
+
+    waitingReaction.message:edit(false, reactionSetEmbed)
+    waitingReaction = {}
+end
+
+function events.MESSAGE_REACTION_ADD(info)
+    suggestionReaction(info)
+    customizationReaction(info)
 end
 
 return plugin
