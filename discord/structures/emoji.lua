@@ -12,6 +12,8 @@ local function Verify(value, name, ...)
     error(emsg, 3)
 end
 
+--TODO: Add weak tables caching of custom emojis
+
 --New guild member object
 function emoji:initialize(data, emojiID)
     if type(data) == "string" then
