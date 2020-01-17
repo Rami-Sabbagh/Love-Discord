@@ -36,7 +36,7 @@ local defaultReactions = {
 
 local function getReactionEmoji(guildID, id)
     local suggestionEmojies = dataStorage["plugins/rexcellent_games/suggestions_emojies"]
-    local guildEmojies = suggestionEmojies[tostring(guildID)]
+    local guildEmojies = suggestionEmojies[tostring(guildID)] or {}
     
     return guildEmojies[id] or defaultReactions[id]
 end
