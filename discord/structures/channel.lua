@@ -156,4 +156,9 @@ function channel:__tostring()
     return discord.utilities.message.formatChannel(tostring(self.id))
 end
 
+--Checks if the two channel objects has the same id
+function channel:__eq(other)
+    return self.id == other.id
+end
+
 return channel
