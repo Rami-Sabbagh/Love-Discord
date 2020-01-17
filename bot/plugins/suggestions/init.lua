@@ -103,9 +103,9 @@ do
 
         local sentMessage = suggestionChannel:send(false, suggestionEmbed)
         if sentMessage then
-            sentMessage:addReaction(getReactionEmoji(guildID, "upvote"))
+            sentMessage:addReaction(getReactionEmoji(guildID, "upvote", true))
             love.timer.sleep(1) --Sleep 1 second between the reactions so the ratelimit is not faced instantly
-            sentMessage:addReaction(getReactionEmoji(guildID, "downvote"))
+            sentMessage:addReaction(getReactionEmoji(guildID, "downvote", true))
         end
 
         reply:send(false, successEmbed)
