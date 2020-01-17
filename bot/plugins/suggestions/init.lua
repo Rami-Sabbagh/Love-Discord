@@ -179,7 +179,20 @@ function events.RELOAD()
     end
 end
 
---TODO: HOOK INTO CHANNEL DELETE
+--Unregister the suggestions channel when deleted
+function events.CHANNEL_DELETE(channel)
+    local guildID = channel:getGuildID()
+    if not guildID then return end --DM channel
+    guildID = tostring(guildID)
+
+    if suggestionChannels[guildID] ~= channel then return end --Not a suggestions channel
+
+    --Unregister the channel
+    suggestionChannels[guildID] = nil
+    local suggestionSnowflakes = dataStorage["plugins/rexcellent_games/suggestions_snowflakes"]
+    suggestionSnowflakes[guildID] = nil
+    dataStorage["plugins/rexcellent_games/suggestions_snowflakes"] = suggestionSnowflakes
+end
 
 local reactionActions = {
     ["white_check_mark"] = { verb = "Accepted", color = 0x5FF44B },
