@@ -72,6 +72,9 @@ end
 --Returns the ID of the channel
 function channel:getID() return self.id end
 
+--Returns the guildID of the channel (if it's set)
+function channel:getGuildID() return self.guildID end
+
 --Tells if this is a text channel
 local textChannelTypes = {"GUILD_TEXT", "DM", "GROUP_DM"}
 function channel:isText()
