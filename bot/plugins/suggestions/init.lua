@@ -34,11 +34,18 @@ local defaultReactions = {
     done = "ballot_box_with_check"
 }
 
-local function getReactionEmoji(guildID, id)
+local function getReactionEmoji(guildID, id, fetch)
     local suggestionEmojies = dataStorage["plugins/rexcellent_games/suggestions_emojies"]
     local guildEmojies = suggestionEmojies[tostring(guildID)] or {}
     
-    return guildEmojies[id] or defaultReactions[id]
+    local emojiID = guildEmojies[id] or defaultReactions[id]
+    
+    if fetch and tonumber(emojiID) then
+        local emoji = discord.emoji(false, emojiID)
+        return emoji:getName()..":"..tostring(emoji:getID())
+    else
+        return emojiID
+    end
 end
 
 --== Commands ==--
