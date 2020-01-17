@@ -74,7 +74,7 @@ function emoji:getName() return self.name end
 
 --== Operators Overrides ==--
 
---Fromat the emoji into it's message tag
+--Format the emoji into it's message tag
 function emoji:__tostring()
     if not self.id then
         return discord.utilities.message.emojis[self.name]
