@@ -207,7 +207,7 @@ do
 
         if action == "reset" then
             local suggestionEmojies = dataStorage["plugins/rexcellent_games/suggestions_emojies"]
-            suggestionsEmojies[guildID] = {}
+            suggestionEmojies[guildID] = {}
             dataStorage["plugins/rexcellent_games/suggestions_emojies"] = suggestionEmojies
             reply:send(false, resetEmbed)
             return
