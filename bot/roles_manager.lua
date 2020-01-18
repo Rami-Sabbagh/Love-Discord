@@ -50,7 +50,7 @@ function rolesManager:isFromAdmin(message)
 
     --Check if any role has admin power
     local member = message:getMember()
-    if self:doesMemberHaveAdminRole(guildID, member) then return end
+    if self:doesMemberHaveAdminRole(guildID, member) then return true end
 
     return self.botAPI:isFromOwner(message) --Bot owners are considered admins everywhere
 end
