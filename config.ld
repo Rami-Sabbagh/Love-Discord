@@ -8,7 +8,9 @@ file = {
 }
 
 title = "Discörd documentation"
+project = "Discörd"
 description = "A Discord bots library for LuaJIT and LÖVE."
 
-format = "markdown"
 dir = "docs"
+format = "markdown"
+no_space_before_args = true
