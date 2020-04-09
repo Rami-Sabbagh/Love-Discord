@@ -127,6 +127,7 @@ end
 --- Tells if the gateway is connected or not.
 -- @treturn boolean `true` if the gateway is connected, `false` otherwise.
 -- @see discord:connect
+-- @see discord:disconnect
 function discord:isConnected()
     return self.gateway:isConnected()
 end
