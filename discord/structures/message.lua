@@ -1,4 +1,6 @@
---- Message class
+--- The discord message class.
+-- It can be obtained either from a discord event, or by requesting a message by it's ID from the discord servers.
+-- @usage local fetchedMessage = discord.message("channel_id", "message_id") --The requested message.
 -- @classmod discord.message
 
 local discord = ... --Passed as an argument.
@@ -35,7 +37,11 @@ local messageFlags = {
     [4] = "SUPPRESS_EMBEDS"
 }
 
---New message object
+--- Create a new message object.
+-- Either from an internal message data table, or by requesting the message data from discord servers.
+-- @tparam table|string data Either a message data table (from an internal api), or a `Guild ID` as a string.
+-- @tparam ?string messageID The `Message ID` as a string to fetch, only when `data` is a `Guild ID`.
+-- @raise Request error when fails to request the message from discord servers.
 function message:initialize(data, messageID)
     Verify(data, "data", "table", "string")
 
@@ -121,7 +127,9 @@ end
 
 --== Methods ==--
 
---Adds a reaction
+--- Add a reaction to the message.
+-- @tparam string|discord.emoji emoji The reaction to add, either a string which is the name of a standard emoji (ex `sweat`), or an emoji object.
+-- @raise Request error on failure.
 function message:addReaction(emoji)
     Verify(emoji, "emoji", "table", "string")
     if type(emoji) == "string" then
@@ -134,13 +142,18 @@ function message:addReaction(emoji)
     Request(endpoint, nil, "PUT")
 end
 
---Deletes the mesage
+--- Delete the message.
+-- @raise Request error on failure.
 function message:delete()
     local endpoint = string.format("/channels/%s/messages/%s", tostring(self.channelID), tostring(self.id))
     Request(endpoint, nil, "DELETE")
 end
 
---Edits the message
+--- Edits the message.
+-- @tparam ?string content The new message content, standard emojis are automatically replaced with their unicode character.
+-- @tparam ?discord.embed embed The new embed content of the message.
+-- @raise `Messages content can't be longer than 2000 characters!`, `Either content or embed parameter has to be present!`
+-- or request error on failure.
 function message:edit(content, embed)
     Verify(content, "content", "string", "nil")
     Verify(embed, "embed", "table", "nil")
@@ -149,17 +162,23 @@ function message:edit(content, embed)
     if content then content = discord.utilities.message.patchEmojis(content) end
     if embed then embed = embed:getAll() end
 
+    if not content and not embed then return error("Either content or embed parameter has to be present!") end
+
     local endpoint = string.format("/channels/%s/messages/%s", tostring(self.channelID), tostring(self.id))
     return discord.message(Request(endpoint, {content = content or nil, embed = embed or nil}, "PATCH"))
 end
 
---Tells if a message is pinned or not
+--- Check if the message is pinned or not.
+-- @treturn ?boolean Whether the message is pinned or not, `nil` when not known.
 function message:isPinned() return self.pinned end
 
---Tells if the message has the text to speech
+--- Check if the message was sent with `text to speech`.
+-- @treturn ?boolean Whether the message was send with `text to speech` or not, `nil` when not known.
 function message:isTTS() return self.tts end
 
---Tells if the user id is mentioned
+--- Check if a user was mentioned or not in this message.
+-- @tparam discord.user user The user to check.
+-- @treturn boolean whether the user was mentioned or not.
 function message:isUserMentioned(user)
     Verify(user, "user", "table")
     if not self.mentions then return false end --Can't know
@@ -169,10 +188,12 @@ function message:isUserMentioned(user)
     return false
 end
 
---Returns the author user object
+--- Get the user object of the message's author.
+-- @treturn discord.user The author of the message.
 function message:getAuthor() return self.author end
 
---Returns the list of attachments if there are any
+--- Get the list of attachments if there are any.
+-- @treturn ?{discord.attachment,...} The message's attachments, `nil` when there are none, or if not known.
 function message:getAttachments()
     if self.attachments then
         local attachments = {}
@@ -181,13 +202,16 @@ function message:getAttachments()
     end
 end
 
---Returns channel ID of which the message was sent in
+--- Get channel ID/snowflake of which the message was sent in.
+-- @treturn discord.snowflake The channel ID/snowflake.
 function message:getChannelID() return self.channelID end
 
---Returns the message content
+--- Get the message content.
+-- @treturn ?string The message content, or `nil` when it doesn't have content (embed only).
 function message:getContent() return self.content end
 
---Returns the message embeds
+--- Get the message embeds if there are any.
+-- @treturn ?{discord.embed,...} An array for embed objects.
 function message:getEmbeds()
     if self.embeds then
         local embeds = {}
@@ -196,16 +220,20 @@ function message:getEmbeds()
     end
 end
 
---Returns the guild ID of the channel the message is sent in, would return nil for DM channels
+--- Get the guild ID of the channel the message is sent in, would return nil for DM channels
+-- @treturn ?discord.snowflake The guild ID/snowflake for the channel the message was sent in, `nil` if it was sent in a DM channel.
 function message:getGuildID() return self.guildID end
 
---Returns the ID of the message
+--- Get the ID/snowflake of the message
+-- @treturn discord.snowflake The ID/snowflake of the message.
 function message:getID() return self.id end
 
---Returns the guild member of the message
+--- Get the guild member of the message if the message was sent in a guild.
+-- @treturn ?discord.guild_member The guild member object. `nil` if it was not known, or in a DM channel.
 function message:getMember() return self.member end
 
---Returns the list of specifically mentioned users ids
+--- Get the list of specifically mentioned user.
+-- @treturn {discord.user,...} The mentioned users array, can be an empty table if we don't know which users are mentioned.
 function message:getMentions()
     if not self.mentions then return {} end --Can't know
     local mentions = {}
@@ -215,9 +243,13 @@ function message:getMentions()
     return mentions
 end
 
---Returns a basic channel object for ONLY replying
---Only the id field has a proper value, and the channel type is just set into GUILD_TEXT for messages with guild ID, and into DM for other messages
---Other channel fields are just nil
+--- Get a fake channel object for ONLY replying to the message.
+--
+-- Only the channel ID has a proper value, and the channel type is just set into `GUILD_TEXT` for messages with guild ID
+-- , and into `DM` for other messages.
+--
+-- Other channel fields are just nil.
+-- @treturn discord.channel A fake channel object to send a reply message using it.
 function message:getReplyChannel()
     return discord.channel{
         id = tostring(self.channelID),
@@ -225,10 +257,13 @@ function message:getReplyChannel()
     }
 end
 
---Returns the timestamp of the message
+--- Get the timestamp of the message.
+-- @treturn number A `os.time()` timestamp as provided by discord.
 function message:getTimestamp() return self.timestamp end
 
---Returns the type of the message
+--- Returns the type of the message.
+-- @treturn string The type of the message.
+-- @see discord.enums.messageTypes
 function message:getType() return self.type end
 
 return message
