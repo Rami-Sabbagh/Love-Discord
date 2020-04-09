@@ -1,4 +1,4 @@
---- Discörd - A Discord bot library by RamiLego4Game (Rami Sabbagh)
+--- Discörd - A Discord bot library for LuaJIT and LÖVE.
 -- @classmod discord
 -- @author Rami Sabbagh (@RamiLego4Game)
 -- @copyright 2018-2020 Rami Sabbagh
@@ -22,12 +22,13 @@ local function Verify(value, name, ...)
     error(emsg, 3)
 end
 
---- Create a new instance of the Discörd library.
+--- Create a new instance of the Discörd library, and loads the submodules of the library.
 -- @tparam string tokenType The OAuth authorization token type. Can be `Bot` or `Bearer`.
 -- @tparam string token The OAuth authorization token.
 -- @tparam ?boolean connectInstantly Whether to start the gateway connection automatically or not (`false` by default).
 -- @tparam ?table gatewayOptions Set custom options for the gateway.
 -- @todo Document the gateway options table and give it a proper LDoc type.
+-- @see discord:connect
 function discord:initialize(tokenType, token, connectInstantly, gatewayOptions)
     Verify(tokenType, "tokenType", "string")
     Verify(token, "token", "string")
@@ -96,14 +97,21 @@ function discord:initialize(tokenType, token, connectInstantly, gatewayOptions)
     end
 end
 
---Update the gateway and process gateway events
+--- Update the gateway and process gateway events.
+-- @tparam number dt The time between the last update call and this call in seconds.
 function discord:update(dt)
     if self.gateway:isConnected() then
         return self.gateway:update(dt)
     end
 end
 
---Hook a function into an event
+--- Events system methods.
+-- Methods for using the events system of the library.
+-- @section events
+
+--- Hook a function into an event.
+-- @tparam string name The event name.
+-- @tparam function func The function you wish to hook.
 function discord:hookEvent(name, func)
     if self.events[name] then
         self.events[name][#self.events[name] + 1] = func
@@ -112,18 +120,28 @@ function discord:hookEvent(name, func)
     end
 end
 
---Tells if the gateway is connected or not
+--- Gateway methods.
+-- Methods for controlling the discord gateway.
+-- @section gateway
+
+--- Tells if the gateway is connected or not.
+-- @treturn boolean `true` if the gateway is connected, `false` otherwise.
+-- @see discord:connect
 function discord:isConnected()
     return self.gateway:isConnected()
 end
 
---Connects the gateway if not already connected
+--- Connects to the gateway.
+-- @raise `Already connected!`: If the gateway is already connected.
+-- @see discord:isConnected
 function discord:connect()
     if self.gateway:isConnected() then return error("Already connected!") end
     self.gateway:connect()
 end
 
---Disconnects from the gateway if connected
+--- Disconnects from the gateway.
+-- @raise `Not connected!`: If the gateway is already not connected.
+-- @see discord:isConnected
 function discord:disconnect()
     if not self.gateway:isConnected() then return error("Not connected!") end
     self.gateway:disconnect()
