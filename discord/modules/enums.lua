@@ -1,4 +1,5 @@
---Discord Enums
+--- Discord Enums.
+-- @module discord.enums
 
 local enums = {}
 
@@ -41,6 +42,8 @@ enums.messageNotificationsLevels = enum{
     [1] = "ONLY_MENTIONS"
 }
 
+--- Message types
+-- @todo Write a LDoc extension for enums
 enums.messageTypes = enum{
     [0] = "DEFAULT",
     [1] = "RECIPIENT_ADD",
@@ -54,7 +57,9 @@ enums.messageTypes = enum{
     [9] = "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_1",
     [10] = "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_2",
     [11] = "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3",
-    [12] = "CHANNEL_FOLLOW_ADD"
+    [12] = "CHANNEL_FOLLOW_ADD",
+    [13] = "GUILD_DISCOVERY_DISQUALIFIED",
+    [14] = "GUILD_DISCOVERY_QUALIFIED"
 }
 
 enums.mfaLevels = enum{
