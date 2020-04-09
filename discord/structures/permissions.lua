@@ -1,3 +1,6 @@
+--- Permissions class
+-- @classmod discord.permissions
+
 local discord = ... --Passed as an argument.
 local class = discord.class --Middleclass.
 local bit = discord.utilities.bit --Universal bit library.

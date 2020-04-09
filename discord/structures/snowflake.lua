@@ -1,3 +1,6 @@
+--- Snowflake class
+-- @classmod discord.snowflake
+
 local discord = ... --Passed as an argument.
 local class = discord.class --Middleclass.
 

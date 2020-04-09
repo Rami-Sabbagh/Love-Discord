@@ -1,3 +1,6 @@
+--- Attachment class
+-- @classmod discord.attachment
+
 local discord = ... --Passed as an argument.
 local class = discord.class --Middleclass.
 
@@ -23,7 +26,7 @@ function attachment:initialize(data)
     self.size = data.size --Size of file in bytes (number)
     self.url = data.url --Source url of file (string)
     self.proxyURL = data.proxy_url --A proxied url of file (string)
-    
+
     --== Optional Fields ==--
 
     self.height = data.height --Height of file (if image) (number)

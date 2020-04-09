@@ -1,3 +1,6 @@
+--- Channel mention class
+-- @classmod discord.channelMention
+
 local discord = ... --Passed as an argument.
 local class = discord.class --Middleclass.
 

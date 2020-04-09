@@ -1,3 +1,6 @@
+--- Role class
+-- @classmod discord.role
+
 local discord = ... --Passed as an argument.
 local class = discord.class --Middleclass.
 

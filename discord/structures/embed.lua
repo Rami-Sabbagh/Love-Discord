@@ -1,3 +1,6 @@
+--- Embed class
+-- @classmod discord.embed
+
 local discord = ... --Passed as an argument.
 local class = discord.class --Middleclass.
 

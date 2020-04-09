@@ -1,3 +1,6 @@
+--- Reaction class
+-- @classmod discord.reaction
+
 local discord = ... --Passed as an argument.
 local class = discord.class --Middleclass.
 

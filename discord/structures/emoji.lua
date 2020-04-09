@@ -1,3 +1,6 @@
+--- Emoji class
+-- @classmod discord.emoji
+
 local discord = ... --Passed as an argument.
 local class = discord.class --Middleclass.
 

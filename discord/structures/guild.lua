@@ -1,3 +1,6 @@
+--- Guild class
+-- @classmod discord.guild
+
 local discord = ... --Passed as an argument.
 local class = discord.class --Middleclass.
 

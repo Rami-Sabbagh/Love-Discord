@@ -1,3 +1,6 @@
+--- Snowflake utilities
+-- @module discord.utilities.snowflake
+
 local discord = ... --Passed as an argument
 local bit = discord.utilities.bit --Universal bitwise interface
 
