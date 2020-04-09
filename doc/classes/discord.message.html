@@ -1,0 +1,979 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Discörd documentation</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Methods">Methods</a></li>
+<li><a href="#Internal_fields">Internal fields </a></li>
+<li><a href="#Internal_optional_fields">Internal optional fields </a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/discord.html">discord</a></li>
+  <li><a href="../classes/discord.attachment.html">discord.attachment</a></li>
+  <li><a href="../classes/discord.channel.html">discord.channel</a></li>
+  <li><a href="../classes/discord.channelMention.html">discord.channelMention</a></li>
+  <li><a href="../classes/discord.embed.html">discord.embed</a></li>
+  <li><a href="../classes/discord.emoji.html">discord.emoji</a></li>
+  <li><a href="../classes/discord.guild.html">discord.guild</a></li>
+  <li><a href="../classes/discord.guildMember.html">discord.guildMember</a></li>
+  <li><strong>discord.message</strong></li>
+  <li><a href="../classes/discord.permissions.html">discord.permissions</a></li>
+  <li><a href="../classes/discord.reaction.html">discord.reaction</a></li>
+  <li><a href="../classes/discord.role.html">discord.role</a></li>
+  <li><a href="../classes/discord.snowflake.html">discord.snowflake</a></li>
+  <li><a href="../classes/discord.user.html">discord.user</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/discord.enums.html">discord.enums</a></li>
+  <li><a href="../modules/discord.utilities.snowflake.html">discord.utilities.snowflake</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>discord.message</code></h1>
+<p>The discord message class.</p>
+<p> It can be obtained either from a discord event, or by requesting a message by it's ID from the discord servers.</p>
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">local fetchedMessage = discord.message(&quot;channel_id&quot;, &quot;message_id&quot;) --The requested message.
+</pre>
+    </ul>
+
+
+<h2><a href="#Methods">Methods</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#discord.message:initialize">discord.message:initialize (data, messageID)</a></td>
+	<td class="summary">Create a new message object.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.message:addReaction">discord.message:addReaction (emoji)</a></td>
+	<td class="summary">Add a reaction to the message.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.message:delete">discord.message:delete ()</a></td>
+	<td class="summary">Delete the message.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.message:edit">discord.message:edit (content, embed)</a></td>
+	<td class="summary">Edits the message.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.message:isPinned">discord.message:isPinned ()</a></td>
+	<td class="summary">Check if the message is pinned or not.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.message:isTTS">discord.message:isTTS ()</a></td>
+	<td class="summary">Check if the message was sent with <code>text to speech</code>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.message:isUserMentioned">discord.message:isUserMentioned (user)</a></td>
+	<td class="summary">Check if a user was mentioned or not in this message.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.message:getAuthor">discord.message:getAuthor ()</a></td>
+	<td class="summary">Get the user object of the message's author.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.message:getAttachments">discord.message:getAttachments ()</a></td>
+	<td class="summary">Get the list of attachments if there are any.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.message:getChannelID">discord.message:getChannelID ()</a></td>
+	<td class="summary">Get channel ID/snowflake of which the message was sent in.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.message:getContent">discord.message:getContent ()</a></td>
+	<td class="summary">Get the message content.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.message:getEmbeds">discord.message:getEmbeds ()</a></td>
+	<td class="summary">Get the message embeds if there are any.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.message:getGuildID">discord.message:getGuildID ()</a></td>
+	<td class="summary">Get the guild ID of the channel the message is sent in, would return nil for DM channels</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.message:getID">discord.message:getID ()</a></td>
+	<td class="summary">Get the ID/snowflake of the message</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.message:getMember">discord.message:getMember ()</a></td>
+	<td class="summary">Get the guild member of the message if the message was sent in a guild.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.message:getMentions">discord.message:getMentions ()</a></td>
+	<td class="summary">Get the list of specifically mentioned user.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.message:getReplyChannel">discord.message:getReplyChannel ()</a></td>
+	<td class="summary">Get a fake channel object for ONLY replying to the message.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.message:getTimestamp">discord.message:getTimestamp ()</a></td>
+	<td class="summary">Get the timestamp of the message.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.message:getType">discord.message:getType ()</a></td>
+	<td class="summary">Returns the type of the message.</td>
+	</tr>
+</table>
+<h2><a href="#Internal_fields">Internal fields </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#self.id">self.id</a></td>
+	<td class="summary">ID of the message (snowflake)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.channelID">self.channelID</a></td>
+	<td class="summary">ID of the channel the message was sent in (snowflake)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.content">self.content</a></td>
+	<td class="summary">Contents of the message (string)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.timestamp">self.timestamp</a></td>
+	<td class="summary">When the message was sent (number)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.tts">self.tts</a></td>
+	<td class="summary">Whether this was a TTS message (boolean)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.mentionEveryone">self.mentionEveryone</a></td>
+	<td class="summary">Where this message mentions everyone (boolean)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.pinned">self.pinned</a></td>
+	<td class="summary">Whether this message is pinned (boolean)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.type">self.type</a></td>
+	<td class="summary">Type of message (string)</td>
+	</tr>
+</table>
+<h2><a href="#Internal_optional_fields">Internal optional fields </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#self.author">self.author</a></td>
+	<td class="summary">The author of this message (not guaranteed to be a valid user) (user)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.guildID">self.guildID</a></td>
+	<td class="summary">ID of the guild the message was sent in (snowflake)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.member">self.member</a></td>
+	<td class="summary">Member properties for this message's author (guild member)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.editedTimestamp">self.editedTimestamp</a></td>
+	<td class="summary">When the message was edited (or null if never) (number)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.mentions">self.mentions</a></td>
+	<td class="summary">Users specifically mentioned in the message (array of user objects)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.mentionRoles">self.mentionRoles</a></td>
+	<td class="summary">Roles specifically mentioned in this message (array of snowflake objects)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.attachments">self.attachments</a></td>
+	<td class="summary">Any attached files (array of attachment objects)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.embeds">self.embeds</a></td>
+	<td class="summary">Any embedded (array of embed objects)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.mentionChannels">self.mentionChannels</a></td>
+	<td class="summary">Channels specifically mentioned in this message (array of channel mention objects)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.reactions">self.reactions</a></td>
+	<td class="summary">Reactions to the message (array of reaction objects)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.nonce">self.nonce</a></td>
+	<td class="summary">Used for validating a message was sent (snowflake)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.webhookID">self.webhookID</a></td>
+	<td class="summary">If the message is generated by a webhook, this is the webhook's id (snowflake)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.flags">self.flags</a></td>
+	<td class="summary">Message flags, describes extra features of the message (array of strings)</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Methods"></a>Methods</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "discord.message:initialize"></a>
+    <strong>discord.message:initialize (data, messageID)</strong>
+    </dt>
+    <dd>
+    Create a new message object.
+ Either from an internal message data table, or by requesting the message data from discord servers.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">data</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a> or <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Either a message data table (from an internal api), or a <code>Guild ID</code> as a string.
+        </li>
+        <li><span class="parameter">messageID</span>
+            <span class="types">optional <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The <code>Message ID</code> as a string to fetch, only when <code>data</code> is a <code>Guild ID</code>.
+        </li>
+    </ul>
+
+
+    <h3>Raises:</h3>
+    Request error when fails to request the message from discord servers.
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.message:addReaction"></a>
+    <strong>discord.message:addReaction (emoji)</strong>
+    </dt>
+    <dd>
+    Add a reaction to the message.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">emoji</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a> or <a class="type" href="../classes/discord.emoji.html#">discord.emoji</a></span>
+         The reaction to add, either a string which is the name of a standard emoji (ex <code>sweat</code>), or an emoji object.
+        </li>
+    </ul>
+
+
+    <h3>Raises:</h3>
+    Request error on failure.
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.message:delete"></a>
+    <strong>discord.message:delete ()</strong>
+    </dt>
+    <dd>
+    Delete the message.
+
+
+
+
+    <h3>Raises:</h3>
+    Request error on failure.
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.message:edit"></a>
+    <strong>discord.message:edit (content, embed)</strong>
+    </dt>
+    <dd>
+    Edits the message.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">content</span>
+            <span class="types">optional <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The new message content, standard emojis are automatically replaced with their unicode character.
+        </li>
+        <li><span class="parameter">embed</span>
+            <span class="types">optional <a class="type" href="../classes/discord.embed.html#">discord.embed</a></span>
+         The new embed content of the message.
+        </li>
+    </ul>
+
+
+    <h3>Raises:</h3>
+    <code>Messages content can&apos;t be longer than 2000 characters!</code>, <code>Either content or embed parameter has to be present!</code>
+ or request error on failure.
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.message:isPinned"></a>
+    <strong>discord.message:isPinned ()</strong>
+    </dt>
+    <dd>
+    Check if the message is pinned or not.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types">optional <span class="type">boolean</span></span>
+        Whether the message is pinned or not, <code>nil</code> when not known.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.message:isTTS"></a>
+    <strong>discord.message:isTTS ()</strong>
+    </dt>
+    <dd>
+    Check if the message was sent with <code>text to speech</code>.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types">optional <span class="type">boolean</span></span>
+        Whether the message was send with <code>text to speech</code> or not, <code>nil</code> when not known.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.message:isUserMentioned"></a>
+    <strong>discord.message:isUserMentioned (user)</strong>
+    </dt>
+    <dd>
+    Check if a user was mentioned or not in this message.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">user</span>
+            <span class="types"><a class="type" href="../classes/discord.user.html#">discord.user</a></span>
+         The user to check.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        whether the user was mentioned or not.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.message:getAuthor"></a>
+    <strong>discord.message:getAuthor ()</strong>
+    </dt>
+    <dd>
+    Get the user object of the message's author.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/discord.user.html#">discord.user</a></span>
+        The author of the message.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.message:getAttachments"></a>
+    <strong>discord.message:getAttachments ()</strong>
+    </dt>
+    <dd>
+    Get the list of attachments if there are any.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types">optional <a class="type" href="../classes/discord.attachment.html#">{discord.attachment,...}</a></span>
+        The message's attachments, <code>nil</code> when there are none, or if not known.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.message:getChannelID"></a>
+    <strong>discord.message:getChannelID ()</strong>
+    </dt>
+    <dd>
+    Get channel ID/snowflake of which the message was sent in.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/discord.snowflake.html#">discord.snowflake</a></span>
+        The channel ID/snowflake.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.message:getContent"></a>
+    <strong>discord.message:getContent ()</strong>
+    </dt>
+    <dd>
+    Get the message content.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types">optional <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The message content, or <code>nil</code> when it doesn't have content (embed only).
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.message:getEmbeds"></a>
+    <strong>discord.message:getEmbeds ()</strong>
+    </dt>
+    <dd>
+    Get the message embeds if there are any.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types">optional <a class="type" href="../classes/discord.embed.html#">{discord.embed,...}</a></span>
+        An array for embed objects.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.message:getGuildID"></a>
+    <strong>discord.message:getGuildID ()</strong>
+    </dt>
+    <dd>
+    Get the guild ID of the channel the message is sent in, would return nil for DM channels
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types">optional <a class="type" href="../classes/discord.snowflake.html#">discord.snowflake</a></span>
+        The guild ID/snowflake for the channel the message was sent in, <code>nil</code> if it was sent in a DM channel.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.message:getID"></a>
+    <strong>discord.message:getID ()</strong>
+    </dt>
+    <dd>
+    Get the ID/snowflake of the message
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/discord.snowflake.html#">discord.snowflake</a></span>
+        The ID/snowflake of the message.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.message:getMember"></a>
+    <strong>discord.message:getMember ()</strong>
+    </dt>
+    <dd>
+    Get the guild member of the message if the message was sent in a guild.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types">optional <a class="type" href="../classes/discord.guild.html#">discord.guild_member</a></span>
+        The guild member object. <code>nil</code> if it was not known, or in a DM channel.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.message:getMentions"></a>
+    <strong>discord.message:getMentions ()</strong>
+    </dt>
+    <dd>
+    Get the list of specifically mentioned user.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/discord.user.html#">{discord.user,...}</a></span>
+        The mentioned users array, can be an empty table if we don't know which users are mentioned.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.message:getReplyChannel"></a>
+    <strong>discord.message:getReplyChannel ()</strong>
+    </dt>
+    <dd>
+    Get a fake channel object for ONLY replying to the message. </p>
+
+<p> Only the channel ID has a proper value, and the channel type is just set into <code>GUILD_TEXT</code> for messages with guild ID
+ , and into <code>DM</code> for other messages.</p>
+
+<p> Other channel fields are just nil.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/discord.channel.html#">discord.channel</a></span>
+        A fake channel object to send a reply message using it.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.message:getTimestamp"></a>
+    <strong>discord.message:getTimestamp ()</strong>
+    </dt>
+    <dd>
+    Get the timestamp of the message.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        A <code>os.time()</code> timestamp as provided by discord.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.message:getType"></a>
+    <strong>discord.message:getType ()</strong>
+    </dt>
+    <dd>
+    Returns the type of the message.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The type of the message.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/discord.enums.html#messageTypes">discord.enums.messageTypes</a>
+    </ul>
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Internal_fields"></a>Internal fields </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "self.id"></a>
+    <strong>self.id</strong>
+    </dt>
+    <dd>
+    ID of the message (snowflake)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.channelID"></a>
+    <strong>self.channelID</strong>
+    </dt>
+    <dd>
+    ID of the channel the message was sent in (snowflake)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.content"></a>
+    <strong>self.content</strong>
+    </dt>
+    <dd>
+    Contents of the message (string)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.timestamp"></a>
+    <strong>self.timestamp</strong>
+    </dt>
+    <dd>
+    When the message was sent (number)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.tts"></a>
+    <strong>self.tts</strong>
+    </dt>
+    <dd>
+    Whether this was a TTS message (boolean)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.mentionEveryone"></a>
+    <strong>self.mentionEveryone</strong>
+    </dt>
+    <dd>
+    Where this message mentions everyone (boolean)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.pinned"></a>
+    <strong>self.pinned</strong>
+    </dt>
+    <dd>
+    Whether this message is pinned (boolean)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.type"></a>
+    <strong>self.type</strong>
+    </dt>
+    <dd>
+    Type of message (string)
+
+
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Internal_optional_fields"></a>Internal optional fields </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "self.author"></a>
+    <strong>self.author</strong>
+    </dt>
+    <dd>
+    The author of this message (not guaranteed to be a valid user) (user)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.guildID"></a>
+    <strong>self.guildID</strong>
+    </dt>
+    <dd>
+    ID of the guild the message was sent in (snowflake)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.member"></a>
+    <strong>self.member</strong>
+    </dt>
+    <dd>
+    Member properties for this message's author (guild member)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.editedTimestamp"></a>
+    <strong>self.editedTimestamp</strong>
+    </dt>
+    <dd>
+    When the message was edited (or null if never) (number)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.mentions"></a>
+    <strong>self.mentions</strong>
+    </dt>
+    <dd>
+    Users specifically mentioned in the message (array of user objects)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.mentionRoles"></a>
+    <strong>self.mentionRoles</strong>
+    </dt>
+    <dd>
+    Roles specifically mentioned in this message (array of snowflake objects)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.attachments"></a>
+    <strong>self.attachments</strong>
+    </dt>
+    <dd>
+    Any attached files (array of attachment objects)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.embeds"></a>
+    <strong>self.embeds</strong>
+    </dt>
+    <dd>
+    Any embedded (array of embed objects)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.mentionChannels"></a>
+    <strong>self.mentionChannels</strong>
+    </dt>
+    <dd>
+    Channels specifically mentioned in this message (array of channel mention objects)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.reactions"></a>
+    <strong>self.reactions</strong>
+    </dt>
+    <dd>
+    Reactions to the message (array of reaction objects)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.nonce"></a>
+    <strong>self.nonce</strong>
+    </dt>
+    <dd>
+    Used for validating a message was sent (snowflake)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.webhookID"></a>
+    <strong>self.webhookID</strong>
+    </dt>
+    <dd>
+    If the message is generated by a webhook, this is the webhook's id (snowflake)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.flags"></a>
+    <strong>self.flags</strong>
+    </dt>
+    <dd>
+    Message flags, describes extra features of the message (array of strings)
+
+
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-04-09 16:14:19 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

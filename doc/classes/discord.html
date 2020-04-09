@@ -1,0 +1,294 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Discörd documentation</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Methods">Methods</a></li>
+<li><a href="#Events_system_methods">Events system methods </a></li>
+<li><a href="#Gateway_methods">Gateway methods </a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><strong>discord</strong></li>
+  <li><a href="../classes/discord.attachment.html">discord.attachment</a></li>
+  <li><a href="../classes/discord.channel.html">discord.channel</a></li>
+  <li><a href="../classes/discord.channelMention.html">discord.channelMention</a></li>
+  <li><a href="../classes/discord.embed.html">discord.embed</a></li>
+  <li><a href="../classes/discord.emoji.html">discord.emoji</a></li>
+  <li><a href="../classes/discord.guild.html">discord.guild</a></li>
+  <li><a href="../classes/discord.guildMember.html">discord.guildMember</a></li>
+  <li><a href="../classes/discord.message.html">discord.message</a></li>
+  <li><a href="../classes/discord.permissions.html">discord.permissions</a></li>
+  <li><a href="../classes/discord.reaction.html">discord.reaction</a></li>
+  <li><a href="../classes/discord.role.html">discord.role</a></li>
+  <li><a href="../classes/discord.snowflake.html">discord.snowflake</a></li>
+  <li><a href="../classes/discord.user.html">discord.user</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/discord.enums.html">discord.enums</a></li>
+  <li><a href="../modules/discord.utilities.snowflake.html">discord.utilities.snowflake</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>discord</code></h1>
+<p>Discörd - A Discord bot library for LuaJIT and LÖVE.</p>
+<p>
+
+</p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Copyright</strong>: 2018-2020 Rami Sabbagh</li>
+        <li><strong>License</strong>: MIT</li>
+        <li><strong>Author</strong>: Rami Sabbagh (@RamiLego4Game)</li>
+    </ul>
+
+
+<h2><a href="#Methods">Methods</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#discord:initialize">discord:initialize (tokenType, token, connectInstantly, gatewayOptions)</a></td>
+	<td class="summary">Create a new instance of the Discörd library, and loads the submodules of the library.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord:update">discord:update (dt)</a></td>
+	<td class="summary">Update the gateway and process gateway events.</td>
+	</tr>
+</table>
+<h2><a href="#Events_system_methods">Events system methods </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#discord:hookEvent">discord:hookEvent (name, func)</a></td>
+	<td class="summary">Hook a function into an event.</td>
+	</tr>
+</table>
+<h2><a href="#Gateway_methods">Gateway methods </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#discord:isConnected">discord:isConnected ()</a></td>
+	<td class="summary">Tells if the gateway is connected or not.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord:connect">discord:connect ()</a></td>
+	<td class="summary">Connects to the gateway.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord:disconnect">discord:disconnect ()</a></td>
+	<td class="summary">Disconnects from the gateway.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Methods"></a>Methods</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "discord:initialize"></a>
+    <strong>discord:initialize (tokenType, token, connectInstantly, gatewayOptions)</strong>
+    </dt>
+    <dd>
+    Create a new instance of the Discörd library, and loads the submodules of the library.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">tokenType</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The OAuth authorization token type. Can be <code>Bot</code> or <code>Bearer</code>.
+        </li>
+        <li><span class="parameter">token</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The OAuth authorization token.
+        </li>
+        <li><span class="parameter">connectInstantly</span>
+            <span class="types">optional <span class="type">boolean</span></span>
+         Whether to start the gateway connection automatically or not (<code>false</code> by default).
+        </li>
+        <li><span class="parameter">gatewayOptions</span>
+            <span class="types">optional <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         Set custom options for the gateway.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../classes/discord.html#discord:connect">discord:connect</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "discord:update"></a>
+    <strong>discord:update (dt)</strong>
+    </dt>
+    <dd>
+    Update the gateway and process gateway events.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">dt</span>
+            <span class="types"><span class="type">number</span></span>
+         The time between the last update call and this call in seconds.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header has-description"><a name="Events_system_methods"></a>Events system methods </h2>
+
+          <div class="section-description">
+           Methods for using the events system of the library.
+          </div>
+    <dl class="function">
+    <dt>
+    <a name = "discord:hookEvent"></a>
+    <strong>discord:hookEvent (name, func)</strong>
+    </dt>
+    <dd>
+    Hook a function into an event.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The event name.
+        </li>
+        <li><span class="parameter">func</span>
+            <span class="types"><span class="type">function</span></span>
+         The function you wish to hook.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header has-description"><a name="Gateway_methods"></a>Gateway methods </h2>
+
+          <div class="section-description">
+           Methods for controlling the discord gateway.
+          </div>
+    <dl class="function">
+    <dt>
+    <a name = "discord:isConnected"></a>
+    <strong>discord:isConnected ()</strong>
+    </dt>
+    <dd>
+    Tells if the gateway is connected or not.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        <code>true</code> if the gateway is connected, <code>false</code> otherwise.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../classes/discord.html#discord:connect">discord:connect</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "discord:connect"></a>
+    <strong>discord:connect ()</strong>
+    </dt>
+    <dd>
+    Connects to the gateway.
+
+
+
+
+    <h3>Raises:</h3>
+    <code>Already connected!</code>: If the gateway is already connected.
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../classes/discord.html#discord:isConnected">discord:isConnected</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "discord:disconnect"></a>
+    <strong>discord:disconnect ()</strong>
+    </dt>
+    <dd>
+    Disconnects from the gateway.
+
+
+
+
+    <h3>Raises:</h3>
+    <code>Not connected!</code>: If the gateway is already not connected.
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../classes/discord.html#discord:isConnected">discord:isConnected</a>
+    </ul>
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-04-09 16:14:19 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
