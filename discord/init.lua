@@ -1,11 +1,19 @@
---Discörd - A Discord bot library by RamiLego4Game (Rami Sabbagh)
+--- Discörd - A Discord bot library by RamiLego4Game (Rami Sabbagh)
+-- @classmod discord
+-- @author Rami Sabbagh (@RamiLego4Game)
+-- @copyright 2018-2020 Rami Sabbagh
+-- @license MIT
 
 local libraryPath = ...
 local class = require(libraryPath..".third-party.middleclass")
 
 local discord = class("discord.Discord")
 
---A function for verifying the arguments types of a method
+--- A function for verifying the arguments types of a method.
+-- If the argument verification fails, then an error with level 3 is raised (the caller level).
+-- @param value The argument value to verify.
+-- @tparam string name The name of the argument.
+-- @tparam string ... The allowed types of the argument.
 local function Verify(value, name, ...)
     local vt, types = type(value), {...}
     for _, t in pairs(types) do if vt == t or (t=="nil" and not value) then return end end --Verified successfully
@@ -14,7 +22,12 @@ local function Verify(value, name, ...)
     error(emsg, 3)
 end
 
---New instance
+--- Create a new instance of the Discörd library.
+-- @tparam string tokenType The OAuth authorization token type. Can be `Bot` or `Bearer`.
+-- @tparam string token The OAuth authorization token.
+-- @tparam ?boolean connectInstantly Whether to start the gateway connection automatically or not (`false` by default).
+-- @tparam ?table gatewayOptions Set custom options for the gateway.
+-- @todo Document the gateway options table and give it a proper LDoc type.
 function discord:initialize(tokenType, token, connectInstantly, gatewayOptions)
     Verify(tokenType, "tokenType", "string")
     Verify(token, "token", "string")
