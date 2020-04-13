@@ -30,6 +30,13 @@
   <li><a href="../index.html">Index</a></li>
 </ul>
 
+<h2>Contents</h2>
+<ul>
+<li><a href="#Methods">Methods</a></li>
+<li><a href="#Internal_fields">Internal fields </a></li>
+<li><a href="#Internal_optional_fields">Internal optional fields </a></li>
+<li><a href="#Operators_Overrides">Operators Overrides </a></li>
+</ul>
 
 
 <h2>Classes</h2>
@@ -61,24 +68,293 @@
 <div id="content">
 
 <h1>Class <code>discord.emoji</code></h1>
-<p>The discord emoji class</p>
-<p>
+<p>The discord emoji class.</p>
+<p> It can be obtained either from a discord event, from some discörd objects, by constructing one for a standard emoji
+ or by fetching the custom emoji by it's id and guild id from discord servers.</p>
+    <h3>Usage:</h3>
+    <ul>
+        <li><pre class="example">local standardEmoji = discord.emoji(&quot;smiley&quot;) --The constructed standard emoji.
+</pre></li>
+        <li><pre class="example">local customEmoji = discord.emoji(&quot;guild_id&quot;, &quot;emoji_id&quot;) --The requested custom emoji.
+</pre></li>
+    </ul>
 
-</p>
 
-
+<h2><a href="#Methods">Methods</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#discord.emoji:initialize">discord.emoji:initialize(data, emojiID)</a></td>
+	<td class="summary">Create a new emoji object.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.emoji:getID">discord.emoji:getID()</a></td>
+	<td class="summary">Get the emoji ID.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#discord.emoji:getName">discord.emoji:getName()</a></td>
+	<td class="summary">Get the emoji name.</td>
+	</tr>
+</table>
+<h2><a href="#Internal_fields">Internal fields </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#self.name">self.name</a></td>
+	<td class="summary">Emoji name (string).</td>
+	</tr>
+</table>
+<h2><a href="#Internal_optional_fields">Internal optional fields </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#self.id">self.id</a></td>
+	<td class="summary">Emoji ID (snowflake).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.roles">self.roles</a></td>
+	<td class="summary">Roles this emoji is whitelisted to (array of role objects).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.user">self.user</a></td>
+	<td class="summary">User that created this emoji (user).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.requireColons">self.requireColons</a></td>
+	<td class="summary">Whether this emoji must be wrapped in colons (boolean).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.managed">self.managed</a></td>
+	<td class="summary">Whether this emoji is managed (boolean).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.animated">self.animated</a></td>
+	<td class="summary">Whether this emoji is animated (boolean).</td>
+	</tr>
+</table>
+<h2><a href="#Operators_Overrides">Operators Overrides </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#discord.emoji:__tostring">discord.emoji:__tostring()</a></td>
+	<td class="summary">Format the emoji into it's message tag.</td>
+	</tr>
+</table>
 
 <br/>
 <br/>
 
 
+    <h2 class="section-header "><a name="Methods"></a>Methods</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "discord.emoji:initialize"></a>
+    <strong>discord.emoji:initialize(data, emojiID)</strong>
+    </dt>
+    <dd>
+    Create a new emoji object.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">data</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a> or <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         Either the emoji name string for a standard emoji, the standard emoji unicode string,
+ the guild ID string for a custom emoji or an emoji data table (from an internal api).
+        </li>
+        <li><span class="parameter">emojiID</span>
+            <span class="types">optional <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The emoji ID string for a custom emoji.
+        </li>
+    </ul>
+
+
+    <h3>Raises:</h3>
+    Request error when fails to request the custom emoji from discord servers.
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.emoji:getID"></a>
+    <strong>discord.emoji:getID()</strong>
+    </dt>
+    <dd>
+    Get the emoji ID.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types">optional <a class="type" href="../classes/discord.snowflake.html#">discord.snowflake</a></span>
+        The emoji's ID, <code>nil</code> when not known.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "discord.emoji:getName"></a>
+    <strong>discord.emoji:getName()</strong>
+    </dt>
+    <dd>
+    Get the emoji name.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The emoji's name.
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Internal_fields"></a>Internal fields </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "self.name"></a>
+    <strong>self.name</strong>
+    </dt>
+    <dd>
+    Emoji name (string).
+
+
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Internal_optional_fields"></a>Internal optional fields </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "self.id"></a>
+    <strong>self.id</strong>
+    </dt>
+    <dd>
+    Emoji ID (snowflake).
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.roles"></a>
+    <strong>self.roles</strong>
+    </dt>
+    <dd>
+    Roles this emoji is whitelisted to (array of role objects).
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.user"></a>
+    <strong>self.user</strong>
+    </dt>
+    <dd>
+    User that created this emoji (user).
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.requireColons"></a>
+    <strong>self.requireColons</strong>
+    </dt>
+    <dd>
+    Whether this emoji must be wrapped in colons (boolean).
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.managed"></a>
+    <strong>self.managed</strong>
+    </dt>
+    <dd>
+    Whether this emoji is managed (boolean).
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.animated"></a>
+    <strong>self.animated</strong>
+    </dt>
+    <dd>
+    Whether this emoji is animated (boolean).
+
+
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Operators_Overrides"></a>Operators Overrides </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "discord.emoji:__tostring"></a>
+    <strong>discord.emoji:__tostring()</strong>
+    </dt>
+    <dd>
+    Format the emoji into it's message tag.
+ Handles standard emojis custom emojis, and custom animated emojis properly.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The emoji's message tag, ex: <code>&lt;:emoji_name:emoji_id&gt;</code>.
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> emoji_tag = <span class="global">tostring</span>(my_emoji)</pre>
+    </ul>
+
+</dd>
+</dl>
 
 
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-04-13 12:57:31 </i>
+<i style="float:right;">Last updated 2020-04-13 13:26:32 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
