@@ -57,8 +57,8 @@ function commandsManager:identifyBot(channel)
 
     local ok, err = pcall(channel.send, channel, table.concat({
         "I'm a Discord bot written and operating in Lua :full_moon_with_face:",
-        "Utilizes the Discörd library :books: written by RamiLego4Game (Rami Sabbagh) :sunglasses:",
-        "Running using LÖVE :heart:"
+        "Utilizes the Discörd library :books: written by RamiLego4Game (Rami Sabbagh)",
+        "Running using LÖVE framework :heart:"
     },"\n"))
 
     if ok then print("Sent then about bot message successfully!") else
