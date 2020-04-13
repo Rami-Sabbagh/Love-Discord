@@ -1,4 +1,7 @@
---Discörd Böt - A Basic Bot System
+--- Discörd Böt, A basic bot system.
+-- @module bot
+-- @alias botAPI
+local botAPI = {}
 
 --Set the custom error handler
 require("bot.error_handler")
@@ -13,22 +16,22 @@ local pluginsManager = require("bot.plugins_manager")
 local commandsManager = require("bot.commands_manager")
 local dataStorage = require("bot.data_storage")
 
---BOT API
-local botAPI = {}
-
---Initialize the bot and connect into Discord
+--- Initialize the bot and connect into Discord.
+-- @tparam table args The command line arguments passed to the bot, can be an empty table.
+-- @raise Errors when it fails to load the bot's configuration file.
 function botAPI:initialize(args)
+    --- The command line arguments passed to the bot.
     self.args = args
-    self.adminRoles = {}
-    self.guildOwners = {}
 
     print("Loading configuration...")
 
     if not love.filesystem.getInfo("/bot/config.json") then error("Please create the bot configuration file at /bot/config.json, based on the file in /bot/config_template.json") end
+    --- The bot's configuration file decoded, from `bot/config.json`.
     self.config = json:decode(love.filesystem.read("/bot/config.json"))
 
     print("Initializing...")
 
+    --- The discörd library instance for the bot.
     self.discord = discord("Bot", self.config.bot.token, false, {
         payloadCompression = true, --Enable payload compression
         transportCompression = false, --Not implemented
@@ -68,7 +71,9 @@ function botAPI:initialize(args)
     print("Connected :)")
 end
 
---Tells if a provided snowflake is an owner one
+--- Check if a provided snowflake is for a bot owner user.
+-- @tparam string id The snowflake as a string.
+-- @treturn boolean `true` if it's an owner snowflake, `false` otherwise.
 function botAPI:isOwner(id)
     for k, ownerid in pairs(self.config.bot.owners) do
         if ownerid == id then return true end
@@ -76,13 +81,17 @@ function botAPI:isOwner(id)
     return false
 end
 
---Tells if a message is from an owner
+--- Check if a message is from a bot owner.
+-- @tparam discord.message message The message to check it's owner.
+-- @treturn boolean `true` if it's a message from a bot owner, `false` otherwise.
 function botAPI:isFromOwner(message)
     local authorID = tostring(message:getAuthor():getID())
     return self:isOwner(authorID)
 end
 
---Tells if a provided snowflake is a developer one
+--- Check if a provided snowflake is for a bot developer user.
+-- @tparam string id The snowflake as a string.
+-- @treturn boolean `true` if it's a developer snowflake, `false` otherwise.
 function botAPI:isDeveloper(id)
     for k, devid in pairs(self.config.bot.developers) do
         if devid == id then return true end
@@ -90,13 +99,16 @@ function botAPI:isDeveloper(id)
     return false
 end
 
---Tells if a message is from a developer
+--- Check if a message is from a bot developer.
+-- @tparam discord.message message The message to check it's owner.
+-- @treturn boolean `true` if it's a message from a bot developer, `false` otherwise.
 function botAPI:isFromDeveloper(message)
     local authorID = tostring(message:getAuthor():getID())
     return self:isDeveloper(authorID)
 end
 
---Update the bot
+--- Update the bot.
+-- @tparam number dt The time between the last update call and this call in seconds.
 function botAPI:update(dt)
     dataStorage(dt)
     if self.discord:update(dt) then
@@ -104,8 +116,8 @@ function botAPI:update(dt)
     end
 end
 
---Quit the bot properly with the data saved
-function botAPI:quit(a, ...)
+--- Quit the bot properly with the data saved.
+function botAPI:quit()
     dataStorage(-2)
     self.discord:disconnect()
 end
@@ -117,7 +129,7 @@ function botAPI._READY(data)
     botAPI.me = data.user
 
     local gdata = dataStorage["bot/gateway"]
-    
+
     gdata.url = botAPI.discord.gateway.gatewayURL
     gdata.info = botAPI.discord.gateway.gatewayInfo
 
