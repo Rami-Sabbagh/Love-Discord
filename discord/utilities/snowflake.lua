@@ -53,7 +53,7 @@ function snowflake.decode(sf)
     largePart, smallPart = tonumber(largePart, 2) or 0, tonumber(smallPart, 2) or 0
     local time = largePart*fixFactor + smallPart/1000
     time = math.floor(time + 1420070400)
-    
+
     sf = tonumber(sf)
 
     local workerID = bit.band(sf,0x3E0000)
