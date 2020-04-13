@@ -141,7 +141,7 @@ function http_utils.request(url, data, method, headers, useMultipart)
         end
 
         --Decode the response body if it's JSON data
-        if response_headers["content-type"] and response_headers["content-type"] == "application/json" then
+        if response_headers["content-type"] and response_headers["content-type"]:match("^application/json") then
             response_body = json:decode(response_body)
         end
 
