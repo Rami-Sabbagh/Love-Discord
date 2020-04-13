@@ -27,6 +27,8 @@ do
 
     function commands.cf_contests(message, reply, commandName, ...)
         if commandName == "?" then reply:send(false, usageEmbed) return end --Triggered using the help command
+
+        reply:triggerTypingIndicator()
         
         local data, err = discord.utilities.http.request("https://codeforces.com/api/contest.list")
         if not data then error(err) end
@@ -62,19 +64,24 @@ do
                 contest.durationSeconds%60
             )
 
-            replyEmbed:setField(i, contest.name, string.format(table.concat({
-                    "ID: `%d`",
-                    "Phase: `%s`",
-                    "Frozen: `%s`",
-                    contest.relativeTimeSeconds < 0 and "Until start: `%s`" or "Since start: `%s`",
-                    "Duration: `%s`"
-                }, "\n"),
-                contest.id,
-                contest.phase,
-                tostring(contest.frozen),
-                remainingTime,
-                duration
-            ))
+            replyEmbed:setField(i, contest.name,
+                string.format(
+                    table.concat({
+                        "URL: https://codeforces.com/contest/%d",
+                        "ID: `%d`",
+                        "Phase: `%s`",
+                        "Frozen: `%s`",
+                        contest.relativeTimeSeconds < 0 and "Until start: `%s`" or "Since start: `%s`",
+                        "Duration: `%s`"
+                    }, "\n"),
+                    contest.id,
+                    contest.id,
+                    contest.phase,
+                    tostring(contest.frozen),
+                    remainingTime,
+                    duration
+                )
+            )
         end
 
         reply:send(false, replyEmbed)
