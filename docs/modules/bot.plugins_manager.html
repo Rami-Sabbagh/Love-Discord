@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Discörd documentation</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Discörd</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/discord.enums.html">discord.enums</a></li>
+  <li><a href="../modules/discord.utilities.http.html">discord.utilities.http</a></li>
+  <li><a href="../modules/discord.utilities.snowflake.html">discord.utilities.snowflake</a></li>
+  <li><a href="../modules/bot.html">bot</a></li>
+  <li><strong>bot.plugins_manager</strong></li>
+</ul>
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/discord.html">discord</a></li>
+  <li><a href="../classes/discord.attachment.html">discord.attachment</a></li>
+  <li><a href="../classes/discord.channel.html">discord.channel</a></li>
+  <li><a href="../classes/discord.channelMention.html">discord.channelMention</a></li>
+  <li><a href="../classes/discord.embed.html">discord.embed</a></li>
+  <li><a href="../classes/discord.emoji.html">discord.emoji</a></li>
+  <li><a href="../classes/discord.guild.html">discord.guild</a></li>
+  <li><a href="../classes/discord.guildMember.html">discord.guildMember</a></li>
+  <li><a href="../classes/discord.message.html">discord.message</a></li>
+  <li><a href="../classes/discord.permissions.html">discord.permissions</a></li>
+  <li><a href="../classes/discord.reaction.html">discord.reaction</a></li>
+  <li><a href="../classes/discord.role.html">discord.role</a></li>
+  <li><a href="../classes/discord.snowflake.html">discord.snowflake</a></li>
+  <li><a href="../classes/discord.user.html">discord.user</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>bot.plugins_manager</code></h1>
+<p>Discörd Böt plugins manager.</p>
+<p>
+
+</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#initialize">initialize()</a></td>
+	<td class="summary">Initialize the plugin manager.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#reload">reload()</a></td>
+	<td class="summary">Reload the plugin manager.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#update">update(dt)</a></td>
+	<td class="summary">Update the plugins.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getPlugins">getPlugins()</a></td>
+	<td class="summary">Get the list of initialized plugins.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getDisabledPlugins">getDisabledPlugins(guildID, channelID)</a></td>
+	<td class="summary">Get a table of disabled plugins for a certain guild/channel.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "initialize"></a>
+    <strong>initialize()</strong>
+    </dt>
+    <dd>
+    Initialize the plugin manager.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "reload"></a>
+    <strong>reload()</strong>
+    </dt>
+    <dd>
+    Reload the plugin manager.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "update"></a>
+    <strong>update(dt)</strong>
+    </dt>
+    <dd>
+    Update the plugins.
+ Called automatically by the bot api.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">dt</span>
+            <span class="types"><span class="type">number</span></span>
+         The time between the last update call and this call in seconds.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getPlugins"></a>
+    <strong>getPlugins()</strong>
+    </dt>
+    <dd>
+    Get the list of initialized plugins.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        The initialized plugins table, don't modify!
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getDisabledPlugins"></a>
+    <strong>getDisabledPlugins(guildID, channelID)</strong>
+    </dt>
+    <dd>
+    Get a table of disabled plugins for a certain guild/channel.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">guildID</span>
+            <span class="types">optional <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The guild ID.
+        </li>
+        <li><span class="parameter">channelID</span>
+            <span class="types">optional <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The channel ID.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        The disabled plugins at guild level table, don't modify!</li>
+        <li>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        The disabled plugins at channel level table, don't modify!</li>
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-04-13 14:04:35 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Discörd documentation</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Discörd</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Fields">Fields</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/discord.enums.html">discord.enums</a></li>
+  <li><a href="../modules/discord.utilities.http.html">discord.utilities.http</a></li>
+  <li><a href="../modules/discord.utilities.snowflake.html">discord.utilities.snowflake</a></li>
+  <li><strong>bot</strong></li>
+  <li><a href="../modules/bot.plugins_manager.html">bot.plugins_manager</a></li>
+</ul>
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/discord.html">discord</a></li>
+  <li><a href="../classes/discord.attachment.html">discord.attachment</a></li>
+  <li><a href="../classes/discord.channel.html">discord.channel</a></li>
+  <li><a href="../classes/discord.channelMention.html">discord.channelMention</a></li>
+  <li><a href="../classes/discord.embed.html">discord.embed</a></li>
+  <li><a href="../classes/discord.emoji.html">discord.emoji</a></li>
+  <li><a href="../classes/discord.guild.html">discord.guild</a></li>
+  <li><a href="../classes/discord.guildMember.html">discord.guildMember</a></li>
+  <li><a href="../classes/discord.message.html">discord.message</a></li>
+  <li><a href="../classes/discord.permissions.html">discord.permissions</a></li>
+  <li><a href="../classes/discord.reaction.html">discord.reaction</a></li>
+  <li><a href="../classes/discord.role.html">discord.role</a></li>
+  <li><a href="../classes/discord.snowflake.html">discord.snowflake</a></li>
+  <li><a href="../classes/discord.user.html">discord.user</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>bot</code></h1>
+<p>Discörd Böt, A basic bot system.</p>
+<p>
+
+</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#initialize">initialize(args)</a></td>
+	<td class="summary">Initialize the bot and connect into Discord.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isOwner">isOwner(id)</a></td>
+	<td class="summary">Check if a provided snowflake is for a bot owner user.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isFromOwner">isFromOwner(message)</a></td>
+	<td class="summary">Check if a message is from a bot owner.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isDeveloper">isDeveloper(id)</a></td>
+	<td class="summary">Check if a provided snowflake is for a bot developer user.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isFromDeveloper">isFromDeveloper(message)</a></td>
+	<td class="summary">Check if a message is from a bot developer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#update">update(dt)</a></td>
+	<td class="summary">Update the bot.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#quit">quit()</a></td>
+	<td class="summary">Quit the bot properly with the data saved.</td>
+	</tr>
+</table>
+<h2><a href="#Fields">Fields</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#self.config">self.config</a></td>
+	<td class="summary">The bot's configuration file decoded, from <code>bot/config.json</code>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.discord">self.discord</a></td>
+	<td class="summary">The discörd library instance for the bot.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "initialize"></a>
+    <strong>initialize(args)</strong>
+    </dt>
+    <dd>
+    Initialize the bot and connect into Discord.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         The command line arguments passed to the bot, can be an empty table.
+        </li>
+    </ul>
+
+
+    <h3>Raises:</h3>
+    Errors when it fails to load the bot's configuration file.
+
+
+
+</dd>
+    <dt>
+    <a name = "isOwner"></a>
+    <strong>isOwner(id)</strong>
+    </dt>
+    <dd>
+    Check if a provided snowflake is for a bot owner user.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The snowflake as a string.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        <code>true</code> if it's an owner snowflake, <code>false</code> otherwise.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isFromOwner"></a>
+    <strong>isFromOwner(message)</strong>
+    </dt>
+    <dd>
+    Check if a message is from a bot owner.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">message</span>
+            <span class="types"><a class="type" href="../classes/discord.message.html#">discord.message</a></span>
+         The message to check it's owner.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        <code>true</code> if it's a message from a bot owner, <code>false</code> otherwise.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isDeveloper"></a>
+    <strong>isDeveloper(id)</strong>
+    </dt>
+    <dd>
+    Check if a provided snowflake is for a bot developer user.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The snowflake as a string.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        <code>true</code> if it's a developer snowflake, <code>false</code> otherwise.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isFromDeveloper"></a>
+    <strong>isFromDeveloper(message)</strong>
+    </dt>
+    <dd>
+    Check if a message is from a bot developer.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">message</span>
+            <span class="types"><a class="type" href="../classes/discord.message.html#">discord.message</a></span>
+         The message to check it's owner.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        <code>true</code> if it's a message from a bot developer, <code>false</code> otherwise.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "update"></a>
+    <strong>update(dt)</strong>
+    </dt>
+    <dd>
+    Update the bot.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">dt</span>
+            <span class="types"><span class="type">number</span></span>
+         The time between the last update call and this call in seconds.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "quit"></a>
+    <strong>quit()</strong>
+    </dt>
+    <dd>
+    Quit the bot properly with the data saved.
+
+
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Fields"></a>Fields</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "self.config"></a>
+    <strong>self.config</strong>
+    </dt>
+    <dd>
+    The bot's configuration file decoded, from <code>bot/config.json</code>.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.discord"></a>
+    <strong>self.discord</strong>
+    </dt>
+    <dd>
+    The discörd library instance for the bot.
+
+
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-04-13 14:04:35 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
