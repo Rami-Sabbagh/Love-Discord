@@ -80,7 +80,7 @@ do
     function commands.restart(message, reply, commandName, ...)
         if commandName == "?" then reply:send(false, usageEmbed) return end --Triggered using the help command
         if not botAPI:isFromOwner(message) then reply:send(false, ownerEmbed) return end
-        
+
         love.event.quit("restart")
 
         local pdata = dataStorage["plugins/basic/restart"]
@@ -172,6 +172,7 @@ do
         setmetatable(env, { __index = function(t,k) return superEnv[k] end })
 
         env.botAPI, env.discord = botAPI, discord
+        env.json = discord.json
         env.pluginsManager, env.commandsManager, env.dataStorage = pluginsManager, commandsManager, dataStorage
         env.message, env.reply = message, reply
         env.bit, env.http, env.rest = discord.utilities.bit, discord.utilities.http, discord.rest
