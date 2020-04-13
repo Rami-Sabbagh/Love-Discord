@@ -1,4 +1,5 @@
---HTTP Utilities, contains usefull formatting and requesting functions
+--- HTTP Utilities, contains usefull formatting and requesting functions
+-- @module discord.utilities.http
 
 local discord = ... --Passed as an argument
 local https = discord.https
@@ -10,7 +11,8 @@ local url_utils = require("socket.url")
 
 local http_utils = {}
 
---The https response codes explaination.
+--- The https response codes explainations.
+-- @table http_utils.codes
 http_utils.codes = {
     [200] = {"OK","The request completed successfully"},
     [201] = {"CREATED", "The entity was created successfully"},
@@ -25,7 +27,9 @@ http_utils.codes = {
     [502] = {"GATEWAY UNAVAILABLE", "There was not a gateway available to process your request. Wait a bit and retry"}
 }
 
---Encodes a table into a query string
+--- Encode a table into a query string.
+-- @tparam table t The query table.
+-- @treturn string The encoded query string.
 function http_utils.encodeQuery(t)
     local query = {}
     for k,v in pairs(t) do
@@ -34,6 +38,17 @@ function http_utils.encodeQuery(t)
     return table.concat(query, "&")
 end
 
+--- Execute a http request synchronously.
+-- @tparam string|table url The request url, or a url table in lua-socket format.
+-- @tparam ?string|table data The request body data.
+-- @tparam ?string method The request method: GET, POST, etc.
+-- @tparam ?table headers The request headers table.
+-- @tparam ?boolean useMultipart Whether use multipart/form-data instead of json to encode the request data (when provided in a table).
+-- @treturn boolean `true` then the request has been done successfully, `false` otherwise.
+-- @treturn string|table The error string on failure, otherwise it's the reponse body data, automatically decode if it was JSON.
+-- @treturn ?table The response headers (only on success).
+-- @treturn ?number The response status code (only on success).
+-- @treturn ?string The response status line (only on success).
 function http_utils.request(url, data, method, headers, useMultipart)
 
     --Construct the url if it's a table
