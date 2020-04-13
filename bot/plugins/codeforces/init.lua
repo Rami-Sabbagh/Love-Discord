@@ -22,7 +22,13 @@ do
     usageEmbed:setDescription("Work in progress :warning:")
 
     local function compareContests(c1, c2)
-        return c1.relativeTimeSeconds > c2.relativeTimeSeconds
+        if c1.relativeTimeSeconds < 0 and c2.relativeTimeSeconds < 0 then
+            return c1.relativeTimeSeconds > c2.relativeTimeSeconds
+        elseif c1.relativeTimeSeconds >= 0 and c2.relativeTimeSeconds >= 0 then
+            return c1.relativeTimeSeconds < c2.relativeTimeSeconds
+        else
+            return c1.relativeTimeSeconds < 0
+        end
     end
 
     function commands.cf_contests(message, reply, commandName, ...)
@@ -37,7 +43,7 @@ do
         local contests = {}
 
         for _, contest in ipairs(data.result) do
-            if contest.phase == "BEFORE" or contest.phase == "CODING" then
+            if math.abs(contest.relativeTimeSeconds) <= 24*3600 then
                 table.insert(contests, contest)
             end
         end
@@ -46,7 +52,7 @@ do
 
         local replyEmbed = discord.embed()
         replyEmbed:setAuthor("Codeforces", "https://codeforces.com", "https://cdn.discordapp.com/attachments/667745243717828663/699234756843274260/favicon.png")
-        replyEmbed:setTitle("Available contests:")
+        replyEmbed:setTitle("Available contests (24-hours filtered)")
 
         for i=1, math.min(#contests, 25) do
             local contest = contests[i]
