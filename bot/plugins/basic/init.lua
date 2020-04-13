@@ -58,7 +58,7 @@ do
                     pluginEmbed:setTitle(p.name.." "..p.icon)
                     pluginEmbed:setDescription(p.description)
                     pluginEmbed:setField(1, "Version:", p.version)
-                    
+
                     local pCommands = p.commands
                     if pCommands then
                         local clist = {}
