@@ -1,4 +1,6 @@
---Discörd Böt plugins manager
+--- Discörd Böt plugins manager.
+-- @module bot.plugins_manager
+-- @alias pluginsManager
 local pluginsManager = {}
 
 local dataStorage = require("bot.data_storage")
@@ -23,7 +25,7 @@ local function triggerPluginsEvent(eventName, ...)
     end
 end
 
---Initialize the plugin manager
+--- Initialize the plugin manager.
 function pluginsManager:initialize()
     self.botAPI = require("bot")
     self.discord = self.botAPI.discord
@@ -40,7 +42,7 @@ function pluginsManager:initialize()
     self.discord:hookEvent("ANY", triggerPluginsEvent)
 end
 
---Reloads the plugin manager
+--- Reload the plugin manager.
 function pluginsManager:reload()
     --Attempt to reload the plugins
     print(string.rep("-", 40))
@@ -57,24 +59,32 @@ function pluginsManager:reload()
     return true --Success
 end
 
---Update the plugins
+--- Update the plugins.
+-- Called automatically by the bot api.
+-- @tparam number dt The time between the last update call and this call in seconds.
 function pluginsManager:update(dt)
     triggerPluginsEvent("UPDATE", dt)
 end
 
---Returns the list of initialized plugins
+--- Get the list of initialized plugins.
+-- @treturn table The initialized plugins table, don't modify!
+-- @todo Proper plugin ldoc object.
 function pluginsManager:getPlugins()
     return self.plugins
 end
 
---Returns a table of disabled plugins
+--- Get a table of disabled plugins for a certain guild/channel.
+-- @tparam ?string guildID The guild ID.
+-- @tparam ?string channelID The channel ID.
+-- @treturn table The disabled plugins at guild level table, don't modify!
+-- @treturn table The disabled plugins at channel level table, don't modify!
 function pluginsManager:getDisabledPlugins(guildID, channelID)
     local disabledPlugins = dataStorage["bot/disabled_plugins"]
     local guildKey, channelKey = tostring(guildID or ""), tostring(guildID or "").."_"..tostring(channelID or "")
     return disabledPlugins[guildKey] or {}, disabledPlugins[channelKey] or {}
 end
 
---Tells if a plugin is disabled or not
+--Check if a plugin is disabled or not for a certain guild/channel.
 function pluginsManager:isPluginDisabled(guildID, channelID, pluginName)
     local guildPlugins, channelPlugins = pluginsManager:getDisabledPlugins(guildID, channelID)
 
