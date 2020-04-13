@@ -144,7 +144,7 @@ end
 do
     local usageEmbed = discord.embed()
     usageEmbed:setDescription(":ping_pong:")
-    
+
     function commands.ping(message, reply, commandName, ...)
         if commandName == "?" then reply:send(false, usageEmbed) return end --Triggered using the help command
 

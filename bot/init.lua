@@ -50,7 +50,7 @@ function botAPI:initialize(args)
     --Events
     self.discord:hookEvent("READY", self._READY)
     self.discord:hookEvent("GUILD_CREATE", self._GUILD_CREATE)
-    
+
     rolesManager:initialize()
     pluginsManager:initialize()
     commandsManager:initialize()
