@@ -211,7 +211,7 @@ do
         if tostring(nolog) == "true" then
             if message:getGuildID() then pcall(message.delete, message) end
         else
-            reply:send(false, outputEmbed, outputFile and {string.format("output-%d.txt"}, os.time()), outputFile} )
+            reply:send(false, outputEmbed, outputFile and {string.format("output-%d.txt", os.time()), outputFile} )
             --reply:send("Data too large, uploaded in a file :wink:", false, {dname:gsub("/","_")..".json",data})
         end
     end
