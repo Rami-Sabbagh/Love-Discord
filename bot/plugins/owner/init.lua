@@ -194,9 +194,16 @@ do
             return
         end
 
+        local outputFile
         if showOutput then
             env.print("```")
-            outputEmbed:setField(1, "Output:", table.concat(output, "\n"))
+            local outputString = table.concat(output, "\n")
+            if #outputString > 2048 then
+                outputFile = outputString:sub(5,-5)
+                outputEmbed:setField(1, "Output:", "Output too large, uploaded in a file :wink:")
+            else
+                outputEmbed:setField(1, "Output:", outputString)
+            end
         else
             outputEmbed:setField(1)
         end
@@ -204,7 +211,8 @@ do
         if tostring(nolog) == "true" then
             if message:getGuildID() then pcall(message.delete, message) end
         else
-            reply:send(false, outputEmbed)
+            reply:send(false, outputEmbed, outputFile and {string.format("output-%d.txt"}, os.time()), outputFile} )
+            --reply:send("Data too large, uploaded in a file :wink:", false, {dname:gsub("/","_")..".json",data})
         end
     end
 end
