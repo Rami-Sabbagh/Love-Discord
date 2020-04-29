@@ -54,7 +54,7 @@ end
 
 function commands.antiowo(message, reply, commandName, verb, arg1, arg2)
     if commandName == "?" then sendAntiOwOUsage(reply) return end --Triggered using the help command
-    if not botAPI:isFromOwner(message) and (not verb or verb ~= "tell") then reply:send(false, ownerEmbed) return end
+    --if not botAPI:isFromOwner(message) and (not verb or verb ~= "tell") then reply:send(false, ownerEmbed) return end
 
     if not verb then sendAntiOwOUsage(reply) return end
 
