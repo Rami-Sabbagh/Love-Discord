@@ -5,9 +5,10 @@ local dataStorage = require("bot.data_storage")
 local pluginsManager = require("bot.plugins_manager")
 
 local owoPatterns = {
-    "[ouv°0◔ʘüÜÖö@]+[%p]*[w]+[%p]*[ouv°0◔ʘüÜÖö@]+",
-    "[owv°0◔ʘüÜÖö@]+[%p]*[u]+[%p]*[owv°0◔ʘüÜÖö@]+",
-    "[ouw°0◔ʘüÜÖö@]+[%p]*[v]+[%p]*[ouw°0◔ʘüÜÖö@]+"
+    "[u]%p*[w]%p*[u]",
+    "[o]%p*[w]%p*[o]",
+    "[w]%p*[u]%p*[w]",
+    "[o]%p*[u]%p*[o]",
 }
 
 local penalty = 350
@@ -68,7 +69,7 @@ function commands.antiowo(message, reply, commandName, verb, arg1, arg2)
         local penalties = dataStorage["plugins/antiowo/penalties"]
         penalties[authorID] = (penalties[authorID] or 0) + math.floor(penalty*owoCount)
         dataStorage["plugins/antiowo/penalties"] = penalties
-        
+
         penaltyEmbed:setTitle("**$"..penalties[authorID].." PENALTY**")
         penaltyEmbed:setDescription("for "..arg1.." to pay!")
 
@@ -84,7 +85,7 @@ function commands.antiowo(message, reply, commandName, verb, arg1, arg2)
         if count <= 0 then
             message:getReplyChannel():send(arg1.." is not a weeb!")
         else
-            message:getReplyChannel():send(arg1.." has $"..count.." to pay!\nWhich is `"..(count/36).."$` mike's dollars.")
+            message:getReplyChannel():send(arg1.." has $"..count.." to pay!")
         end
     elseif verb == "clear" then
         if not arg1 then sendAntiOwOUsage(reply) return end
