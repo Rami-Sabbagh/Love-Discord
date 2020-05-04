@@ -51,7 +51,7 @@ do
         table.sort(contests, compareContests)
 
         local replyEmbed = discord.embed()
-        replyEmbed:setAuthor("Codeforces", "https://codeforces.com", "https://cdn.discord.com/attachments/667745243717828663/699234756843274260/favicon.png")
+        replyEmbed:setAuthor("Codeforces", "https://codeforces.com", "https://cdn.discordapp.com/attachments/667745243717828663/699234756843274260/favicon.png")
         replyEmbed:setTitle("Available contests (24-hours filtered)")
 
         for i=1, math.min(#contests, 25) do
