@@ -78,7 +78,7 @@ function guild:initialize(data)
     end
     --TODO: Presences field
 
-    --TODO: Add the fields after the presences one https://discordapp.com/developers/docs/resources/guild
+    --TODO: Add the fields after the presences one https://discord.com/developers/docs/resources/guild
 
 end
 

@@ -28,7 +28,7 @@ local function Request(endpoint, data, method, headers, useMultipart)
     end
 end
 
---https://discordapp.com/developers/docs/resources/user#user-object-user-flags
+--https://discord.com/developers/docs/resources/user#user-object-user-flags
 local userFlags = {
     [1] = "Discord Employee",
     [2] = "Discord Partner",

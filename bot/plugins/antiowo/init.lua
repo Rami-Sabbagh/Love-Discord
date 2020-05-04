@@ -16,7 +16,7 @@ local penalty = 350
 local penaltyEmbed = discord.embed()
 
 penaltyEmbed:setColor(0xEE0000)
-penaltyEmbed:setImage("https://cdn.discordapp.com/attachments/440553300203667479/628171994218889216/unknown.png", false, 102, 142)
+penaltyEmbed:setImage("https://cdn.discord.com/attachments/440553300203667479/628171994218889216/unknown.png", false, 102, 142)
 
 --Shared embed, could be used by any command
 local ownerEmbed = discord.embed()

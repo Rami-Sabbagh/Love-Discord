@@ -30,7 +30,7 @@ local function Request(endpoint, data, method, headers, useMultipart)
     end
 end
 
---https://discordapp.com/developers/docs/resources/channel#message-object-message-flags
+--https://discord.com/developers/docs/resources/channel#message-object-message-flags
 local messageFlags = {
     [1] = "CROSSPOSTED",
     [2] = "IS_CROSSPOST",

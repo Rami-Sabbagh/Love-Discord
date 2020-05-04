@@ -12,7 +12,7 @@ messageUtilities.emojisText = json:decode(love.filesystem.read(discord._director
 
 --TODO: Add emojis utilities
 
---https://discordapp.com/developers/docs/reference#message-formatting
+--https://discord.com/developers/docs/reference#message-formatting
 
 function messageUtilities.formatUser(id)
     return string.format("<@%s>", id)

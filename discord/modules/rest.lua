@@ -21,7 +21,7 @@ local rest = {}
 --Create a new instance
 function rest:initialize()
     self.version = 6 --The used version of Discord's REST API.
-    self.baseURL = "https://discordapp.com/api/v"..self.version --The base URL of the used REST API version.
+    self.baseURL = "https://discord.com/api/v"..self.version --The base URL of the used REST API version.
 
     --RateLimits
     self.rateLimitBuckets = {} --The rate limit buckets
