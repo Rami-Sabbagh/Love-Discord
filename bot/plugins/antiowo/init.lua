@@ -108,7 +108,7 @@ plugin.events = {}; local events = plugin.events
 
 function events.MESSAGE_CREATE(message)
     local author = message:getAuthor()
-    
+
     if author:isBot() then return end
     if author == botAPI.me then return end
     if pluginsManager:isPluginDisabled(message:getGuildID(), message:getChannelID(), pluginName) then return end
