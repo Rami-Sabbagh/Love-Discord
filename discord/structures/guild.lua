@@ -40,9 +40,9 @@ function guild:initialize(data)
     self.defaultMessageNotifications = discord.enums.messageNotificationsLevels[data.default_message_notifications] --Default message notifications level (string)
     self.explicitContentFilter = discord.enums.explicitContentFilterLevels[data.explicit_content_filter] --Explicit content filter level (string)
     self.roles = {} --Array of role objects
-    for id, role in pairs(data.roles) do self.roles[id] = discord.role(role) end
+    for id, role in pairs(data.roles or {}) do self.roles[id] = discord.role(role) end
     self.emojis = {} --Array of emoji objects
-    for id, emoji in pairs(data.emojis) do self.emojis[id] = discord.emoji(emoji) end
+    for id, emoji in pairs(data.emojis or {}) do self.emojis[id] = discord.emoji(emoji) end
     self.features = data.features --Enabled guild features (array of strings)
     self.mfaLevel = discord.enums.mfaLevels[data.mfa_level] --Required MFA level for the guild (string)
 
